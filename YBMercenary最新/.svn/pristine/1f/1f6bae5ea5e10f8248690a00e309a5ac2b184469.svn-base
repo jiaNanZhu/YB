@@ -1,0 +1,200 @@
+//
+//  ErrandHeaderCell.m
+//  YBMercenary
+//
+//  Created by 龙青磊 on 2018/3/28.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "ErrandHeaderCell.h"
+
+@interface ErrandHeaderCell ()<UITextFieldDelegate>
+
+@property (nonatomic, strong) UITextField *taskNameField;
+@property (nonatomic, strong) UITextField *goodsNameField;
+@property (nonatomic, strong) UITextField *countField;
+@property (nonatomic, strong) UITextField *moneyField;
+
+
+@end
+
+@implementation ErrandHeaderCell
+
++ (instancetype)creatTableViewCellWithTableView:(UITableView *)tableView{
+    ErrandHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ErrandHeaderCell"];
+    if (cell == nil) {
+        cell = [[ErrandHeaderCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ErrandHeaderCell"];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    cell.backgroundColor = [UIColor hex:Back_Color];
+    return cell;
+}
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        [self creatSubViews];
+    }
+    return self;
+}
+
+- (void)creatSubViews{
+    UIView *backView = [[UIView alloc]init];
+    backView.backgroundColor = [UIColor whiteColor];
+    [self.contentView addSubview:backView];
+    [backView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.contentView).offset(Width(8));
+        make.left.right.bottom.equalTo(self.contentView);
+    }];
+    
+    UILabel *taskName = [F_UI SL_UI_Label:@"任务名称" color:[UIColor hex:@"444444"] textAlignment:0 textFont:14 numberOfLines:1];
+    [self.contentView addSubview:taskName];
+    [taskName mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(backView).offset(Width(10));
+        make.left.equalTo(backView).offset(Width(15));
+    }];
+    
+    UIView *line1 = [[UIView alloc]init];
+    line1.backgroundColor = [UIColor hex:Back_Color];
+    [self.contentView addSubview:line1];
+    [line1 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(backView).offset(Width(15));
+        make.right.equalTo(backView.mas_right).offset(-Width(15));
+        make.top.equalTo(taskName.mas_bottom).offset(Width(10));
+        make.height.mas_equalTo(Width(1));
+    }];
+    
+    _taskNameField = [[UITextField alloc]init];
+    _taskNameField.backgroundColor = [UIColor clearColor];
+    _taskNameField.placeholder = @"请输入任务名称";
+    _taskNameField.textColor = [UIColor hex:@"999999"];
+    _taskNameField.font = [UIFont fontSize:14];
+    _taskNameField.delegate = self;
+    _taskNameField.returnKeyType = UIReturnKeyDone;
+    [_taskNameField addTarget:self action:@selector(textFieldTextChanged:) forControlEvents:UIControlEventEditingChanged];
+    [self.contentView addSubview:_taskNameField];
+    [_taskNameField mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(taskName);
+        make.right.lessThanOrEqualTo(backView.mas_right).offset(-Width(15));
+        make.left.equalTo(taskName.mas_right).offset(Width(25));
+        make.height.mas_equalTo(Width(24));
+    }];
+    
+    UILabel *goodsName = [F_UI SL_UI_Label:@"物品名称" color:[UIColor hex:@"444444"] textAlignment:0 textFont:14 numberOfLines:1];
+    [self.contentView addSubview:goodsName];
+    [goodsName mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(line1.mas_bottom).offset(Width(10));
+        make.left.equalTo(backView).offset(Width(15));
+    }];
+    
+    UIView *line2 = [[UIView alloc]init];
+    line2.backgroundColor = [UIColor hex:Back_Color];
+    [self.contentView addSubview:line2];
+    [line2 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(backView).offset(Width(15));
+        make.right.equalTo(backView.mas_right).offset(-Width(15));
+        make.top.equalTo(goodsName.mas_bottom).offset(Width(10));
+        make.height.mas_equalTo(Width(1));
+    }];
+    
+    _goodsNameField = [[UITextField alloc]init];
+    _goodsNameField.backgroundColor = [UIColor clearColor];
+    _goodsNameField.placeholder = @"请输入物品名称";
+    _goodsNameField.textColor = [UIColor hex:@"999999"];
+    _goodsNameField.font = [UIFont fontSize:14];
+    _goodsNameField.delegate = self;
+    _goodsNameField.returnKeyType = UIReturnKeyDone;
+    [_goodsNameField addTarget:self action:@selector(textFieldTextChanged:) forControlEvents:UIControlEventEditingChanged];
+    [self.contentView addSubview:_goodsNameField];
+    [_goodsNameField mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(goodsName);
+        make.right.lessThanOrEqualTo(backView.mas_right).offset(-Width(15));
+        make.left.equalTo(_taskNameField);
+        make.height.mas_equalTo(Width(24));
+    }];
+    
+    UILabel *count = [F_UI SL_UI_Label:@"数量" color:[UIColor hex:@"444444"] textAlignment:0 textFont:14 numberOfLines:1];
+    [self.contentView addSubview:count];
+    [count mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(line2.mas_bottom).offset(Width(10));
+        make.left.equalTo(backView).offset(Width(15));
+    }];
+    
+    UIView *line3 = [[UIView alloc]init];
+    line3.backgroundColor = [UIColor hex:Back_Color];
+    [self.contentView addSubview:line3];
+    [line3 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(backView).offset(Width(15));
+        make.right.equalTo(backView.mas_right).offset(-Width(15));
+        make.top.equalTo(count.mas_bottom).offset(Width(10));
+        make.height.mas_equalTo(Width(1));
+    }];
+    
+    _countField = [[UITextField alloc]init];
+    _countField.backgroundColor = [UIColor clearColor];
+    _countField.placeholder = @"请输入物品数量";
+    _countField.textColor = [UIColor hex:@"999999"];
+    _countField.font = [UIFont fontSize:14];
+    _countField.delegate = self;
+    _countField.returnKeyType = UIReturnKeyDone;
+    _countField.keyboardType=UIKeyboardTypeNumberPad;
+    [_countField addTarget:self action:@selector(textFieldTextChanged:) forControlEvents:UIControlEventEditingChanged];
+    [self.contentView addSubview:_countField];
+    [_countField mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(count);
+        make.right.lessThanOrEqualTo(backView.mas_right).offset(-Width(15));
+        make.left.equalTo(_taskNameField);
+        make.height.mas_equalTo(Width(24));
+    }];
+    
+    UILabel *money = [F_UI SL_UI_Label:@"佣金" color:[UIColor hex:@"444444"] textAlignment:0 textFont:14 numberOfLines:1];
+    [self.contentView addSubview:money];
+    [money mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(line3.mas_bottom).offset(Width(10));
+        make.left.equalTo(backView).offset(Width(15));
+        make.bottom.equalTo(backView.mas_bottom).offset(-Width(15));
+    }];
+    
+    _moneyField = [[UITextField alloc]init];
+    _moneyField.backgroundColor = [UIColor clearColor];
+    _moneyField.placeholder = @"请输入佣金金额";
+    _moneyField.textColor = [UIColor hex:@"999999"];
+    _moneyField.font = [UIFont fontSize:14];
+    _moneyField.delegate = self;
+    _moneyField.returnKeyType = UIReturnKeyDone;
+    _moneyField.keyboardType=UIKeyboardTypeNumberPad;
+    [_moneyField addTarget:self action:@selector(textFieldTextChanged:) forControlEvents:UIControlEventEditingChanged];
+    [self.contentView addSubview:_moneyField];
+    [_moneyField mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(money);
+        make.right.lessThanOrEqualTo(backView.mas_right).offset(-Width(15));
+        make.left.equalTo(_taskNameField);
+        make.height.mas_equalTo(Width(24));
+    }];
+}
+-(void)textFieldTextChanged:(UITextField *)textField{
+    NSInteger type;
+    if (textField == _taskNameField) {
+        //任务名称
+        type = 0;
+    }else if (textField == _goodsNameField){
+        //物品名称
+        type = 1;
+    }else if (textField == _countField){
+        //数量
+        type = 2;
+    }else{
+        //佣金
+        type = 3;
+    }
+    if (self.delegate && [self.delegate respondsToSelector:@selector(errandHeaderCellTextFieldEndChanged:index:)]) {
+        [self.delegate errandHeaderCellTextFieldEndChanged:textField.text index:type];
+    }
+}
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
+@end

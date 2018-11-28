@@ -1,0 +1,114 @@
+//
+//  ZJNFMDBManager.m
+//  OverseasRealEstateProject
+//
+//  Created by 朱佳男 on 2018/6/13.
+//  Copyright © 2018年 XianFeng. All rights reserved.
+//
+
+#import "ZJNFMDBManager.h"
+#import "FMDatabase.h"
+@interface ZJNFMDBManager(){
+    FMDatabase *_db;
+}
+
+@end
+static ZJNFMDBManager *manager;
+@implementation ZJNFMDBManager
++(instancetype)allocWithZone:(struct _NSZone *)zone{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        manager = [super allocWithZone:zone];
+    });
+    return manager;
+}
++(ZJNFMDBManager *)sharedInstance{
+    return [[self alloc]init];
+}
+-(id)init{
+    self = [super init];
+    if (self) {
+        NSString *path = NSHomeDirectory();
+        path = [path stringByAppendingPathComponent:@"/Documents/CacheSearchText.db"];
+        _db = [[FMDatabase alloc]initWithPath:path];
+        BOOL ret = [_db open];
+        if (ret) {
+            NSLog(@"打开数据库成功");
+            [self creatCacheSearchTextTable];
+        }
+    }
+    return self;
+}
+/**
+ 创建搜索记录缓存表
+ */
+-(void)creatCacheSearchTextTable{
+    NSString *sqlStr = @"create table if not exists CacheSearchText(searchText)";
+    BOOL ret = [_db executeUpdate:sqlStr];
+    if (ret) {
+        NSLog(@"创建搜索记录数据表成功");
+    }else{
+        NSLog(@"创建搜索记录数据表失败");
+    }
+}
+
+/**
+ 添加缓存字段
+
+ @param searchText 需要添加的搜索字段
+ */
+-(void)addSearchTextWithSearchText:(NSString *)searchText{
+    BOOL isExist = [self isExistInSearchTextTableWithInfo:searchText];
+    if (!isExist) {
+        NSString *sqlStr = @"insert into CacheSearchText (searchText) values (?)";
+        BOOL ret = [_db executeUpdate:sqlStr,searchText];
+        if (ret) {
+            DBLog(@"插入成功");
+        }else{
+            DBLog(@"插入失败");
+        }
+    }else{
+        DBLog(@"该搜索字段已经存在了");
+    }
+
+}
+
+/**
+ 删除所有缓存字段
+ */
+-(void)deleteAllSearchText{
+    NSString *sqlStr = @"delete from CacheSearchText";
+    BOOL ret = [_db executeUpdate:sqlStr];
+    if (ret) {
+        DBLog(@"删除搜索字段成功");
+    }else{
+        DBLog(@"删除搜索字段失败");
+    }
+}
+
+-(NSArray *)getAllSearchText{
+    NSMutableArray *tempArr = [NSMutableArray array];
+    NSString *sqlStr = @"select *from CacheSearchText";
+    FMResultSet *set = [_db executeQuery:sqlStr];
+    while ([set next]) {
+        [tempArr addObject:[set stringForColumn:@"searchText"]];
+    }
+    return [tempArr copy];
+}
+/**
+ 判断该搜索记录是否已经存在
+
+ @param searchText 搜索字段model
+ @return yes 已经存在 no 不存在
+ */
+-(BOOL)isExistInSearchTextTableWithInfo:(NSString *)searchText{
+    NSString *sqlStr = @"select *from CacheSearchText where searchText=?";
+    FMResultSet *set = [_db executeQuery:sqlStr,searchText];
+    if ([set next]) {
+        return YES;
+    }else{
+        return NO;
+    }
+}
+
+@end

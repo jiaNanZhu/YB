@@ -1,0 +1,18 @@
+//
+//  PublishTaskAddPhotosCell.h
+//  YBMercenary
+//
+//  Created by 龙青磊 on 2018/3/28.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface PublishTaskAddPhotosCell : UITableViewCell
+@property (nonatomic, strong)UITableViewController *vc;
+@property (nonatomic, strong) NSMutableArray *dataArr;
+@property (nonatomic, copy)void (^imageUrlsBlock)(NSString *imagePaths);
++ (instancetype)creatTableViewCellWithTableView:(UITableView *)tableView;
+
+
+@end

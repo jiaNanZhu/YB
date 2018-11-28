@@ -1,0 +1,199 @@
+//
+//  YBMyIssueTJViewController.m
+//  YBMercenary
+//
+//  Created by 飞哥 on 2018/3/23.
+//  Copyright © 2018年 pengfei.li. All rights reserved.
+//
+
+#import "YBMyIssueTJViewController.h"
+#import "YBMyIssueTJTableViewCell.h"
+@interface YBMyIssueTJViewController ()<UITableViewDelegate,UITableViewDataSource>{
+     UIImageView *xianImg;
+}
+@property(nonatomic,strong)UITableView * tableView;
+@property(nonatomic,strong)UIView * headView;
+
+@property(nonatomic,strong)NSMutableArray *dataArr;
+@end
+
+@implementation YBMyIssueTJViewController
+-(NSMutableArray *)dataArr
+{
+    if (!_dataArr) {
+        _dataArr=[[NSMutableArray alloc]init];
+    }
+    return _dataArr;
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    [self makeUIwithcountArr:@[@"0",@"0",@"0",@"0",@"0",@"0"]];
+    
+    [self requestUserCenter_MyTask_publish_sum];
+}
+#pragma mark - UI
+-(void)makeUIwithcountArr:(NSArray *)countArr{
+    _headView = [F_UI SL_UI_View:[UIColor whiteColor] cornerRadius:0 borderColor:nil borderWidth:0];
+    _headView.frame = CGRectMake(0, 0, d_Device_width, AdFloat(128));
+    [self.view addSubview:_headView];
+    
+    xianImg = [F_UI SL_UI_UIimg:[UIImage imageNamed:@"xianIMG"] cornerRadius:0];
+    xianImg.frame = CGRectMake(0, AdFloat(123), d_Device_width/6, AdFloat(5));
+    [_headView addSubview:xianImg];
+    
+    NSArray *titleArr = @[@"一星",@"二星",@"三星",@"四星",@"五星",@"总计"];
+    for (int i = 0; i < titleArr.count; i++) {
+        UIButton *btn = [F_UI SL_UI_Btn:nil Color:nil Font:AdFloat(30) bgimage:nil selecteImage:nil target:self action:@selector(btn:) cornerRadius:0];
+        btn.frame = CGRectMake(i*(d_Device_width/titleArr.count), 0, d_Device_width/titleArr.count, AdFloat(122));
+        btn.tag = i+200;
+        [_headView addSubview:btn];
+        
+        UILabel *titleLab = [F_UI SL_UI_Label:titleArr[i] color:[UIColor hex:@"666666"] textAlignment:NSTextAlignmentCenter textFont:AdFloat(30) numberOfLines:1];
+        titleLab.frame = CGRectMake(0, AdFloat(15), btn.width, AdFloat(40));
+        titleLab.tag = i + 210;
+        [btn addSubview:titleLab];
+        
+        UILabel *countLab = [F_UI SL_UI_Label:countArr[i] color:[UIColor hex:@"444444"] textAlignment:NSTextAlignmentCenter textFont:AdFloat(28) numberOfLines:1];
+        countLab.frame = CGRectMake(0, titleLab.maxY+AdFloat(10), btn.width, AdFloat(40));
+        countLab.tag = i + 220;
+        [btn addSubview:countLab];
+        
+        if (i == 0) {
+            [btn setUserInteractionEnabled:NO];
+            titleLab.textColor = [UIColor hex:@"0386FF"];
+            countLab.textColor = [UIColor hex:@"0386FF"];
+        }
+    }
+    [self.view addSubview:self.tableView];
+}
+#pragma mark - 选择
+-(void)btn:(UIButton *)sender{
+    for (int i = 0; i < 6; i++) {
+        UIButton *btn = (UIButton *)[self.view viewWithTag:(200+i)];
+        UILabel *lab_1 = (UILabel *)[self.view viewWithTag:(210+i)];
+        UILabel *lab_2 = (UILabel *)[self.view viewWithTag:(220+i)];
+        if (btn.tag == sender.tag) {
+            [btn setUserInteractionEnabled:NO];
+            lab_1.textColor = [UIColor hex:@"0386FF"];
+            lab_2.textColor = [UIColor hex:@"0386FF"];
+            [UIView animateWithDuration:0.3 animations:^{
+                xianImg.frame = CGRectMake(i*(d_Device_width/6), AdFloat(123), d_Device_width/6, AdFloat(5));
+            }];
+        }else{
+            [btn setUserInteractionEnabled:YES];
+            lab_1.textColor = [UIColor hex:@"444444"];
+            lab_2.textColor = [UIColor hex:@"444444"];
+        }
+    }
+    
+    [self requestUserCenter_MyTask_publish_sum_list];
+}
+-(UITableView *)tableView
+{
+    if (_tableView == nil){
+        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, _headView.maxY+AdFloat(16), d_Device_width, d_Device_height-iPhone_X_bool_Nav_height-AdFloat(136))];
+        if (@available(iOS 11.0, *)) {
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }else {
+            self.automaticallyAdjustsScrollViewInsets = NO;
+        }
+        [_tableView registerClass:[YBMyIssueTJTableViewCell class] forCellReuseIdentifier:@"YBMyIssueTJTableViewCell"];
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+        _tableView.separatorColor = [UIColor clearColor];
+        
+    }
+    return _tableView;
+}
+#pragma mark - 分组cell数量
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.dataArr.count;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return AdFloat(104);
+}
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    YBMyIssueTJTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if (cell == nil)
+    {
+        cell = [[YBMyIssueTJTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"YBMyIssueTJTableViewCell"];
+    }
+    cell.backgroundColor = [UIColor whiteColor];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    return cell;
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    DBLog(@"------ 点击%ld行 ------",(long)indexPath.row);
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark request
+#pragma mark
+-(void)requestUserCenter_MyTask_publish_sum
+{
+    NSDictionary *parameters =@{@"token":USERTOKEN};
+    
+    [[YBRequestManager sharedYBManager]postWithUrlString:UserCenter_MyTask_publish_sum_total parameters:parameters success:^(id data) {
+        
+    if ([data[@"code"]integerValue] ==0) {
+        
+            [self makeUIwithcountArr:@[[data[@"data"][@"one"] stringValue],[data[@"data"][@"two"] stringValue],[data[@"data"][@"three"] stringValue],[data[@"data"][@"fore"] stringValue],[data[@"data"][@"five"] stringValue],[data[@"data"][@"total"] stringValue]] ];
+            
+            
+        }
+        
+        
+    } failure:^(NSError *error) {
+        
+    }];
+}
+
+#pragma mark request
+#pragma mark
+-(void)requestUserCenter_MyTask_publish_sum_list
+{
+    
+    //一星：1 二星：2 三星：3 四星：4 五星：5 总计：6
+    NSDictionary *parameters =@{@"token":USERTOKEN,@"pageNum":@(1),@"pageSize":@(20),@"star":@(1)};
+    
+    [[YBRequestManager sharedYBManager]postWithUrlString:UserCenter_MyTask_publish_sum_list parameters:parameters success:^(id data) {
+        
+        
+                [self.dataArr removeAllObjects];
+        if ([data[@"code"]integerValue] ==0) {
+            
+            
+            //            for (NSDictionary *dict in data[@"data"]) {
+            //                YBMyIssueModel *model=[YBMyIssueModel yy_modelWithDictionary:dict];
+            //
+            //                [self.dataArr addObject:model];
+            //            }
+            //
+            
+            
+        }
+        else if ([data[@"code"]integerValue] ==1)
+        {
+            
+            //暂无任务
+            [DWBToast showCenterWithText:data[@"msg"]];
+        }
+        else{
+            [DWBToast showCenterWithText:data[@"msg"]];
+        }
+        [self.tableView reloadData];
+        
+    } failure:^(NSError *error) {
+        
+    }];
+}
+
+@end

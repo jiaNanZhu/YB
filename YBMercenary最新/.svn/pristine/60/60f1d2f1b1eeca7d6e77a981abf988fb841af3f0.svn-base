@@ -1,0 +1,43 @@
+//
+//  RanchConst.m
+//  Ranch
+//
+//  Created by GZP on 2018/1/25.
+//  Copyright © 2018年 gzp_macbook. All rights reserved.
+//
+
+NSString *const CMProduceDetail = @"/api/v2/good/good-show";
+NSString *const XiLieRightList = @"/api/v2/good/series-list";
+NSString *const MallAllCategory = @"/api/v2/good/class";
+NSString *const HOST = @"http://39.107.91.92:84";
+
+
+//============= 个人信息 ====================//
+//uid
+NSString *const User_id = @"user_id";
+//mobile
+NSString *const User_mobile = @"user_mobile";
+//token
+NSString *const User_token = @"token";
+
+
+
+NSString *const Green_Color = @"47b546";
+NSString *const Nav_Color = @"333333";
+NSString *const Back_Color = @"edecea";
+NSString *const Gray_Color = @"ededed";
+NSString *const Yellow_Color = @"ffb600";
+NSString *const Blue_Color = @"0386FF";
+
+
+//============= 网络接口====================
+
+#pragma mark 登录/注册
+//登录
+NSString *const Login = @"mobile-login";
+//注册
+NSString *const Regist = @"register";
+//找回密码
+NSString *const FindPwd = @"find-password";
+//获取验证码
+NSString *const GetVerifyCode = @"verifycodes";

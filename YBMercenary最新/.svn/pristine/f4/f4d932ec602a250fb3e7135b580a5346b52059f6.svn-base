@@ -1,0 +1,56 @@
+//
+//  YBMyCollectRTableViewCell.m
+//  YBMercenary
+//
+//  Created by 飞哥 on 2018/3/23.
+//  Copyright © 2018年 pengfei.li. All rights reserved.
+//
+
+#import "YBMyCollectRTableViewCell.h"
+
+@implementation YBMyCollectRTableViewCell
+-(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if(self){
+        
+        _picIMG = [F_UI SL_UI_UIimg:[UIImage imageNamed:@"头像"] cornerRadius:AdFloat(40)];
+        _picIMG.frame = CGRectMake(AdFloat(30), AdFloat(30), AdFloat(80), AdFloat(80));
+        [self addSubview:_picIMG];
+        
+        _nameLab = [F_UI SL_UI_Label:@"" color:[UIColor hex:@"444444"] textAlignment:NSTextAlignmentLeft textFont:AdFloat(30) numberOfLines:1];
+        _nameLab.frame = CGRectMake(_picIMG.maxX+AdFloat(24), 0, AdFloat(400), AdFloat(140));
+        [self addSubview:_nameLab];
+        
+        UIView *xianView = [F_UI SL_UI_View:COlOR_R_G_B_A(242, 242, 242, 1) cornerRadius:0 borderColor:nil borderWidth:0];
+        xianView.frame = CGRectMake(AdFloat(30), AdFloat(138), d_Device_width-AdFloat(60), AdFloat(2));
+        [self addSubview:xianView];
+        
+    }
+    return self;
+}
+
+-(void)networkDataCell:(YBMessagModel *)model
+{
+    _nameLab.text=model.touser_name;
+    [_picIMG sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",model.touserhead_img]] placeholderImage:nil];
+    
+    
+}
+
+-(void)networkdatawithmodel:(YBMyCollectUserModel *)model
+{
+    _nameLab.text=model.name;
+    [_picIMG sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",HOST,model.head_img]] placeholderImage:nil];
+}
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // Initialization code
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+    
+    // Configure the view for the selected state
+}
+
+@end

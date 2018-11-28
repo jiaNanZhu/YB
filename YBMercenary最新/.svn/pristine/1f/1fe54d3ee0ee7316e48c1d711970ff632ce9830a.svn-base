@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "0"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.ExceptionBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            scope = "0"
+            stopOnStyle = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "YBMercenary/AppDelegate.mm"
+            timestampString = "556013996.172107"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "247"
+            endingLineNumber = "247"
+            landmarkName = "-loginRCloud"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__26-[AppDelegate loginRCloud]_block_invoke_5"
+                  moduleName = "YBMercenary"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/JW/Desktop/%E9%99%A9%E9%94%8B%E9%A1%B9%E7%9B%AE/%E4%BD%A3%E5%85%B5%E5%A4%A9%E4%B8%8Bios/YBMercenary/YBMercenary/AppDelegate.mm"
+                  timestampString = "556013996.204641"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "247"
+                  endingLineNumber = "247"
+                  offsetFromSymbolStart = "45">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__26-[AppDelegate loginRCloud]_block_invoke_6"
+                  moduleName = "YBMercenary"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/JW/Desktop/%E9%99%A9%E9%94%8B%E9%A1%B9%E7%9B%AE/%E4%BD%A3%E5%85%B5%E5%A4%A9%E4%B8%8Bios/YBMercenary/YBMercenary/AppDelegate.mm"
+                  timestampString = "556013996.20755"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "249"
+                  endingLineNumber = "249"
+                  offsetFromSymbolStart = "12">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "YBMercenary/ViewControllers/Message/View/YBMessageXXTableViewCell.m"
+            timestampString = "555850368.946883"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
+            landmarkName = "-networkDataCellmodel:type:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

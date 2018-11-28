@@ -1,0 +1,495 @@
+//
+//  ZJNSignUpViewController.m
+//  YBMercenary
+//
+//  Created by 朱佳男 on 2018/7/19.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "ZJNSignUpViewController.h"
+#import "TaskDetailModel.h"//详情model
+#import "DateTool.h"//时间戳转换
+#import "YBLoginViewController.h"//登陆界面
+#import "TaskInfoCell.h"//任务发布者基本信息
+#import "ZJNFirstHeadInfoTableViewCell.h"
+#import "ZJNSecondInfoTableViewCell.h"
+#import "ZJNTaskBasicInfoTableViewCell.h"
+#import "ZJNTaskCoexecutorTableViewCell.h"
+//第一区分情况展示六种单元格
+#import "SignupPaotuiTaskCell.h"//跑腿
+#import "SignupLifeTaskCell.h"//生活
+#import "SignupCustomTaskCell.h"//个人定制
+#import "SignupWorkTaskCell.h"//工作
+#import "SignUpHealthTaskCell.h"//健康
+#import "SignupOtherTaskCell.h"//其他
+
+#import "ChosePersonCell.h"//已报名/待选人
+#import "LeaveMessageCell.h"//输入留言
+#import "MessageDetailCell.h"//留言
+#import "ZJNDoubleBtnView.h"//切换按钮
+#import "ZJNSignUpBottomView.h"//底部按钮
+#import "SDPhotoBrowser.h"//展示图片
+#import "TopicsImageCell.h"
+#import "YBNavigationViewController.h"
+#import "ZJNPayViewController.h"
+#import "YBMessageConversationViewController.h"
+@interface ZJNSignUpViewController ()<UITableViewDelegate,UITableViewDataSource,ZJNSignUpBottomViewDelegate,SDPhotoBrowserDelegate,ChosePersonCellDelegate>{
+    NSString *kType;//left:已报名 right:待选人
+}
+@property (nonatomic ,assign)BOOL myPublish;
+@property (nonatomic ,strong)UITableView *tableView;
+@property (nonatomic, strong)TaskDetailModel *detailModel;
+@property (nonatomic, strong)NSArray *messageArr;//保存留言信息数组
+@property (nonatomic, strong)NSArray *signUpArr;//已报名/待选人数组
+@property (nonatomic, strong)ZJNSignUpBottomView *bottomView;
+@end
+
+@implementation ZJNSignUpViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.navigationItem.title = @"任务详情";
+    kType = @"left";
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithImage:SetImage(@"分享") style:UIBarButtonItemStylePlain target:self action:@selector(shareBtnClick)];
+    self.navigationItem.rightBarButtonItem = rightItem;
+    [self.view addSubview:self.tableView];
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view).with.insets(UIEdgeInsetsMake(0, 0, 0, 0));
+    }];
+    [self.view addSubview:self.bottomView];
+    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.equalTo(self.view);
+        make.height.mas_equalTo(self.tabBarController.tabBar.height);
+    }];
+    [self getDataFromService];
+    [self getMessageFromService];
+    [self getSignUpDataFromService];
+    // Do any additional setup after loading the view.
+}
+#pragma mark-获取任务详情
+-(void)getDataFromService{
+    NSDictionary *dic;
+    if ([[YBUser boolLogin]isEqualToString:@""]||[YBUser boolLogin] == nil) {
+        dic = @{@"id":@(self.taskId)};
+    }else{
+        dic = @{@"id":@(self.taskId),@"token":USERTOKEN};
+    }
+    DBLog(@"%@",dic);
+    [[YBRequestManager sharedYBManager] postWithUrlString:Get_taskdetail parameters:dic success:^(id data) {
+        DBLog(@"%@",data);
+        if ([data[@"code"] integerValue] == 0) {
+            self.detailModel = [TaskDetailModel yy_modelWithDictionary:data[@"data"]];
+            self.bottomView.type = self.detailModel.task_status;
+            if ([self.detailModel.collect isEqualToString:@"1"]) {
+                self.bottomView.collectBtn.selected = YES;
+            }
+            if ([[YBUser boolLogin]isEqualToString:@""]||[YBUser boolLogin] == nil) {
+                
+            }else{
+                if ([self.detailModel.apply isEqualToString:@"1"]) {
+                    [self.bottomView.stateBtn setTitle:@"已报名" forState:UIControlStateNormal];
+                }
+            }
+            NSString *idStr = [[NSUserDefaults standardUserDefaults] objectForKey:@"id"];
+            if ([idStr isEqualToString:self.detailModel.publisher_id]) {
+                self.myPublish = YES;
+            }else{
+                self.myPublish = NO;
+            }
+            [self.tableView reloadData];
+        }else{
+            [DWBToast showCenterWithText:data[@"msg"]];
+        }
+    } failure:^(NSError *error) {
+        DBLog(@"%@",error);
+        [DWBToast showCenterWithText:ErrorInfo];
+    }];
+}
+#pragma mark-获取留言
+-(void)getMessageFromService{
+    NSDictionary *dic = @{@"pageNum":@(1),@"id":@(self.taskId)};
+    [[YBRequestManager sharedYBManager] postWithUrlString:Get_boardlist parameters:dic success:^(id data) {
+        DBLog(@"%@",data);
+        self.messageArr = data[@"data"];
+        [self.tableView reloadData];
+    } failure:^(NSError *error) {
+        DBLog(@"%@",error);
+    }];
+}
+#pragma mark-获取已报名/已选定数据
+-(void)getSignUpDataFromService{
+    NSInteger status = 0;
+    if ([kType isEqualToString:@"left"]) {
+        status = 0;
+    }else{
+        status = 1;
+    }
+    NSDictionary *dic = @{@"id":@(self.taskId),@"apply_status":@(status)};
+    [[YBRequestManager sharedYBManager] postWithUrlString:Get_applylist parameters:dic success:^(id data) {
+        DBLog(@"%@",data);
+        if ([data[@"code"] integerValue] == 0) {
+            self.signUpArr = data[@"data"];
+            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationNone];
+        }else{
+            [DWBToast showCenterWithText:data[@"msg"]];
+        }
+    } failure:^(NSError *error) {
+        DBLog(@"%@",error);
+    }];
+}
+#pragma mark-创建底部视图
+-(ZJNSignUpBottomView *)bottomView{
+    if (!_bottomView) {
+        _bottomView = [[ZJNSignUpBottomView alloc]init];
+        _bottomView.delegate = self;
+    }
+    return _bottomView;
+}
+#pragma mark-创建UITableView
+-(UITableView *)tableView{
+    if (!_tableView) {
+        _tableView = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+        _tableView.estimatedRowHeight = AdFloat(120);
+        _tableView.rowHeight = UITableViewAutomaticDimension;
+        _tableView.showsVerticalScrollIndicator = NO;
+    }
+    return _tableView;
+}
+#pragma mark-UITableView-Delegate
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    if (section == 2) {
+        
+        return AdFloat(100);
+    }
+    return Width(8);
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    if (section == 3) {
+        return self.tabBarController.tabBar.height;
+    }
+    return 0;
+}
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    if (section == 2) {
+        ZJNDoubleBtnView *btnView = [[ZJNDoubleBtnView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, AdFloat(100))];
+        btnView.type = kType;
+        btnView.tableViewReloadBlock = ^(NSString *type) {
+            kType = type;
+            [self getSignUpDataFromService];
+        };
+        return btnView;
+    }
+    return nil;
+}
+-(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    return nil;
+}
+#pragma mark-UITableView-DataSource
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 4;
+}
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    if (section == 0) {
+        return 2;
+    }else if (section == 2) {
+        
+        return self.signUpArr.count;
+    }else if (section == 3){
+        return self.messageArr.count+1;
+    }
+    return 1;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 2) {
+        
+        return AdFloat(120);
+    }
+    return UITableViewAutomaticDimension;
+}
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 0) {
+        if (indexPath.row == 0) {
+            ZJNFirstHeadInfoTableViewCell *cell = [ZJNFirstHeadInfoTableViewCell creatTableViewCellWithTableView:tableView];
+                
+            cell.model = self.detailModel;
+            return cell;
+        }else{
+            ZJNTaskBasicInfoTableViewCell *cell = [ZJNTaskBasicInfoTableViewCell creatTableViewWithTableView:tableView];
+            cell.taskNameLabel.text = self.detailModel.task_name;
+            cell.priceLabel.hidden = YES;
+            cell.tagArray = [self.detailModel.task_tag componentsSeparatedByString:@"|"];
+            return cell;
+        }
+    }else if (indexPath.section == 1){
+        if (self.type == 1) {
+            //跑腿
+            SignupPaotuiTaskCell *cell = [SignupPaotuiTaskCell creatTableViewCellWithTableView:tableView];
+            cell.nameLabel.text = self.detailModel.itemname;
+            cell.countLabel.text = self.detailModel.numbers;
+            cell.beginLabel.text = self.detailModel.begin_address;
+            cell.endLabel.text = self.detailModel.end_address;
+            cell.timeLabel.text = [DateTool timeStampToString:[self.detailModel.delivery_time integerValue]];
+            cell.requireLabel.text = self.detailModel.transport;
+            return cell;
+        }else if (self.type == 2){
+            //生活
+            SignupLifeTaskCell *cell = [SignupLifeTaskCell creatTableViewCellWithTableView:tableView];
+            cell.validityLabel.text = self.detailModel.validity_time;
+            cell.purposeLabel.text = self.detailModel.task_purpose;
+            cell.requireLabel.text = self.detailModel.task_request;
+            cell.detailLabel.text = self.detailModel.task_description;
+            return cell;
+        }else if (self.type == 3){
+            //个人定制
+            SignupCustomTaskCell *cell = [SignupCustomTaskCell creatTableViewCellWithTableView:tableView];
+            cell.requireLabel.text = self.detailModel.task_request;
+            cell.detaileLabel.text = self.detailModel.task_description;
+            if (self.detailModel.task_img != nil && self.detailModel.task_img.length>0) {
+                cell.photoView.imageList = [self.detailModel.task_img componentsSeparatedByString:@"|"];
+            }
+            __weak UICollectionView *listView = cell.photoView.collectionView;
+            
+            cell.photoView.showImageBlock = ^(NSInteger index) {
+                NSLog(@"%ld",index);
+                [self showImagesWithIndex:index ContainerView:listView];
+            };
+            return cell;
+        }else if (self.type == 4){
+            //工作
+            SignupWorkTaskCell *cell = [SignupWorkTaskCell creatTableViewCellWithTableView:tableView];
+            cell.purposeLabel.text = self.detailModel.task_purpose;
+            cell.requireLabel.text = self.detailModel.task_request;
+            cell.detailLabel.text = self.detailModel.task_description;
+            return cell;
+        }else if (self.type == 5){
+            //健康
+            
+            SignUpHealthTaskCell *cell = [SignUpHealthTaskCell creatTableViewCellWithTableView:tableView];
+            cell.purposeLabel.text = self.detailModel.task_purpose;
+            cell.requireLabel.text = self.detailModel.task_request;
+            cell.detailLabel.text = self.detailModel.task_description;
+            if (self.detailModel.task_img != nil && self.detailModel.task_img.length>0) {
+                cell.photoView.imageList = [self.detailModel.task_img componentsSeparatedByString:@"|"];
+            }
+            __weak UICollectionView *listView = cell.photoView.collectionView;
+            
+            cell.photoView.showImageBlock = ^(NSInteger index) {
+                NSLog(@"%ld",index);
+                [self showImagesWithIndex:index ContainerView:listView];
+            };
+            return cell;
+        }else{
+            //其他
+            SignupOtherTaskCell *cell = [SignupOtherTaskCell creatTableViewCellWithTableView:tableView];
+            cell.validityLabel.text = self.detailModel.validity_time;
+            cell.purposeLabel.text = self.detailModel.task_purpose;
+            cell.requireLabel.text = self.detailModel.task_request;
+            cell.detailLabel.text = self.detailModel.task_description;
+            return cell;
+        }
+    }else if (indexPath.section == 2){
+        
+            //已报名人/待选人
+            ChosePersonCell *cell = [ChosePersonCell creatTableViewCellWithTableView:tableView];
+            if ([kType isEqualToString:@"left"]) {
+                cell.type = @"signup";
+            }else{
+                cell.type = @"chose";
+            }
+            cell.delegate = self;
+            NSDictionary *dic = self.signUpArr[indexPath.row];
+            [cell.iconImage sd_setImageWithURL:[NSURL URLWithString:dic[@"apply_user_headimg"]] placeholderImage:[UIImage imageNamed:@"头像"]];
+            cell.nameLabel.text = dic[@"apply_user_name"];
+            cell.priceLabel.hidden = YES;
+            return cell;
+        
+    }else{
+        if (indexPath.row == 0) {
+            //输入留言
+            LeaveMessageCell *cell = [LeaveMessageCell creatTableViewCellWithTableView:tableView];
+            cell.taskId = self.taskId;
+            __weak typeof(self) weakSelf = self;
+            cell.refreshMessageList = ^{
+                [weakSelf getMessageFromService];
+            };
+            return cell;
+        }else{
+            //留言
+            MessageDetailCell *cell = [MessageDetailCell creatTableViewCellWithTableView:tableView];
+            cell.dic = self.messageArr[indexPath.row-1];
+            return cell;
+        }
+    }
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 2) {
+        if (self.myPublish) {
+            
+            NSDictionary *dic = self.signUpArr[indexPath.row];
+            NSLog(@"%@",dic);
+            YBMessageConversationViewController *_conversationVC = [[YBMessageConversationViewController alloc] init];
+            _conversationVC.conversationType = ConversationType_SYSTEM;
+            _conversationVC.targetId = dic[@"apply_user_id"];
+            _conversationVC.title = dic[@"apply_user_name"];
+            _conversationVC.displayUserNameInCell=NO;
+            _conversationVC.unReadMessage = 0;//未读消息
+            _conversationVC.enableNewComingMessageIcon = NO; //开启消息提醒
+            _conversationVC.enableUnreadMessageIcon = YES;
+            _conversationVC.hidesBottomBarWhenPushed=YES;
+            [self.navigationController pushViewController:_conversationVC animated:YES];
+        }else{
+            [DWBToast showCenterWithText:@"又不是你发布的 你不能聊天"];
+        }
+    }
+}
+#pragma mark-ZJNSignUpBottomViewDelegate
+-(void)bottomCollecBtnClick{
+    if ([[YBUser boolLogin]isEqualToString:@""]||[YBUser boolLogin] == nil) {
+        [self login];
+    }else{
+        NSInteger collect;
+        if ([self.detailModel.collect isEqualToString:@"1"]) {
+            collect = 2;
+        }else{
+            collect = 1;
+        }
+        NSDictionary *dic = @{@"token":USERTOKEN,@"task_id":@(self.taskId),@"type":@(collect)};
+        DBLog(@"%@",dic);
+        [[YBRequestManager sharedYBManager] postWithUrlString:Add_collect parameters:dic success:^(id data) {
+            DBLog(@"%@",data);
+            if ([data[@"code"] integerValue] == 0) {
+                self.bottomView.collectBtn.selected = !self.bottomView.collectBtn.selected;
+                if ([self.detailModel.collect isEqualToString:@"1"]) {
+                    [DWBToast showCenterWithText:@"取消收藏成功"];
+                    self.detailModel.collect = @"0";
+                }else{
+                    [DWBToast showCenterWithText:@"收藏成功"];
+                    self.detailModel.collect = @"1";
+                }
+            }else{
+                [DWBToast showCenterWithText:data[@"msg"]];
+            }
+        } failure:^(NSError *error) {
+            [DWBToast showCenterWithText:ErrorInfo];
+        }];
+    }
+}
+-(void)bottomComplainBtnClick{
+    if ([[YBUser boolLogin]isEqualToString:@""]||[YBUser boolLogin] == nil) {
+        [self login];
+    }else{
+        NSMutableString * str=[[NSMutableString alloc] initWithFormat:@"tel:%@",@"18135697075"];
+        UIWebView * callWebview = [[UIWebView alloc] init];
+        [callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
+        [self.view addSubview:callWebview];
+    }
+}
+-(void)bottomStateBtnClick{
+    if ([[YBUser boolLogin]isEqualToString:@""]||[YBUser boolLogin] == nil) {
+        [self login];
+    }else{
+        NSDictionary *dic = @{@"token":USERTOKEN,@"id":@(self.taskId)};
+        [[YBRequestManager sharedYBManager] postWithUrlString:Add_apply parameters:dic success:^(id data) {
+            if ([[data[@"code"] stringValue] isEqualToString:@"0"]) {
+                [DWBToast showCenterWithText:@"报名成功"];
+                self.bottomView.stateBtn.selected = YES;
+            }else{
+                [DWBToast showCenterWithText:data[@"msg"]];
+            }
+        } failure:^(NSError *error) {
+            [DWBToast showCenterWithText:ErrorInfo];
+        }];
+    }
+}
+#pragma mark-展示图片
+-(void)showImagesWithIndex:(NSInteger)index ContainerView:(UIView *)view{
+    NSArray *imagePaths = [self.detailModel.task_img componentsSeparatedByString:@"|"];
+    SDPhotoBrowser *photoBrowser = [SDPhotoBrowser new];
+    photoBrowser.delegate = self;
+    photoBrowser.currentImageIndex = index;
+    photoBrowser.imageCount = imagePaths.count;
+    photoBrowser.sourceImagesContainerView = view;
+    [photoBrowser show];
+}
+// 返回高质量图片的url
+- (NSURL *)photoBrowser:(SDPhotoBrowser *)browser highQualityImageURLForIndex:(NSInteger)index
+{
+    NSArray *imagePaths = [self.detailModel.task_img componentsSeparatedByString:@"|"];
+    return [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",HOST,imagePaths[index]]];
+}
+#pragma mark-ChosePersonCellDelegate
+-(void)chosePersonCellButtonCLickWithType:(NSString *)type withCell:(ChosePersonCell *)cell{
+    
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    NSDictionary *dic = self.signUpArr[indexPath.row];
+    if ([type isEqualToString:@"选定"]) {
+        [self getDataFromServiceWithType:2 Id:[dic[@"id"] integerValue]];
+    }else if ([type isEqualToString:@"待选"]){
+        [self getDataFromServiceWithType:1 Id:[dic[@"id"] integerValue]];
+    }else{
+        //放弃
+        [self getDataFromServiceWithType:3 Id:[dic[@"id"] integerValue]];
+    }
+}
+-(void)getDataFromServiceWithType:(NSInteger)type Id:(NSInteger)ID{
+    NSDictionary *dic = @{@"token":USERTOKEN,@"id":@(ID),@"task_id":self.detailModel.id,@"apply_status":@(type)};
+    [[YBRequestManager sharedYBManager] postWithUrlString:Change_apply parameters:dic success:^(id data) {
+        if ([[data[@"code"] stringValue] isEqualToString:@"0"]) {
+            if (self.reloadTaskList) {
+                self.reloadTaskList();
+                [self.navigationController popViewControllerAnimated:YES];
+            }
+        }else if ([[data[@"code"] stringValue] isEqualToString:@"101"]){
+            [self toPay];
+        }else{
+            [DWBToast showCenterWithText:data[@"msg"]];
+        }
+    } failure:^(NSError *error) {
+        [DWBToast showCenterWithText:ErrorInfo];
+    }];
+}
+-(void)login{
+    YBLoginViewController *viewc = [[YBLoginViewController alloc]init];
+    YBNavigationViewController *nav = [[YBNavigationViewController alloc]initWithRootViewController:viewc];
+    [self presentViewController:nav animated:YES completion:nil];
+}
+
+#pragma mark-分享
+-(void)shareBtnClick{
+    [self showShareView];
+}
+
+#pragma mark-支付
+-(void)toPay{
+    NSDictionary *dic = @{@"token":USERTOKEN,@"task_id":self.detailModel.id};
+    [[YBRequestManager sharedYBManager] postWithUrlString:toPay parameters:dic success:^(id data) {
+        if ([[data[@"code"] stringValue] isEqualToString:@"0"]) {
+            NSLog(@"%@",data[@"data"][@"url"]);
+            ZJNPayViewController *viewC = [[ZJNPayViewController alloc]initWithPayUrl:data[@"data"][@"url"]];
+            viewC.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:viewC animated:YES];
+        }else{
+            [DWBToast showCenterWithText:data[@"msg"]];
+        }
+    } failure:^(NSError *error) {
+        [DWBToast showCenterWithText:ErrorInfo];
+    }];
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

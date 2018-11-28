@@ -1,0 +1,105 @@
+//
+//  ZJNSearchNavView.m
+//  YBMercenary
+//
+//  Created by 险峰科技 on 2018/8/1.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "ZJNSearchNavView.h"
+#import "ZJNFMDBManager.h"
+@interface ZJNSearchNavView()<UITextFieldDelegate>
+
+@property (nonatomic ,strong)UIButton *cancelButton;
+@end
+@implementation ZJNSearchNavView
+-(instancetype)initWithFrame:(CGRect)frame{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.backgroundColor = [UIColor hex:@"0386FF"];
+        [self addSubview:self.cancelButton];
+        [self.cancelButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.equalTo(self);
+            make.bottom.equalTo(self);
+            make.height.mas_equalTo(44);
+            make.width.mas_equalTo(60);
+        }];
+        
+        [self addSubview:self.textField];
+        [self.textField mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self).offset(15);
+            make.right.equalTo(self.cancelButton.mas_left).offset(-15);
+            make.height.mas_equalTo(30);
+            make.centerY.equalTo(self.cancelButton);
+        }];
+    }
+    return self;
+}
+-(UIButton *)cancelButton{
+    if (!_cancelButton) {
+        _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _cancelButton.titleLabel.font = SetFont(AdFloat(32));
+        [_cancelButton setTitle:@"取消" forState:UIControlStateNormal];
+        [_cancelButton addTarget:self action:@selector(cancelButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _cancelButton;
+}
+-(UITextField *)textField{
+    if (!_textField) {
+        _textField = [[UITextField alloc]init];
+        _textField.delegate = self;
+        _textField.backgroundColor = [UIColor whiteColor];
+        _textField.borderStyle = UITextBorderStyleRoundedRect;
+        _textField.placeholder = @"请输入关键词";
+        _textField.textColor = [UIColor hex:@"999999"];
+        _textField.font = SetFont(AdFloat(28));
+        UIView *bgView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 40, 30)];
+        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 6, 18, 18)];
+        imageView.center = bgView.center;
+        imageView.image = SetImage(@"搜索");
+        [bgView addSubview:imageView];
+        _textField.leftViewMode = UITextFieldViewModeAlways;
+        _textField.leftView = bgView;
+        _textField.layer.cornerRadius = 15;
+        _textField.layer.masksToBounds = YES;
+        _textField.returnKeyType = UIReturnKeyDone;
+        [_textField addTarget:self action:@selector(textFieldValueChanged:) forControlEvents:UIControlEventEditingChanged];
+    }
+    return _textField;
+}
+#pragma mark-UITextFieldDelegate
+-(BOOL)textFieldShouldReturn:(UITextField *)textField{
+    [textField resignFirstResponder];
+    if (textField.text.length>0) {
+        [[ZJNFMDBManager sharedInstance] addSearchTextWithSearchText:textField.text];
+        if (self.searchNavViewBlock) {
+            self.searchNavViewBlock(textField.text);
+        }
+    }
+    return YES;
+}
+//搜索框
+-(void)textFieldValueChanged:(UITextField *)textField{
+    self.searchText = textField.text;
+    if (textField.text.length == 0) {
+        if (self.hideResultViewBlock) {
+            self.hideResultViewBlock();
+        }
+    }
+}
+-(void)setSearchText:(NSString *)searchText{
+    _searchText = searchText;
+    self.textField.text = self.searchText;
+}
+-(void)cancelButtonClick{
+    [self.viewController.navigationController popViewControllerAnimated:YES];
+}
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect {
+    // Drawing code
+}
+*/
+
+@end

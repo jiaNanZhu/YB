@@ -1,0 +1,279 @@
+//
+//  YBMyCollectViewController.m
+//  YBMercenary
+//
+//  Created by 飞哥 on 2018/3/23.
+//  Copyright © 2018年 pengfei.li. All rights reserved.
+//
+
+#import "YBMyCollectViewController.h"
+#import "YBMyCollectRWTableViewCell.h"
+#import "YBMyCollectRTableViewCell.h"
+#import "ZJNSignUpViewController.h"
+#import "YBMyCollectUserModel.h"
+#import "UserInfoVC.h"
+@interface YBMyCollectViewController ()<UITableViewDelegate,UITableViewDataSource>{
+    UIImageView *xianImg;
+    int typeBool;
+}
+@property(nonatomic,strong)UITableView * tableView;
+@property(nonatomic,strong)UIView * headView;
+
+@property(nonatomic,strong)NSMutableArray * dataArr;
+@end
+
+@implementation YBMyCollectViewController
+-(NSMutableArray *)dataArr
+{
+    if (!_dataArr) {
+        _dataArr=[[NSMutableArray alloc]init];
+    }
+    return _dataArr;
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    if (typeBool ==0) {
+        [self requestUserCenter_MyTask_publish_lis];
+    }
+    else
+    {
+        [self requestUserCenter_get_care];
+    }
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    //0任务 1人
+    typeBool = 0;
+    [self makeUI];
+    
+    [self requestUserCenter_MyTask_publish_lis];
+}
+#pragma mark - UI
+-(void)makeUI{
+    _headView = [F_UI SL_UI_View:[UIColor whiteColor] cornerRadius:0 borderColor:nil borderWidth:0];
+    _headView.frame = CGRectMake(0, 0, d_Device_width, AdFloat(100));
+    [self.view addSubview:_headView];
+    
+    xianImg = [F_UI SL_UI_UIimg:[UIImage imageNamed:@"xianIMG"] cornerRadius:0];
+    xianImg.frame = CGRectMake(AdFloat(8), AdFloat(95), (d_Device_width-AdFloat(24))/2, AdFloat(5));
+    [_headView addSubview:xianImg];
+    
+    UIView *shuXian = [F_UI SL_UI_View:[UIColor hex:@"DDDDDD"] cornerRadius:0 borderColor:nil borderWidth:0];
+    shuXian.frame = CGRectMake(d_Device_width/2-AdFloat(1), AdFloat(25), AdFloat(2), AdFloat(50));
+    [_headView addSubview:shuXian];
+    
+    NSArray *titleArr = @[@"任务",@"人"];
+    for (int i = 0; i < titleArr.count; i++) {
+        UIButton *btn = [F_UI SL_UI_Btn:titleArr[i] Color:[UIColor hex:@"666666"] Font:AdFloat(32) bgimage:nil selecteImage:nil target:self action:@selector(btn:) cornerRadius:0];
+        btn.frame = CGRectMake(AdFloat(8)+i*(d_Device_width-AdFloat(32))/2+i*8, 0, (d_Device_width-AdFloat(24))/titleArr.count, AdFloat(100));
+        btn.tag = i+300;
+        [_headView addSubview:btn];
+        
+        if (i == 0) {
+            [btn setUserInteractionEnabled:NO];
+            [btn setTitleColor:[UIColor hex:@"0386FF"] forState:UIControlStateNormal];
+        }
+    }
+    [self.view addSubview:self.tableView];
+}
+#pragma mark - 选择
+-(void)btn:(UIButton *)sender{
+    
+    for (int i = 0; i < 2; i++) {
+        UIButton *btn = (UIButton *)[self.view viewWithTag:(300+i)];
+        if (btn.tag == sender.tag) {
+            [btn setUserInteractionEnabled:NO];
+            [btn setTitleColor:[UIColor hex:@"0386FF"] forState:UIControlStateNormal];
+            [UIView animateWithDuration:0.3 animations:^{
+                xianImg.frame = CGRectMake(AdFloat(8)+i*(d_Device_width-AdFloat(32))/2+i*8, AdFloat(95), (d_Device_width-AdFloat(32))/2, AdFloat(5));
+            }];
+            typeBool = i;
+             [self.dataArr removeAllObjects];
+            [self.tableView reloadData];
+        }else{
+            [btn setUserInteractionEnabled:YES];
+            [btn setTitleColor:[UIColor hex:@"666666"] forState:UIControlStateNormal];
+
+        }
+    }
+   
+    if (typeBool ==0) {
+        [self requestUserCenter_MyTask_publish_lis];
+    }
+    else
+    {
+        [self requestUserCenter_get_care];
+    }
+}
+-(UITableView *)tableView
+{
+    if (_tableView == nil){
+        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, _headView.maxY+AdFloat(16), d_Device_width, d_Device_height-iPhone_X_bool_Nav_height-AdFloat(108))];
+        if (@available(iOS 11.0, *)) {
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }else {
+            self.automaticallyAdjustsScrollViewInsets = NO;
+        }
+        [_tableView registerClass:[YBMyCollectRWTableViewCell class] forCellReuseIdentifier:@"YBMyCollectRWTableViewCell"];
+        [_tableView registerClass:[YBMyCollectRTableViewCell class] forCellReuseIdentifier:@"YBMyCollectRTableViewCell"];
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+        _tableView.separatorColor = [UIColor clearColor];
+    }
+    return _tableView;
+}
+#pragma mark - 分组cell数量
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+//    if (typeBool == 0) {
+//        return self.dataArr.count;
+//    }
+    return self.dataArr.count;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (typeBool == 0) {
+        return AdFloat(220);
+    }
+    return AdFloat(140);
+}
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (typeBool == 0) {
+        YBMyCollectRWTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        if (cell == nil)
+        {
+            cell = [[YBMyCollectRWTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"YBMyCollectRWTableViewCell"];
+        }
+        cell.backgroundColor = [UIColor whiteColor];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        [cell configurationwithmodel:self.dataArr[indexPath.row]];
+        return cell;
+    }else{
+        YBMyCollectRTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        if (cell == nil)
+        {
+            cell = [[YBMyCollectRTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"YBMyCollectRTableViewCell"];
+        }
+        
+
+        cell.backgroundColor = [UIColor whiteColor];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        [cell networkDataCell:self.dataArr[indexPath.row]];
+        return cell;
+    }
+
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    if (typeBool ==0) {
+        YBMyIssueModel *model= self.dataArr[indexPath.row];
+        ZJNSignUpViewController *vc = [[ZJNSignUpViewController alloc]init];
+        vc.type = [model.task_type intValue];
+        vc.taskId = [model.id integerValue];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    else
+    {
+       
+        YBMyCollectUserModel *model= self.dataArr[indexPath.row];
+        UserInfoVC *vc = [[UserInfoVC alloc]init];
+        vc.user_id=model.id;
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+#pragma mark request
+#pragma mark
+-(void)requestUserCenter_MyTask_publish_lis
+{
+    
+    NSDictionary *parameters =@{@"token":USERTOKEN};
+    
+    [[YBRequestManager sharedYBManager]postWithUrlString:UserCenter_get_collect parameters:parameters success:^(id data) {
+        
+        
+        [self.dataArr removeAllObjects];
+        if ([data[@"code"]integerValue] ==0) {
+            
+            
+            for (NSDictionary *dict in data[@"data"]) {
+                YBMyIssueModel *model=[YBMyIssueModel yy_modelWithDictionary:dict];
+                
+                [self.dataArr addObject:model];
+            }
+            
+            
+            
+        }
+        else if ([data[@"code"]integerValue] ==1)
+        {
+            
+            //暂无任务
+            [DWBToast showCenterWithText:data[@"msg"]];
+        }
+        else{
+            [DWBToast showCenterWithText:data[@"msg"]];
+        }
+        [self.tableView reloadData];
+        
+    } failure:^(NSError *error) {
+        
+    }];
+}
+
+#pragma mark request
+#pragma mark
+-(void)requestUserCenter_get_care
+{
+    
+    NSDictionary *parameters =@{@"token":USERTOKEN};
+    
+    [[YBRequestManager sharedYBManager]postWithUrlString:UserCenter_get_care parameters:parameters success:^(id data) {
+        
+        
+        [self.dataArr removeAllObjects];
+        if ([data[@"code"]integerValue] ==0) {
+            
+            
+            for (NSDictionary *dict in data[@"data"]) {
+                
+                YBMyCollectUserModel *model =[YBMyCollectUserModel yy_modelWithDictionary:dict];
+                
+                [self.dataArr addObject:model];
+            }
+            
+             [self.tableView reloadData];
+            
+            
+            
+        }
+        else if ([data[@"code"]integerValue] ==1)
+        {
+            
+            [DWBToast showCenterWithText:data[@"msg"]];
+        }
+        else{
+            [DWBToast showCenterWithText:data[@"msg"]];
+        }
+       [self.tableView reloadData];
+        
+    } failure:^(NSError *error) {
+        
+    }];
+}
+
+@end

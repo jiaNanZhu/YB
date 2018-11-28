@@ -1,0 +1,151 @@
+//
+//  YBMyAchievementViewController.m
+//  YBMercenary
+//
+//  Created by 飞哥 on 2018/3/23.
+//  Copyright © 2018年 pengfei.li. All rights reserved.
+//
+
+#import "YBMyAchievementViewController.h"
+#import "YBMyAchievementWCTableViewCell.h"
+@interface YBMyAchievementViewController ()<UITableViewDataSource,UITableViewDelegate>
+@property(nonatomic, strong)UITableView *tableView;
+
+@end
+
+@implementation YBMyAchievementViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    [self makeUI];
+}
+#pragma mark - UI
+-(void)makeUI{
+    UIView *backdropView = [F_UI SL_UI_View:[UIColor whiteColor] cornerRadius:0 borderColor:nil borderWidth:0];
+    backdropView.frame = CGRectMake(0, AdFloat(16), d_Device_width, AdFloat(306));
+    [self.view addSubview:backdropView];
+    
+    UIImageView *backdropImg = [F_UI SL_UI_UIimg:[UIImage imageNamed:@"my_Achievement_xian"] cornerRadius:0];
+    backdropImg.frame = CGRectMake(0, AdFloat(20), AdFloat(232), AdFloat(48));
+    [backdropView addSubview:backdropImg];
+    
+    UILabel *medalLab = [F_UI SL_UI_Label:@"最近获得3枚勋章" color:[UIColor whiteColor] textAlignment:NSTextAlignmentCenter textFont:AdFloat(26) numberOfLines:1];
+    medalLab.frame = CGRectMake(0, 0, backdropImg.width, backdropImg.height);
+    [backdropImg addSubview:medalLab];
+    
+    UIImageView *leftIMG = [F_UI SL_UI_UIimg:[UIImage imageNamed:@"my_Achievement_DG"] cornerRadius:0];
+    leftIMG.frame = CGRectMake(AdFloat(80), AdFloat(96), AdFloat(170), AdFloat(170));
+    [backdropView addSubview:leftIMG];
+    
+    UIImageView *centerIMG = [F_UI SL_UI_UIimg:[UIImage imageNamed:@"my_Achievement_dscj"] cornerRadius:0];
+    centerIMG.frame = CGRectMake(leftIMG.maxX+AdFloat(30), AdFloat(86), AdFloat(190), AdFloat(190));
+    [backdropView addSubview:centerIMG];
+    
+    UIImageView *rightIMG = [F_UI SL_UI_UIimg:[UIImage imageNamed:@"my_Achievement_XG"] cornerRadius:0];
+    rightIMG.frame = CGRectMake(centerIMG.maxX+AdFloat(30), AdFloat(96), AdFloat(170), AdFloat(170));
+    [backdropView addSubview:rightIMG];
+    
+    [self.view addSubview:self.tableView];
+}
+#pragma mark - UI
+-(UITableView *)tableView
+{
+    if (_tableView == nil){
+        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, AdFloat(338), d_Device_width, d_Device_height-AdFloat(338)-iPhone_X_bool_Nav_height)  style:UITableViewStyleGrouped];
+        if (@available(iOS 11.0, *)) {
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }else {
+            self.automaticallyAdjustsScrollViewInsets = NO;
+        }
+        [_tableView registerClass:[YBMyAchievementWCTableViewCell class] forCellReuseIdentifier:@"YBMyAchievementWCTableViewCell"];
+//        [_tableView registerClass:[DSCompetitionCSGODZXQZDTableViewCell class] forCellReuseIdentifier:@"DSCompetitionCSGODZXQZDTableViewCell"];
+        _tableView.backgroundColor = [UIColor hex:@"F2F2F2"];
+        _tableView.sectionHeaderHeight = 8;
+        _tableView.sectionFooterHeight = 8;
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+        _tableView.separatorColor = [UIColor clearColor];
+    }
+    return _tableView;
+}
+#pragma mark - UITableViewDataSource,UITableViewDelegate
+#pragma mark - 分组数量
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    if (self.otherAchievement) {
+        return 1;
+    }else{
+        return 2;
+    }
+}
+
+#pragma mark - 分组头视图高度
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return AdFloat(92);
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (section == 0) {
+        return 3;
+    }
+    return 8;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return AdFloat(182);
+}
+#pragma mark - 分组头视图
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    NSArray * titleArray = @[@"已完成成就",@"未完成成就"];
+    NSArray *imgArr = @[@"my_Achievement_W",@"my_Achievement_WW"];
+    UIView *view = [F_UI SL_UI_View:[UIColor whiteColor] cornerRadius:0 borderColor:nil borderWidth:0];
+    view.frame = CGRectMake(0, 0, d_Device_width, AdFloat(90));
+    
+    UIImageView *img = [F_UI SL_UI_UIimg:[UIImage imageNamed:imgArr[section]] cornerRadius:0];
+    img.frame = CGRectMake(AdFloat(30), AdFloat(22), AdFloat(30), AdFloat(46));
+    [view addSubview:img];
+    
+    UILabel *titleLab = [F_UI SL_UI_Label:titleArray[section] color:[UIColor hex:@"444444"] textAlignment:NSTextAlignmentLeft textFont:AdFloat(30) numberOfLines:1];
+    titleLab.frame = CGRectMake(img.maxX+AdFloat(16), 0, AdFloat(200), AdFloat(90));
+    [view addSubview:titleLab];
+    
+    UIView *xianView = [F_UI SL_UI_View:[UIColor hex:@"F2F2F2"] cornerRadius:0 borderColor:nil borderWidth:0];
+    xianView.frame = CGRectMake(0, AdFloat(88), d_Device_width, AdFloat(2));
+    [view addSubview:xianView];
+    return view;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+        YBMyAchievementWCTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        if (cell == nil)
+        {
+            cell = [[YBMyAchievementWCTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"YBMyAchievementWCTableViewCell"];
+        }
+        cell.backgroundColor = [UIColor whiteColor];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    [cell networkDataCell:nil row:(int)indexPath.row section:(int)indexPath.section];
+        return cell;
+    
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

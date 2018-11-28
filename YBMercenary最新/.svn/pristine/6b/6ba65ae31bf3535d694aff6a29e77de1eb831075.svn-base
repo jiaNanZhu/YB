@@ -1,0 +1,20 @@
+//
+//  ZJNSignUpBottomView.h
+//  YBMercenary
+//
+//  Created by 朱佳男 on 2018/7/19.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+@protocol ZJNSignUpBottomViewDelegate<NSObject>
+-(void)bottomCollecBtnClick;
+-(void)bottomComplainBtnClick;
+-(void)bottomStateBtnClick;
+@end
+@interface ZJNSignUpBottomView : UIView
+@property (nonatomic ,weak)id<ZJNSignUpBottomViewDelegate>delegate;
+@property (nonatomic ,strong)UIButton *collectBtn;
+@property (nonatomic ,strong)UIButton *complainBtn;
+@property (nonatomic ,strong)UIButton *stateBtn;
+@end

@@ -1,0 +1,113 @@
+//
+//  ZJNMyIssueViewController.m
+//  YBMercenary
+//
+//  Created by 险峰科技 on 2018/7/27.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "ZJNMyIssueViewController.h"
+#import "ZJNHeadBtnView.h"
+#import "ZJNTaskListView.h"
+@interface ZJNMyIssueViewController ()<UIScrollViewDelegate>
+@property (nonatomic ,strong)ZJNHeadBtnView *btnView;
+@property (nonatomic ,strong)UIScrollView *scrollView;
+@end
+
+@implementation ZJNMyIssueViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.title = @"发布任务的管理";
+    [self.view addSubview:self.btnView];
+    [self.btnView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.right.equalTo(self.view);
+        make.height.mas_equalTo(44);
+    }];
+    
+    [self.view addSubview:self.scrollView];
+    self.scrollView.contentOffset = CGPointMake(self.type*kScreenWidth, 0);
+    [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view).with.insets(UIEdgeInsetsMake(44, 0, 0, 0));
+        make.top.equalTo(self.btnView.mas_bottom);
+        make.left.equalTo(self.view);
+        make.right.equalTo(self.view);
+        make.bottom.equalTo(self.view);
+    }];
+    for (int i = 0; i <6; i ++) {
+        ZJNTaskListView *view = [[ZJNTaskListView alloc]initWithFrame:CGRectMake(i*kScreenWidth, 0, kScreenWidth, kScreenHeight-44-self.navigationController.navigationBar.height-20)];
+        if (i == 4) {
+            view.taskStatus = 6;
+        }else if (i == 5){
+            view.taskStatus = 4;
+        }else{
+            view.taskStatus = i;
+        }
+        [self.scrollView addSubview:view];
+    }
+    // Do any additional setup after loading the view.
+}
+-(ZJNHeadBtnView *)btnView{
+    if (!_btnView) {
+        _btnView = [[ZJNHeadBtnView alloc]initWithFrame:CGRectZero titleArray:@[@"全部",@"未决定",@"任务中",@"审核中",@"待评价",@"已下架"]];
+        __weak typeof(self) weakSelf = self;
+        _btnView.headBtnViewBlock = ^(NSInteger offset) {
+            weakSelf.scrollView.contentOffset = CGPointMake(offset*kScreenWidth, 0);
+        };
+    }
+    return _btnView;
+}
+-(UIScrollView *)scrollView{
+    if (!_scrollView) {
+        _scrollView = [[UIScrollView alloc]init];
+        _scrollView.pagingEnabled = YES;
+        _scrollView.bounces = NO;
+        _scrollView.delegate = self;
+        _scrollView.contentSize = CGSizeMake(6*kScreenWidth, 0);
+        _scrollView.backgroundColor = [UIColor whiteColor];
+        if (@available(iOS 11.0, *)) {
+            _scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }else {
+            self.automaticallyAdjustsScrollViewInsets = NO;
+        }
+    }
+    return _scrollView;
+}
+#pragma mark-UIScrollViewDelegate
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    NSInteger x = scrollView.contentOffset.x/kScreenWidth;
+    UIButton *button = (UIButton *)[self.btnView viewWithTag:10+x];
+    button.selected = YES;
+    self.btnView.selectBtn.selected = NO;
+    self.btnView.selectBtn = button;
+    [UIView animateWithDuration:0.3 animations:^{
+        self.btnView.sliderView.frame = CGRectMake((button.tag - 10)*(kScreenWidth/6.0), 42, kScreenWidth/6.0, 2);
+    }];
+}
+-(void)getDataFromServiceWithPara:(NSDictionary *)dic urlStr:(NSString *)url successfulToast:(NSString *)toast{
+    [[YBRequestManager sharedYBManager] postWithUrlString:url parameters:dic success:^(id data) {
+        if ([[data[@"code"] stringValue] isEqualToString:@"0"]) {
+            [DWBToast showCenterWithText:toast];
+        }else{
+            [DWBToast showCenterWithText:data[@"msg"]];
+        }
+    } failure:^(NSError *error) {
+        [DWBToast showCenterWithText:ErrorInfo];
+    }];
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

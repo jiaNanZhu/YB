@@ -1,0 +1,234 @@
+//
+//  ErrandTimeCell.m
+//  YBMercenary
+//
+//  Created by 龙青磊 on 2018/3/28.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "ErrandTimeCell.h"
+@interface ErrandTimeCell ()<UITextFieldDelegate>
+
+@end
+
+@implementation ErrandTimeCell
+
++ (instancetype)creatTableViewCellWithTableView:(UITableView *)tableView{
+    ErrandTimeCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ErrandTimeCell"];
+    if (cell == nil) {
+        cell = [[ErrandTimeCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ErrandTimeCell"];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    cell.backgroundColor = [UIColor hex:Back_Color];
+    return cell;
+}
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        [self creatSubViews];
+    }
+    return self;
+}
+
+- (void)creatSubViews{
+    UIView *backView = [[UIView alloc]init];
+    backView.backgroundColor = [UIColor whiteColor];
+    [self.contentView addSubview:backView];
+    [backView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.contentView).offset(Width(8));
+        make.left.right.bottom.equalTo(self.contentView);
+    }];
+    
+    
+    
+   
+    
+    
+    UILabel *arrive = [F_UI SL_UI_Label:@"送达时间" color:[UIColor hex:@"444444"] textAlignment:0 textFont:14 numberOfLines:1];
+    [self.contentView addSubview:arrive];
+    [arrive mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(backView).offset(Width(15));
+        make.left.equalTo(backView).offset(Width(15));
+    }];
+    
+    
+    
+    UIView *line1 = [[UIView alloc]init];
+    line1.backgroundColor = [UIColor hex:Back_Color];
+    [self.contentView addSubview:line1];
+    [line1 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(backView).offset(Width(15));
+        make.right.equalTo(backView.mas_right).offset(-Width(15));
+        make.top.equalTo(arrive.mas_bottom).offset(Width(15));
+        make.height.mas_equalTo(Width(1));
+    }];
+    
+    UILabel *valid = [F_UI SL_UI_Label:@"任务有效期" color:[UIColor hex:@"444444"] textAlignment:0 textFont:14 numberOfLines:1];
+    [self.contentView addSubview:valid];
+    [valid mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(line1.mas_bottom).offset(Width(15));
+        make.left.equalTo(backView).offset(Width(15));
+        make.bottom.equalTo(backView.mas_bottom).offset(-Width(15));
+        make.width.mas_lessThanOrEqualTo(Width(70));
+    }];
+    
+    UIImageView *more1 = [[UIImageView alloc]init];
+    more1.image = [UIImage imageNamed:@"更多"];
+    [self.contentView addSubview:more1];
+    [more1 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(arrive);
+        make.right.equalTo(self.contentView.mas_right).offset(-Width(15));
+        make.height.mas_offset(Width(12));
+        make.width.mas_offset(Width(6));
+    }];
+    
+    UIImageView *more2 = [[UIImageView alloc]init];
+    more2.image = [UIImage imageNamed:@"更多"];
+    [self.contentView addSubview:more2];
+    [more2 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(valid);
+        make.right.equalTo(self.contentView.mas_right).offset(-Width(15));
+        make.height.mas_offset(Width(12));
+        make.width.mas_offset(Width(6));
+    }];
+    
+    _validLabel = [F_UI SL_UI_Label:@"请输入有效期" color:[UIColor hex:@"999999"] textAlignment:NSTextAlignmentLeft textFont:14 numberOfLines:1];
+    
+    _validTextField=[[UITextField alloc]init];
+    _validTextField.delegate=self;
+    _validTextField.placeholder=@"请输入有效期";
+    _validTextField.font=[UIFont systemFontOfSize:14];
+    _validTextField.keyboardType=UIKeyboardTypeNumberPad;
+    [self.contentView addSubview:_validTextField];
+    [_validTextField mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(valid);
+        make.left.equalTo(valid.mas_right).offset(Width(25));
+        make.right.equalTo(backView.mas_right).offset(-Width(15));
+    }];
+    
+    
+    _validLabel.hidden=YES;
+    [self.contentView addSubview:_validLabel];
+    [_validLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(valid);
+        make.left.equalTo(valid.mas_right).offset(Width(25));
+        make.right.equalTo(backView.mas_right).offset(-Width(15));
+    }];
+    
+    _arriveLabel = [F_UI SL_UI_Label:@"请输入送达时间" color:[UIColor hex:@"999999"] textAlignment:NSTextAlignmentLeft textFont:14 numberOfLines:1];
+    [self.contentView addSubview:_arriveLabel];
+    [_arriveLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(arrive);
+        make.left.right.equalTo(_validLabel);
+    }];
+    
+    
+    
+    UIView *arriveView =[[UIView alloc]init];
+    [backView addSubview:arriveView];
+    
+    [arriveView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.equalTo(backView);
+        make.height.mas_equalTo(45);
+    }];
+    
+    UIView *validView =[[UIView alloc]init];
+    [backView addSubview:validView];
+    
+    [validView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.left.right.equalTo(backView);
+        make.height.mas_equalTo(45);
+    }];
+    
+
+//    validView.userInteractionEnabled=YES;
+    arriveView.userInteractionEnabled=YES;
+//    UITapGestureRecognizer *re1 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doTapChange:)];
+//    re1.numberOfTapsRequired = 1;
+//
+//    validView.tag=22222;
+//    [validView addGestureRecognizer:re1];
+    
+    UITapGestureRecognizer *re2 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doTapChange:)];
+    re2.numberOfTapsRequired = 1;
+    arriveView.tag=11111;
+    [arriveView addGestureRecognizer:re2];
+
+    
+}
+-(void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    
+    textField.text=[textField.text stringByReplacingOccurrencesOfString:@"天" withString:@""];
+}
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    
+    
+    
+    if ([self.delegate respondsToSelector:@selector(ErrandTimeCelltextFieldDidEndEditing:)]) {
+        [self.delegate ErrandTimeCelltextFieldDidEndEditing:textField.text];
+    }
+    textField.text=[NSString stringWithFormat:@"%@天",textField.text];
+}
+#pragma mark 选择反馈类型
+-(void)doTapChange:(UITapGestureRecognizer *)sender
+{
+    if ([self.delegate respondsToSelector:@selector(didSelectRowwithtext:index:)]) {
+//        NSDate *minDate = [NSDate br_setYear:1990 month:3 day:12];
+        NSDate *maxDate = [NSDate date];
+        [BRDatePickerView showDatePickerWithTitle:@"出生日期" dateType:BRDatePickerModeYMD defaultSelValue:nil minDate:maxDate maxDate:nil isAutoSelect:YES themeColor:nil resultBlock:^(NSString *selectValue) {
+           
+            
+            
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            
+            [formatter setDateStyle:NSDateFormatterMediumStyle];
+            
+            [formatter setTimeStyle:NSDateFormatterShortStyle];
+            
+            [formatter setDateFormat:@"yyyy-MM-dd"]; //(@"YYYY-MM-dd hh:mm:ss") ----------设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
+            
+            
+            
+            NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Beijing"];
+            
+            [formatter setTimeZone:timeZone];
+            
+            
+            
+            NSDate* date = [formatter dateFromString:selectValue];
+            NSString *currentDateString = [formatter stringFromDate:date];
+            
+            NSTimeInterval time=[date timeIntervalSince1970];// *1000 是精确到毫秒，不乘就是精确到秒
+            NSString *timeString = [NSString stringWithFormat:@"%.0f", time];
+            
+            if ( sender.view.tag ==11111) {
+                _arriveLabel.textColor=[UIColor blackColor];
+                
+                _arriveLabel.text=currentDateString;
+                [self.delegate didSelectRowwithtext:timeString index:1];
+            }
+            else
+            {
+                 _validLabel.textColor=[UIColor blackColor];
+                _validLabel.text=currentDateString;
+                [self.delegate didSelectRowwithtext:timeString index:2];
+            }
+            
+        } cancelBlock:^{
+            NSLog(@"点击了背景或取消按钮");
+        }];
+        
+        
+    }
+
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+    // Configure the view for the selected state17600977167 17200017222
+}
+
+@end

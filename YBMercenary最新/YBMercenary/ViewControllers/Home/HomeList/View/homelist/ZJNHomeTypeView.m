@@ -1,0 +1,65 @@
+//
+//  ZJNHomeTypeView.m
+//  YBMercenary
+//
+//  Created by 险峰科技 on 2018/8/9.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "ZJNHomeTypeView.h"
+
+@implementation ZJNHomeTypeView
+-(id)initWithFrame:(CGRect)frame{
+    self = [super initWithFrame:frame];
+    if (self) {
+        CGFloat imageH = (kScreenWidth-AdFloat(308))/5.0;
+        [self addSubview:self.imageV];
+        [self.imageV mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.top.right.equalTo(self);
+            make.height.mas_equalTo(imageH);
+        }];
+        
+        [self addSubview:self.titleLabel];
+        [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self).offset(-AdFloat(16));
+            make.right.equalTo(self).offset(AdFloat(16)); make.top.equalTo(self.imageV.mas_bottom).offset(AdFloat(12));
+            make.height.mas_equalTo(AdFloat(40));
+        }];
+        
+        [self addSubview:self.button];
+        [self.button mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self);
+        }];
+    }
+    return self;
+}
+-(UIImageView *)imageV{
+    if (!_imageV) {
+        _imageV = [[UIImageView alloc]init];
+    }
+    return _imageV;
+}
+-(UILabel *)titleLabel{
+    if (!_titleLabel) {
+        _titleLabel = [[UILabel alloc]init];
+        _titleLabel.font = SetFont(AdFloat(26));
+        _titleLabel.textColor = [UIColor hex:@"666666"];
+        _titleLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    return _titleLabel;
+}
+-(UIButton *)button{
+    if (!_button) {
+        _button = [UIButton buttonWithType:UIButtonTypeCustom];
+    }
+    return _button;
+}
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect {
+    // Drawing code
+}
+*/
+
+@end

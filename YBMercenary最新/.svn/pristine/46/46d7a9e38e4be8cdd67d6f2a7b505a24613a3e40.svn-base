@@ -1,0 +1,24 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'YBMercenary' do
+pod “BaiduMapKit” #百度地图SDK
+pod 'AFNetworking'
+pod 'Masonry'
+pod 'MJRefresh'
+pod 'MJExtension'
+pod 'SDWebImage'
+pod 'KVNProgress'
+pod 'YYModel'
+
+  target 'YBMercenaryTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+  target 'YBMercenaryUITests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+end

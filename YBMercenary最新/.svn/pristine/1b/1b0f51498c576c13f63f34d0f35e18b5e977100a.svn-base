@@ -1,0 +1,91 @@
+//
+//  HotTopicsHeaderCell.m
+//  YBMercenary
+//
+//  Created by 龙青磊 on 2018/3/23.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "HotTopicsHeaderCell.h"
+#import "PubTypeListVC.h"
+#import "YBTabbarViewController.h"
+
+@interface HotTopicsHeaderCell ()
+
+
+
+@end
+
+@implementation HotTopicsHeaderCell
+
++ (instancetype)creatTableViewCellWithTableView:(UITableView *)tableView{
+    HotTopicsHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:@"HotTopicsHeaderCell"];
+    if (cell == nil) {
+        cell = [[HotTopicsHeaderCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"HotTopicsHeaderCell"];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    return cell;
+}
+
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        [self creatSubViews];
+    }
+    return self;
+}
+
+- (void)creatSubViews{
+    
+    UILabel *titleLabel = [F_UI SL_UI_Label:@"热门帖子" color:[UIColor hex:@"444444"] textAlignment:0 textFont:15 numberOfLines:1];
+    [self.contentView addSubview:titleLabel];
+    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.equalTo(self.contentView).offset(Width(15));
+        make.bottom.equalTo(self.contentView.mas_bottom).offset(-Width(15));
+    }];
+    
+    UIImageView *moreimage = [[UIImageView alloc]init];
+    moreimage.image = [UIImage imageNamed:@"更多"];
+    [self.contentView addSubview:moreimage];
+    [moreimage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.contentView);
+        make.right.equalTo(self.contentView).offset(-Width(15));
+        make.height.mas_equalTo(Width(12));
+        make.width.mas_equalTo(Width(8));
+    }];
+    
+    UIButton *morebtn = [F_UI SL_UI_Btn:@"更多" Color:[UIColor hex:@"666666"] Font:14 bgimage:nil selecteImage:nil target:self action:@selector(moreAction) cornerRadius:0];
+    [self.contentView addSubview:morebtn];
+    [morebtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(moreimage);
+        make.right.equalTo(moreimage.mas_right);
+        make.width.mas_equalTo(Width(55));
+    }];
+    
+}
+
+- (void)moreAction{
+//    [DWBToast showCenterWithText:@"查看更多"];
+//    PubTypeListVC *vc = [[PubTypeListVC alloc]init];
+//    vc.hidesBottomBarWhenPushed = YES;
+//    [self.viewController.navigationController pushViewController:vc animated:YES];
+//    YBTabbarViewController *tabbarvc = (YBTabbarViewController *)[UIApplication sharedApplication].delegate.window.rootViewController;
+//    tabbarvc.selectedIndex = 1;
+    
+    
+    PubTypeListVC *vc = [[PubTypeListVC alloc]init];
+    vc.task_type=1;
+    vc.task_type_child=1;
+    vc.title=@"物品";
+    [self.viewController.navigationController pushViewController:vc animated:YES];
+    
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
+@end

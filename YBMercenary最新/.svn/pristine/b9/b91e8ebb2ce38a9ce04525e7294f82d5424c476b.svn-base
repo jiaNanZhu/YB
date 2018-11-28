@@ -1,0 +1,205 @@
+//
+//  RanchConst.h
+//  Ranch
+//
+//  Created by GZP on 2018/1/25.
+//  Copyright © 2018年 gzp_macbook. All rights reserved.
+//
+
+//普通商品详情
+UIKIT_EXTERN NSString *const CMProduceDetail;
+//系列右列表
+UIKIT_EXTERN NSString *const XiLieRightList;
+//商场首页分类
+UIKIT_EXTERN NSString *const MallAllCategory;
+//HOST
+UIKIT_EXTERN NSString *const HOST;
+
+//============= 个人信息 ====================
+//uid
+UIKIT_EXTERN NSString *const User_id;
+//mobile
+UIKIT_EXTERN NSString *const User_mobile;
+//token
+UIKIT_EXTERN NSString *const User_token;
+
+
+//============= 默认颜色 ====================
+UIKIT_EXTERN NSString *const Green_Color;
+UIKIT_EXTERN NSString *const Nav_Color;
+UIKIT_EXTERN NSString *const Back_Color;
+UIKIT_EXTERN NSString *const Gray_Color;
+UIKIT_EXTERN NSString *const Yellow_Color;
+UIKIT_EXTERN NSString *const Blue_Color;
+
+
+//============= 网络接口====================
+#pragma mark 个人中心
+//获取用户基本信息
+UIKIT_EXTERN NSString *const UserCenter_getinfo;
+
+#pragma mark 登录/注册
+//登录
+UIKIT_EXTERN NSString *const Login;
+//验证码登录
+UIKIT_EXTERN NSString *const Loginbycode;
+//注册
+UIKIT_EXTERN NSString *const Regist;
+//重置密码
+UIKIT_EXTERN NSString *const Resetpwd;
+//获取验证码
+UIKIT_EXTERN NSString *const GetVerifyCode;
+
+//基本信息设置
+UIKIT_EXTERN NSString *const UserCenter_setinfo;
+
+//修改绑定手机号
+UIKIT_EXTERN NSString *const UserCenter_setmobile;
+
+//获取任务列表
+UIKIT_EXTERN NSString *const Get_tasklist;
+
+//获取任务详情
+UIKIT_EXTERN NSString *const Get_taskdetail;
+
+//图片上传
+UIKIT_EXTERN NSString *const UserCenter_imgupload;
+
+//任务详情——申请列表
+UIKIT_EXTERN NSString *const Get_applylist;
+
+//任务详情——留言列表
+UIKIT_EXTERN NSString *const Get_boardlist;
+
+//任务详情——发表留言
+UIKIT_EXTERN NSString *const Add_board;
+
+//任务收藏操作
+UIKIT_EXTERN NSString *const Add_collect;
+
+//任务详情_用户报名
+UIKIT_EXTERN NSString *const Add_apply;
+
+//任务发布图片上传接口
+UIKIT_EXTERN NSString *const ImageUpload;
+
+//任务详情——报名人操作
+UIKIT_EXTERN NSString *const Change_apply;
+
+//已完成任务提交
+UIKIT_EXTERN NSString *const Tijiao;
+
+//我发布的任务审核
+UIKIT_EXTERN NSString *const Shenhe;
+
+//用户评价接口
+UIKIT_EXTERN NSString *const Pingjia;
+
+//接受任务统计—总数
+UIKIT_EXTERN NSString *const receiveTotal;
+
+//接受任务统计—列表
+UIKIT_EXTERN NSString *const receiveSumList;
+
+//获取首页banner
+UIKIT_EXTERN NSString *const getBanner;
+
+//首页热门帖子
+UIKIT_EXTERN NSString *const hotPost;
+
+//获取城市列表
+UIKIT_EXTERN NSString *const getCity;
+
+//首页任务列表
+UIKIT_EXTERN NSString *const indexTask;
+
+//首页搜索
+UIKIT_EXTERN NSString *const getSearch;
+
+//首页搜索热门
+UIKIT_EXTERN NSString *const getHotSearch;
+
+//支付接口
+UIKIT_EXTERN NSString *const toPay;
+
+//我的价值
+UIKIT_EXTERN NSString *const getWallet;
+
+//零钱明细
+UIKIT_EXTERN NSString *const getMingXi;
+
+/*ZJN上面写👆~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+//酒馆大厅-列表
+UIKIT_EXTERN NSString *const CommonDrunkery_post_list;
+//酒馆详情-发帖
+UIKIT_EXTERN NSString *const CommonDrunkery_post_add;
+
+//我发布的任务列表
+UIKIT_EXTERN NSString *const UserCenter_MyTask_publish_lis;
+//任务发布接口
+UIKIT_EXTERN NSString *const Home_Task_addtask;
+
+//发布任务统计总数
+UIKIT_EXTERN NSString *const UserCenter_MyTask_publish_sum_total;
+
+//发布任务统计列表
+UIKIT_EXTERN NSString *const UserCenter_MyTask_publish_sum_list;
+
+//我接受的任务列表
+UIKIT_EXTERN NSString *const UserCenter_MyTask_receive_list;
+//我收藏的任务
+UIKIT_EXTERN NSString *const UserCenter_get_collect;
+
+//关注的用户
+UIKIT_EXTERN NSString *const UserCenter_get_care;
+
+//获取我的资历
+UIKIT_EXTERN NSString *const UserCenter_get_zili;
+
+//设置我的资历
+UIKIT_EXTERN NSString *const UserCenter_set_zili;
+
+//我发布的任务上架
+UIKIT_EXTERN NSString *const UserCenter_shangjia;
+
+//我发布的任务下架
+UIKIT_EXTERN NSString *const UserCenter_xiajia;
+
+//我发布的任务审核
+UIKIT_EXTERN NSString *const UserCenter_shenhe;
+
+//酒馆大厅-详情
+UIKIT_EXTERN NSString *const CommonDrunkery_post_detail;
+
+//酒馆详情-发表留言
+UIKIT_EXTERN NSString *const Drunkery_liuyan_add;
+//酒馆详情-回复留言
+UIKIT_EXTERN NSString *const Drunkery_huifu_add;
+
+//通用单图上传
+UIKIT_EXTERN NSString *const UserCenter_singleimgup;
+
+//个人实名认证提交
+UIKIT_EXTERN NSString *const UserCenter_set_renzheng;
+
+//个人资料——基本信息
+UIKIT_EXTERN NSString *const UserCenter_get_userinfo;
+
+//个人资料——我的履历
+UIKIT_EXTERN NSString *const UserCenter_get_uservitae;
+
+//个人资料——我的任务
+UIKIT_EXTERN NSString *const UserCenter_get_tasksum;
+
+//关注用户
+UIKIT_EXTERN NSString *const UserCenter_add_care;
+
+//私聊列表
+UIKIT_EXTERN NSString *const UserCenter_message_get;
+
+//设置私聊已读状态
+UIKIT_EXTERN NSString *const UserCenter_message_read_set;
+
+//添加私聊记录
+UIKIT_EXTERN NSString *const UserCenter_message_add;

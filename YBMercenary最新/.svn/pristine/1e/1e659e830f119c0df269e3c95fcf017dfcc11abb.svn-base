@@ -1,0 +1,49 @@
+//
+//  AddDynamicImageCell.m
+//  Ranch
+//
+//  Created by 龙青磊 on 2018/3/8.
+//  Copyright © 2018年 xfkeji_Ranch. All rights reserved.
+//
+
+#import "AddDynamicImageCell.h"
+
+@interface AddDynamicImageCell ()
+@property (nonatomic, strong) UIImageView *zoneImageView;
+@end
+
+@implementation AddDynamicImageCell
+
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self creatSubViews];
+    }
+    return self;
+}
+
+- (void)creatSubViews{
+    
+    _zoneImageView = [[UIImageView alloc]init];
+    _zoneImageView.image = [UIImage imageNamed:@"添加图片"];
+//    _zoneImageView.contentMode = UIViewContentModeScaleToFill;
+    _zoneImageView.contentMode = UIViewContentModeScaleAspectFill;
+    _zoneImageView.clipsToBounds = YES;
+    _zoneImageView.userInteractionEnabled = YES;
+    [self.contentView addSubview:_zoneImageView];
+    [_zoneImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.bottom.equalTo(self.contentView);
+    }];
+}
+
+- (void)setImageString:(NSString *)imageString{
+    _imageString = imageString;
+    if (_imageString.length > 0) {
+//        [self.zoneImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://ssyd.oss-cn-beijing.aliyuncs.com/%@",_imageString]] placeholderImage:[UIImage imageNamed:@"Group 58"]];
+        self.zoneImageView.image = [UIImage imageNamed:@"方图片1"];
+    }
+}
+
+@end

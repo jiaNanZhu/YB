@@ -1,0 +1,173 @@
+//
+//  RanchConst.m
+//  Ranch
+//
+//  Created by GZP on 2018/1/25.
+//  Copyright © 2018年 gzp_macbook. All rights reserved.
+//
+
+NSString *const CMProduceDetail = @"/api/v2/good/good-show";
+NSString *const XiLieRightList = @"/api/v2/good/series-list";
+NSString *const MallAllCategory = @"/api/v2/good/class";
+NSString *const HOST = @"http://yb.dashuibei.com";
+
+
+//============= 个人信息 ====================//
+//uid
+NSString *const User_id = @"user_id";
+//mobile
+NSString *const User_mobile = @"user_mobile";
+//token
+NSString *const User_token = @"d1736256d1200e6f5268eda40005f5701019cc41";
+
+
+
+NSString *const Green_Color = @"47b546";
+NSString *const Nav_Color = @"333333";
+NSString *const Back_Color = @"edecea";
+NSString *const Gray_Color = @"ededed";
+NSString *const Yellow_Color = @"ffb600";
+NSString *const Blue_Color = @"0386FF";
+
+
+//============= 网络接口====================
+
+#pragma mark 个人中心
+//获取用户基本信息
+NSString *const UserCenter_getinfo = @"/index.php/Home/UserCenter/getinfo";
+
+#pragma mark 登录/注册
+//登录
+NSString *const Login = @"/index.php/Home/User/loginbypwd";
+
+//验证码登录
+NSString *const Loginbycode = @"/index.php/Home/User/loginbycode";
+
+//注册
+NSString *const Regist = @"/index.php/Home/User/register";
+//重置密码
+NSString *const Resetpwd = @"/index.php/Home/User/resetpwd";
+//获取验证码
+NSString *const GetVerifyCode = @"verifycodes";
+
+
+//基本信息设置
+NSString *const UserCenter_setinfo = @"/index.php/Home/UserCenter/setinfo";
+
+//修改绑定手机号
+NSString *const UserCenter_setmobile = @"/index.php/Home/UserCenter/setmobile";
+
+
+//获取任务列表
+NSString *const Get_tasklist = @"/index.php/Home/CommonTask/get_tasklist";
+
+//获取任务详情
+NSString *const Get_taskdetail = @"/index.php/Home/CommonTask/get_taskdetail";
+
+//图片上传
+NSString *const UserCenter_imgupload = @"/index.php/Home/UserCenter/imgupload";
+
+//任务详情——申请列表
+NSString *const Get_applylist = @"/index.php/Home/CommonTask/get_applylist";
+
+//任务详情——留言列表
+NSString *const Get_boardlist = @"/index.php/Home/CommonTask/get_boardlist";
+
+//任务详情——发表留言
+NSString *const Add_board = @"/index.php/Home/Board/add_board";
+
+//任务收藏操作
+NSString *const Add_collect = @"/index.php/Home/Handle/add_collect";
+
+//任务详情_用户报名
+NSString *const Add_apply = @"/index.php/Home/Apply/add_apply";
+
+//任务发布图片上传接口
+NSString *const ImageUpload = @"/index.php/Home/Task/imgupload";
+
+//任务详情——报名人操作
+NSString *const Change_apply = @"/index.php/Home/Apply/change_apply";
+
+//已完成任务提交
+NSString *const Tijiao = @"/index.php/Home/MyTask/tijiao";
+
+//我发布的任务审核
+NSString *const Shenhe = @"/index.php/Home/MyTask/shenhe";
+
+/*ZJN上面写👆~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+//酒馆大厅-列表
+NSString *const CommonDrunkery_post_list = @"/index.php/Home/CommonDrunkery/post_list";
+
+//酒馆详情-发帖
+NSString *const CommonDrunkery_post_add = @"/index.php/Home/Drunkery/post_add";
+
+
+//我发布的任务列表
+NSString *const UserCenter_MyTask_publish_lis = @"/index.php/Home/MyTask/publish_list";
+
+//任务发布接口
+NSString *const Home_Task_addtask = @"/index.php/Home/Task/addtask";
+
+
+//发布任务统计总数
+NSString *const UserCenter_MyTask_publish_sum_total = @"/index.php/Home/MyTask/publish_sum_total";
+
+//发布任务统计列表
+NSString *const UserCenter_MyTask_publish_sum_list = @"/index.php/Home/MyTask/publish_sum_list";
+
+//我接受的任务列表
+NSString *const UserCenter_MyTask_receive_list = @"/index.php/Home/MyTask/receive_list";
+
+//我收藏的任务
+NSString *const UserCenter_get_collect = @"/index.php/Home/UserCenter/get_collect";
+
+//关注的用户
+NSString *const UserCenter_get_care = @"/index.php/Home/UserCenter/get_care";
+
+//获取我的资历
+NSString *const UserCenter_get_zili = @"/index.php/Home/UserCenter/get_zili";
+
+//设置我的资历
+NSString *const UserCenter_set_zili = @"/index.php/Home/UserCenter/set_zili";
+
+
+//我发布的任务上架
+NSString *const UserCenter_shangjia = @"/index.php/Home/MyTask/shangjia";
+
+//我发布的任务下架
+NSString *const UserCenter_xiajia = @"/index.php/Home/MyTask/xiajia";
+
+
+//我发布的任务审核
+NSString *const UserCenter_shenhe = @"/index.php/Home/MyTask/shenhe";
+
+//酒馆大厅-详情
+NSString *const CommonDrunkery_post_detail = @"/index.php/Home/CommonDrunkery/post_detail";
+
+//酒馆详情-发表留言
+NSString *const Drunkery_liuyan_add = @"/index.php/Home/Drunkery/liuyan_add";
+
+//酒馆详情-回复留言
+NSString *const Drunkery_huifu_add = @"/index.php/Home/Drunkery/huifu_add";
+
+//通用单图上传
+NSString *const UserCenter_singleimgup = @"/index.php/Home/UserCenter/singleimgup";
+
+//个人实名认证提交
+NSString *const UserCenter_set_renzheng = @"/index.php/Home/UserCenter/set_renzheng";
+
+
+//个人资料——基本信息
+NSString *const UserCenter_get_userinfo = @"/index.php/Home/UserCenter/get_userinfo";
+
+
+//个人资料——我的履历
+NSString *const UserCenter_get_uservitae = @"/index.php/Home/UserCenter/get_uservitae";
+
+//个人资料——我的任务
+NSString *const UserCenter_get_tasksum = @"/index.php/Home/UserCenter/get_tasksum";
+
+//关注用户
+NSString *const UserCenter_add_care = @"/index.php/Home/Handle/add_care";
+

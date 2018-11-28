@@ -1,0 +1,94 @@
+//
+//  PublishTaskAddPhotosCell.m
+//  YBMercenary
+//
+//  Created by 龙青磊 on 2018/3/28.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "PublishTaskAddPhotosCell.h"
+#import "TaskAddImageCell.h"
+
+@interface PublishTaskAddPhotosCell()<UICollectionViewDelegate,UICollectionViewDataSource>
+
+@property (nonatomic, strong) UICollectionView *collectionView;
+
+@end
+
+@implementation PublishTaskAddPhotosCell
+
++ (instancetype)creatTableViewCellWithTableView:(UITableView *)tableView{
+    PublishTaskAddPhotosCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PublishTaskAddPhotosCell"];
+    if (cell == nil) {
+        cell = [[PublishTaskAddPhotosCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"PublishTaskAddPhotosCell"];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    cell.backgroundColor = [UIColor hex:Back_Color];
+    return cell;
+}
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        [self creatSubViews];
+    }
+    return self;
+}
+
+- (void)creatSubViews{
+    self.contentView.backgroundColor = [UIColor whiteColor];
+    CGFloat ImageWidth = (kScreenWidth - Width(50)) / 4;
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
+    layout.scrollDirection = UICollectionViewScrollDirectionVertical;
+    layout.itemSize = CGSizeMake(ImageWidth, ImageWidth);
+    layout.minimumInteritemSpacing = Width(5);//单元格之间的横间隙
+    layout.minimumLineSpacing = Width(5);//单元格之间的纵间隙
+    _collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:layout];
+    [_collectionView registerClass:[TaskAddImageCell class] forCellWithReuseIdentifier:@"TaskAddImageCell"];
+    _collectionView.collectionViewLayout = layout;
+    _collectionView.dataSource = self;
+    _collectionView.delegate = self;
+    _collectionView.scrollEnabled = YES;
+    _collectionView.backgroundColor = [UIColor whiteColor];
+    _collectionView.scrollEnabled = NO;
+    [self.contentView addSubview:_collectionView];
+    [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.contentView).offset(Width(15));
+        make.right.equalTo(self.contentView.mas_right).offset(-Width(15));
+        make.height.mas_equalTo(ImageWidth);
+        make.bottom.equalTo(self.contentView.mas_bottom);
+        make.top.equalTo(self.contentView);
+    }];
+}
+
+
+#pragma mark UICollectionViewDataSource
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    return 3;
+}
+
+- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    TaskAddImageCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TaskAddImageCell" forIndexPath:indexPath];
+    if(indexPath.row != 2){
+        cell.imageString = @"方图片3";
+    }
+    return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+
+}
+
+// 调整单元格与父视图边界的相对位置
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+    return UIEdgeInsetsMake(0, 0, 0, 0);
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
+@end

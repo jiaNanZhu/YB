@@ -1,0 +1,102 @@
+//
+//  PubTaskListCell.m
+//  YBMercenary
+//
+//  Created by 龙青磊 on 2018/3/26.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "PubTaskListCell.h"
+
+@interface PubTaskListCell ()
+
+@property (nonatomic, strong) UILabel *titleLabel;
+@property (nonatomic, strong) UILabel *contentLabel;
+@property (nonatomic, strong) UIButton *commentBtn;
+
+@end
+
+@implementation PubTaskListCell
+
++ (instancetype)creatTableViewCellWithTableView:(UITableView *)tableView{
+    PubTaskListCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PubTaskListCell"];
+    if (cell == nil) {
+        cell = [[PubTaskListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"PubTaskListCell"];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    return cell;
+}
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        [self initSubViews];
+    }
+    return self;
+}
+
+- (void)initSubViews{
+    self.backgroundColor = [UIColor clearColor];
+    self.contentView.backgroundColor = [UIColor clearColor];
+    UIView *backView = [[UIView alloc]init];
+    backView.backgroundColor = [UIColor whiteColor];
+    [self.contentView addSubview:backView];
+    [backView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.equalTo(self.contentView);
+        make.bottom.equalTo(self.contentView.mas_bottom).offset(-Width(10));
+    }];
+    
+    _titleLabel = [F_UI SL_UI_Label:@"酒馆热门推荐" color:[UIColor hex:@"444444"] textAlignment:NSTextAlignmentLeft textFont:14 numberOfLines:1];
+    [self.contentView addSubview:_titleLabel];
+    [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.contentView).offset(Width(15));
+        make.left.equalTo(self.contentView).offset(Width(15));
+        make.right.equalTo(self.contentView.mas_right).offset(-Width(15));
+    }];
+    
+    _contentLabel = [F_UI SL_UI_Label:@"" color:[UIColor hex:@"666666"] textAlignment:NSTextAlignmentLeft textFont:14 numberOfLines:0];
+    [self.contentView addSubview:_contentLabel];
+    [_contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(_titleLabel.mas_bottom).offset(Width(10));
+        make.left.right.equalTo(_titleLabel);
+    }];
+    
+    _commentBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_commentBtn setTitle:@"0" forState:UIControlStateNormal];
+    [_commentBtn setTitleColor:[UIColor hex:@"666666"] forState:UIControlStateNormal];
+    [_commentBtn setImage:[UIImage imageNamed:@"评论"] forState:UIControlStateNormal];
+    _commentBtn.titleLabel.font = [UIFont fontSize:12];
+    [_commentBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -Width(10), 0, 0)];
+    _commentBtn.userInteractionEnabled = NO;
+    [_commentBtn addTarget:self action:@selector(commentMethod) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentView addSubview:_commentBtn];
+    [_commentBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(_contentLabel);
+        make.top.equalTo(_contentLabel.mas_bottom).offset(Width(5));
+        make.width.mas_equalTo(Width(70));
+        make.height.mas_equalTo(Width(25)).priority(999);
+        make.bottom.equalTo(backView.mas_bottom).offset(-Width(10));
+    }];
+    
+}
+
+- (void)commentMethod{
+    [DWBToast showCenterWithText:@"查看评论"];
+}
+-(void)configurationwith:(PubTypeListModel *)model
+{
+ 
+    _titleLabel.text=@"热门推荐";
+    _contentLabel.text=model.post_content;
+    
+    [_commentBtn setTitle:model.count forState:UIControlStateNormal];
+    
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
+@end

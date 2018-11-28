@@ -1,0 +1,17 @@
+//
+//  ZJNHeadBtnView.h
+//  YBMercenary
+//
+//  Created by 险峰科技 on 2018/7/27.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface ZJNHeadBtnView : UIView
+@property (nonatomic ,copy)NSArray *titleArray;
+@property (nonatomic ,strong)UIView *sliderView;
+@property (nonatomic ,strong)UIButton *selectBtn;
+@property (nonatomic ,copy)void(^headBtnViewBlock)(NSInteger offset);
+-(id)initWithFrame:(CGRect)frame titleArray:(NSArray *)titleArr;
+@end

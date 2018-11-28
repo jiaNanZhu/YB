@@ -1,0 +1,49 @@
+
+//
+//  UserInfoHeaderCell.m
+//  YBMercenary
+//
+//  Created by 龙青磊 on 2018/4/24.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "UserInfoHeaderCell.h"
+
+@implementation UserInfoHeaderCell
+
+
++ (instancetype)creatTableViewCellWithTableView:(UITableView *)tableView{
+    UserInfoHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UserInfoHeaderCell"];
+    if (cell == nil) {
+        cell = [[UserInfoHeaderCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"UserInfoHeaderCell"];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.contentView.backgroundColor = [UIColor hex:Back_Color];
+    }
+    return cell;
+}
+
+- (void)initSubViews{
+    
+    UIView *backView = [[UIView alloc]init];
+    backView.backgroundColor = [UIColor whiteColor];
+    [self.contentView addSubview:backView];
+    [backView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.bottom.equalTo(self.contentView);
+        make.height.mas_equalTo(Width(45));
+    }];
+    
+    UILabel *hangye = [F_UI SL_UI_Label:@"个人证书" color:[UIColor hex:@"444444"] textAlignment:NSTextAlignmentLeft textFont:14 numberOfLines:1];
+    [self.contentView addSubview:hangye];
+    [hangye mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(backView).offset(Width(15));
+        make.centerY.equalTo(backView);
+    }];
+}
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
+
+@end

@@ -1,0 +1,39 @@
+//
+//  TopicsImageCell.m
+//  YBMercenary
+//
+//  Created by 龙青磊 on 2018/3/23.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "TopicsImageCell.h"
+
+@interface TopicsImageCell ()
+
+@end
+
+
+@implementation TopicsImageCell
+
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self creatSubViews];
+    }
+    return self;
+}
+
+- (void)creatSubViews{
+    
+    _zoneImageView = [[UIImageView alloc]init];
+//    _zoneImageView.image = [UIImage imageNamed:@"方图片1"];
+//    _zoneImageView.contentMode = UIViewContentModeScaleAspectFill;
+    [self.contentView addSubview:_zoneImageView];
+    [_zoneImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.bottom.equalTo(self.contentView);
+    }];
+}
+
+@end

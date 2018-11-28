@@ -1,0 +1,61 @@
+//
+//  ZJNPayViewController.m
+//  YBMercenary
+//
+//  Created by 险峰科技 on 2018/8/3.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "ZJNPayViewController.h"
+
+@interface ZJNPayViewController ()<UIWebViewDelegate>
+{
+    NSString *urlStr;
+}
+@end
+
+@implementation ZJNPayViewController
+-(instancetype)initWithPayUrl:(NSString *)url{
+    self = [super init];
+    if (self) {
+        self.title = @"支付";
+        urlStr = url;
+    }
+    return self;
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    UIWebView *web = [UIWebView new];
+    web.frame = CGRectMake(0, 0, kScreenWidth, kScreenHeight);
+    web.backgroundColor = [UIColor yellowColor];
+    web.delegate = self;
+    [self.view addSubview:web];
+    [web loadRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:urlStr]]];
+    // Do any additional setup after loading the view.
+}
+
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
+    if ([request.URL.absoluteString hasPrefix:@"jxaction://scan"]) {
+        //调用原生扫描二维码
+        return NO;
+    }
+    return YES;
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

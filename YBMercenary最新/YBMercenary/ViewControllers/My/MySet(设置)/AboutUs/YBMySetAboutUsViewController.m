@@ -1,0 +1,73 @@
+//
+//  YBMySetAboutUsViewController.m
+//  YBMercenary
+//
+//  Created by 飞哥 on 2018/3/27.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "YBMySetAboutUsViewController.h"
+
+@interface YBMySetAboutUsViewController ()
+
+@end
+
+@implementation YBMySetAboutUsViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    [self makeUI];
+}
+-(void)makeUI{
+    UIView *backdropView = [F_UI SL_UI_View:[UIColor whiteColor] cornerRadius:0 borderColor:nil borderWidth:0];
+    backdropView.frame = CGRectMake(0, AdFloat(16), d_Device_width, AdFloat(436));
+    [self.view addSubview:backdropView];
+    
+    UIImageView *logoIMG = [F_UI SL_UI_UIimg:[UIImage imageNamed:@"佣兵天下APP图标 Copy 3"] cornerRadius:0];
+    logoIMG.frame = CGRectMake((d_Device_width-AdFloat(104))/2, AdFloat(80), AdFloat(102), AdFloat(102));
+    [backdropView addSubview:logoIMG];
+    
+    UILabel *versionsLab = [F_UI SL_UI_Label:@"v1.0.01" color:[UIColor hex:@"666666"] textAlignment:NSTextAlignmentCenter textFont:AdFloat(28) numberOfLines:1];
+    versionsLab.frame = CGRectMake(0, logoIMG.maxY+AdFloat(22), d_Device_width, AdFloat(40));
+    [backdropView addSubview:versionsLab];
+    
+    UIView *xianView = [F_UI SL_UI_View:[UIColor hex:@"F2F2F2"] cornerRadius:0 borderColor:nil borderWidth:0];
+    xianView.frame = CGRectMake(0, AdFloat(256), d_Device_width, AdFloat(2));
+    [backdropView addSubview:xianView];
+    
+    NSString *labStr = @"佣兵旨在为优秀的个体自由创业者提升服务质量，简化沟通，让优秀的创业者更专心的为用户提供更好的服务，更高效的打造自己的品牌。";
+    
+    UILabel *lab = [F_UI SL_UI_Label:labStr color:[UIColor hex:@"444444"] textAlignment:NSTextAlignmentLeft textFont:AdFloat(28) numberOfLines:0];
+    lab.frame = CGRectMake(AdFloat(30), xianView.maxY+AdFloat(30), d_Device_width-AdFloat(60), AdFloat(120));
+    [backdropView addSubview:lab];
+    
+    UIView *backdropView_1 = [F_UI SL_UI_View:[UIColor whiteColor] cornerRadius:0 borderColor:nil borderWidth:0];
+    backdropView_1.frame = CGRectMake(0, backdropView.maxY+AdFloat(16), d_Device_width, AdFloat(90));
+    [self.view addSubview:backdropView_1];
+    
+    UILabel *lab_1 = [F_UI SL_UI_Label:@"官网：" color:[UIColor hex:@"444444"] textAlignment:NSTextAlignmentLeft textFont:AdFloat(28  ) numberOfLines:1];
+    lab_1.frame = CGRectMake(AdFloat(30), 0, AdFloat(100), AdFloat(90));
+    [backdropView_1 addSubview:lab_1];
+    
+    UILabel *mailboxLab = [F_UI SL_UI_Label:@"www.hourenzaishu.com" color:[UIColor hex:@"41A1F8"] textAlignment:NSTextAlignmentLeft textFont:AdFloat(28) numberOfLines:1];
+    mailboxLab.frame = CGRectMake(lab_1.maxX, 0, AdFloat(500), AdFloat(90));
+    [backdropView_1 addSubview:mailboxLab];
+    
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

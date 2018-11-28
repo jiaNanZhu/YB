@@ -1,0 +1,114 @@
+//
+//  PublishHealthTaskVC.m
+//  YBMercenary
+//
+//  Created by 龙青磊 on 2018/3/28.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "PublishHealthTaskVC.h"
+#import "PublishTaskNameCell.h"
+#import "PublishTaskGoal.h"
+#import "PublishTaskRequireCell.h"
+#import "PublishTaskMarkCell.h"
+#import "LifeFiltrateReceiverCell.h"
+#import "PublishTaskDetailCell.h"
+#import "PublishTaskAddPhotosCell.h"
+#import "OtherRequireCell.h"
+
+@interface PublishHealthTaskVC ()<PublishTaskRequireCellDelegate,UIScrollViewDelegate>
+
+@property (nonatomic, assign) NSInteger lineCount;
+
+@end
+
+@implementation PublishHealthTaskVC
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    _lineCount = 1;
+    [self configNav];
+    [self configTableView];
+}
+
+- (void)configNav{
+    self.navigationItem.title = @"发布任务";
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"发布" style:UIBarButtonItemStylePlain target:self action:@selector(publishAction)];
+    self.navigationItem.rightBarButtonItem.tintColor = [UIColor whiteColor];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"back"] style:UIBarButtonItemStylePlain target:self action:@selector(cancleAction)];
+    self.navigationItem.leftBarButtonItem.tintColor = [UIColor whiteColor];
+}
+
+- (void)configTableView{
+    self.tableView.estimatedRowHeight = 100;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.backgroundColor = [UIColor hex:Back_Color];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 8;
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row == 0) {
+        PublishTaskNameCell *cell = [PublishTaskNameCell creatTableViewCellWithTableView:tableView];
+        return cell;
+    }else if(indexPath.row == 1){
+        PublishTaskGoal *cell = [PublishTaskGoal creatTableViewCellWithTableView:tableView];
+        return cell;
+    }else if(indexPath.row == 2){
+        PublishTaskRequireCell *cell= [PublishTaskRequireCell creatTableViewCellWithTableView:tableView];
+        cell.linecount = self.lineCount;
+        cell.delegate = self;
+        return cell;
+    }else if (indexPath.row == 3){
+        LifeFiltrateReceiverCell *cell = [LifeFiltrateReceiverCell creatTableViewCellWithTableView:tableView];
+        return cell;
+    }else if (indexPath.row == 4){
+        PublishTaskMarkCell *cell = [PublishTaskMarkCell creatTableViewCellWithTableView:tableView];
+        return cell;
+    }else if (indexPath.row == 5){
+        PublishTaskDetailCell *cell = [PublishTaskDetailCell creatTableViewCellWithTableView:tableView];
+        return cell;
+    }else if (indexPath.row == 6){
+        PublishTaskAddPhotosCell *cell = [PublishTaskAddPhotosCell creatTableViewCellWithTableView:tableView];
+        return cell;
+    }else{
+        OtherRequireCell *cell = [OtherRequireCell creatTableViewCellWithTableView:tableView];
+        return cell;
+    }
+}
+
+#pragma mark 点击导航右侧按钮
+- (void)publishAction{
+    [DWBToast showCenterWithText:@"开始发布"];
+}
+
+- (void)reloadeViewWithLineCount:(NSInteger)count{
+    _lineCount = count;
+    [self.tableView reloadData];
+}
+
+- (void)cancleAction{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    [self.view endEditing:YES];
+}
+
+
+@end

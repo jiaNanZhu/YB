@@ -1,0 +1,257 @@
+//
+//  AppDelegate.m
+//  YBMercenary
+//
+//  Created by 飞哥 on 2018/3/21.
+//  Copyright © 2018年 pengfei.li. All rights reserved.
+//
+
+#import "AppDelegate.h"
+#import "YBTabbarViewController.h"
+#import <RongIMKit/RongIMKit.h>
+#import <RongCloudIM/RongIMKit/RCIM.h>
+#import <UMShare/UMShare.h>
+#import <UMCommon/UMCommon.h>
+#import "YBLoginViewController.h"
+#define RONGCLOUD_IM_APPKEY @"n19jmcy5n8269"
+@interface AppDelegate ()<RCIMConnectionStatusDelegate, RCIMReceiveMessageDelegate,RCIMUserInfoDataSource>
+@property (nonatomic, strong) YBTabbarViewController *tabbar;
+@end
+
+@implementation AppDelegate
+
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    // Override point for customization after application launch.
+    //初始化部分数据
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    // U-Share 平台设置
+//    [UMSocialManager defaultManager];
+    [UMConfigure initWithAppkey:@"5b75194ea40fa31b6e000241" channel:@"App Store"];
+    [self configUSharePlatforms];
+    [self confitUShareSettings];
+    
+    _mapManager = [[BMKMapManager alloc]init];
+    // 如果要关注网络及授权验证事件，请设定     generalDelegate参数
+    BOOL ret = [_mapManager start:@"Nvn1ANloNeUqKerSKGDtWfZgSvUqDM0X"  generalDelegate:nil];
+    if (!ret) {
+        NSLog(@"manager start failed!");
+    }
+    
+    [self setupIMconfiguration];
+    
+    
+    if ([YBUser boolLogin].length>0) {
+        
+        [self loginRCloud];
+        
+    }
+    else{
+        
+        
+        
+//        YBLoginViewController *vc  = [[YBLoginViewController alloc] init];
+//        self.window.rootViewController = [[UINavigationController alloc]initWithRootViewController:vc];
+    }
+    
+    self.tabbar = [[YBTabbarViewController alloc] init];
+    self.window.rootViewController = self.tabbar;
+    
+    [self.window makeKeyAndVisible];
+    return YES;
+}
+- (void)confitUShareSettings
+{
+    /*
+     * 打开图片水印
+     */
+    //[UMSocialGlobal shareInstance].isUsingWaterMark = YES;
+    /*
+     * 关闭强制验证https，可允许http图片分享，但需要在info.plist设置安全域名
+     <key>NSAppTransportSecurity</key>
+     <dict>
+     <key>NSAllowsArbitraryLoads</key>
+     <true/>
+     </dict>
+     */
+    //[UMSocialGlobal shareInstance].isUsingHttpsWhenShareContent = NO;
+}
+- (void)configUSharePlatforms
+{
+    /* 设置微信的appKey和appSecret */
+    [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_WechatSession appKey:@"wx27f9117f806c82a8" appSecret:@"96cd360c7dec46ad6d8fe300c23a2597" redirectURL:@"http://mobile.umeng.com/social"];
+    /*
+     * 移除相应平台的分享，如微信收藏
+     */
+    //[[UMSocialManager defaultManager] removePlatformProviderWithPlatformTypes:@[@(UMSocialPlatformType_WechatFavorite)]];
+    /* 设置分享到QQ互联的appID
+     * U-Share SDK为了兼容大部分平台命名，统一用appKey和appSecret进行参数设置，而QQ平台仅需将appID作为U-Share的appKey参数传进即可。
+     */
+    [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_QQ appKey:@"1106484844"/*设置QQ平台的appID*/  appSecret:nil redirectURL:@"http://mobile.umeng.com/social"];
+    /* 设置新浪的appKey和appSecret */
+    [[UMSocialManager defaultManager] setPlaform:UMSocialPlatformType_Sina appKey:@"3169663256"  appSecret:@"8292350b6a4180157579caa1368c592c" redirectURL:@"https://sns.whalecloud.com/sina2/callback"];
+}
+// 支持所有iOS系统
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    //6.3的新的API调用，是为了兼容国外平台(例如:新版facebookSDK,VK等)的调用[如果用6.2的api调用会没有回调],对国内平台没有影响
+    BOOL result = [[UMSocialManager defaultManager] handleOpenURL:url sourceApplication:sourceApplication annotation:annotation];
+    if (!result) {
+        // 其他如支付等SDK的回调
+    }
+    return result;
+}
+#pragma mark-融云即时通讯
+-(void)setupIMconfiguration
+{
+    //IM
+    [[RCIM sharedRCIM] initWithAppKey:RONGCLOUD_IM_APPKEY];
+    
+    // 注册自定义测试消息
+    [[RCIM sharedRCIM] registerMessageType:[RCTextMessage class]];
+    
+    //设置会话列表头像和会话页面头像
+    [[RCIM sharedRCIM] setConnectionStatusDelegate:self];
+    
+    
+    [[RCIM sharedRCIM] setUserInfoDataSource:self];
+    //
+    //    [[RCIM sharedRCIM] setGroupInfoDataSource:self];
+    
+    [RCIM sharedRCIM].globalConversationPortraitSize = CGSizeMake(46, 46);
+    //    [RCIM sharedRCIM].portraitImageViewCornerRadius = 10;
+    //开启用户信息和群组信息的持久化
+    [RCIM sharedRCIM].enablePersistentUserInfoCache = YES;
+    //设置用户信息源和群组信息源
+    //    [RCIM sharedRCIM].userInfoDataSource = RCDDataSource;
+    //    [RCIM sharedRCIM].groupInfoDataSource = RCDDataSource;
+    //设置名片消息功能中联系人信息源和群组信息源
+    //    [RCContactCardKit shareInstance].contactsDataSource = RCDDataSource;
+    //    [RCContactCardKit shareInstance].groupDataSource = RCDDataSource;
+    //设置接收消息代理
+    [RCIM sharedRCIM].receiveMessageDelegate = self;
+    //开启输入状态监听
+    [RCIM sharedRCIM].enableTypingStatus = YES;
+    
+    //开启发送已读回执
+    //    [RCIM sharedRCIM].enabledReadReceiptConversationTypeList =
+    //    @[ @(ConversationType_PRIVATE), @(ConversationType_DISCUSSION), @(ConversationType_GROUP) ];
+    //开启多端未读状态同步
+    [RCIM sharedRCIM].enableSyncReadStatus = NO;
+    
+    //设置显示未注册的消息
+    //如：新版本增加了某种自定义消息，但是老版本不能识别，开发者可以在旧版本中预先自定义这种未识别的消息的显示
+    [RCIM sharedRCIM].showUnkownMessage = YES;
+    [RCIM sharedRCIM].showUnkownMessageNotificaiton = YES;
+    
+    //开启消息@功能（只支持群聊和讨论组, App需要实现群成员数据源groupMemberDataSource）
+    [RCIM sharedRCIM].enableMessageMentioned = YES;
+    
+    //开启消息撤回功能
+    [RCIM sharedRCIM].enableMessageRecall = YES;
+    //  设置头像为圆形
+    [RCIM sharedRCIM].globalMessageAvatarStyle = RC_USER_AVATAR_CYCLE;
+    [RCIM sharedRCIM].globalConversationAvatarStyle = RC_USER_AVATAR_CYCLE;
+    //   设置优先使用WebView打开URL
+    //  [RCIM sharedRCIM].embeddedWebViewPreferred = YES;
+    
+    //设置Log级别，开发阶段打印详细log
+    [RCIMClient sharedRCIMClient].logLevel = RC_Log_Level_Error;
+    
+    
+}
+- (void)applicationWillResignActive:(UIApplication *)application {
+    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
+    // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
+}
+
+
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
+    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+}
+
+
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+    // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+}
+
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+}
+
+
+- (void)applicationWillTerminate:(UIApplication *)application {
+    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+#pragma mark request
+//获取用户信息
+-(void)requestuserInfo
+{
+
+        NSDictionary *parameters =@{@"token":USERTOKEN};
+        [[YBRequestManager sharedYBManager]postWithUrlString:UserCenter_getinfo parameters:parameters success:^(id data) {
+            
+            if ([data[@"code"]integerValue] ==0) {
+                YBUser *user =[YBUser yy_modelWithDictionary:data[@"data"]];
+               
+                
+                RCUserInfo *_currentUserInfo =[[RCUserInfo alloc] initWithUserId:user.id name:user.name portrait:[NSString stringWithFormat:@"%@%@",HOST,user.head_img]];
+                [RCIM sharedRCIM].currentUserInfo = _currentUserInfo;
+                
+            }
+        } failure:^(NSError *error) {
+            
+        }];
+}
+
+#pragma mark 登陆融云服务器
+-(void)loginRCloud
+{
+    [self requestuserInfo];
+    //    RCUserInfo *_currentUserInfo =[[RCUserInfo alloc] initWithUserId:user.id name:user.nickname portrait:user.pic];
+    //    [RCIM sharedRCIM].currentUserInfo = _currentUserInfo;
+    //登录融云服务器
+    
+    //    WeakSelf;
+    
+    KWeakSelf(self);
+    [[RCIM sharedRCIM] connectWithToken:USERRCTOKEN
+                                success:^(NSString *userId) {
+                                    
+                                    
+                                    
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    });
+                                    
+                                    
+                                    
+                                    
+                                    
+                                }
+                                  error:^(RCConnectErrorCode status) {
+                                      
+                                      dispatch_async(dispatch_get_main_queue(), ^{
+                                          
+                                          
+                                          
+                                          
+                                      });
+                                  }
+                         tokenIncorrect:^{
+                             NSLog(@"IncorrectToken");
+                             dispatch_async(dispatch_get_main_queue(), ^{
+                                 
+                             });
+                             
+                         }];
+    
+}
+
+@end

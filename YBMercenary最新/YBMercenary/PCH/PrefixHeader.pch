@@ -1,0 +1,101 @@
+//
+//  PrefixHeader.pch
+//  YBMercenary
+//
+//  Created by 飞哥 on 2018/3/21.
+//  Copyright © 2018年 pengfei.li. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+#define IS_IPHONE5 (([[UIScreen mainScreen] bounds].size.height == 568) ? YES :NO)
+
+#define IS_IPhone6 (667 == [[UIScreen mainScreen] bounds].size.height ? YES : NO)
+
+#define IS_IPhone6plus (736 == [[UIScreen mainScreen] bounds].size.height ? YES: NO)
+#define IS_IPhoneX (812 == [[UIScreen mainScreen] bounds].size.height ? YES: NO)
+#define IS_iPad (1024 == [[UIScreen mainScreen] bounds].size.height ? YES: NO)
+
+#define IS_11_OR_LATER    ([[[UIDevice currentDevice] systemVersion] floatValue] > 11.0)
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+#import "UIButton+Category.h"
+#import "UIColor+HexColor.h"
+#import "UIView+Sugar.h"
+#import "ScreenAdapter.h"
+#import "F_UI.h"
+#import "BaseTableVC.h"
+#import "Masonry.h"
+#import "UIImageView+WebCache.h"
+#import "Const.h"
+#import "UIView+BorderRadius.h"
+#import "UIFont+FitSize.h"
+#import "DWBToast.h"
+#import "BaseViewController.h"
+#import "YBUser.h"
+#import "BaseVC.h"
+#import "KVNProgress.h"
+#import "MJExtension.h"
+#import "MJRefresh.h"
+#import "BaseTableViewCell.h"
+#import "SignTool.h"
+#import "YBRequestManager.h"
+#import <YYModel.h>
+#import "BRPickerView.h"
+#import "IQKeyboardManager.h"
+#import "Utile.h"
+#endif /* PrefixHeader_pch */
+
+//判断是否为DEBUG模式 以及 DBLog 定义
+#ifdef DEBUG
+#define DBLog(format, ...) NSLog(format, ## __VA_ARGS__)
+#define DEBUG_MODEL YES
+#else
+#define DBLog(format, ...)
+#define DEBUG_MODEL NO
+#endif
+
+//连接服务器失败时提示
+#define ErrorInfo @"连接服务器失败"
+//设备的宽和高
+#define  d_Device_height   [UIScreen mainScreen].bounds.size.height
+#define  d_Device_width    [UIScreen mainScreen].bounds.size.width
+#define kScreenWidth    [UIScreen mainScreen].bounds.size.width
+#define kScreenHeight   [UIScreen mainScreen].bounds.size.height
+//nav高
+#define iPhone_X_bool_Nav_height (d_Device_height >= 812.0 ? 88 : 64)
+//tabar
+#define iPhone_X_bool_tabbar_height (d_Device_height >= 812.0 ? 34 : 0)
+
+#define KTabbarHeight (isIPhoneX ? 83 : 49)
+#define KAddBottomBarHeight (isIPhoneX ? 34 : 0)
+//颜色值
+#define COlOR_R_G_B_A(r,g,b,a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)]
+
+#define KWeakSelf(type) __weak typeof(type) weak##type = type;
+
+#define Width(value) d_Device_width / 375 * value
+
+//存储
+#define YBMercenary_key_Bool_Login @"YBMercenary_key_Bool_Login"//临时判断是否登录
+//设置图片
+#define SetImage(a) [UIImage imageNamed:a]
+//设置字体大小
+#define SetFont(a) [UIFont systemFontOfSize:a]
+
+#define isIPhoneX [UIScreen mainScreen].bounds.size.height>=812
+#define KNavHeight (isIPhoneX ? 88 : 64)
+//签名秘钥
+#define APPSignkeySecret @"b83a7df9d7de4dcfb47e12f63b9b118a"
+//
+#define APPUserTokenKey @"yongbingtianxiaUserToken"
+
+#define APPUserRCTokenKey @"yongbingtianxiaAPPUserRCTokenKey"
+
+#define USERTOKEN [[NSUserDefaults standardUserDefaults]objectForKey:APPUserTokenKey]
+
+#define USERRCTOKEN [[NSUserDefaults standardUserDefaults]objectForKey:APPUserRCTokenKey]
+
+#define PREFECTINFO @"perfectInfo"
+

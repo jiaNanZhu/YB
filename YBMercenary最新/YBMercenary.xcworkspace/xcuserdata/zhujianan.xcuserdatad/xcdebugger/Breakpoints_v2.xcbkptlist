@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "0"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "YBMercenary/ViewControllers/My/MyIssue(&#x6211;&#x53d1;&#x5e03;&#x7684;)/View/YBMyIssueTableViewCell.m"
+            timestampString = "554309848.121048"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "118"
+            endingLineNumber = "118"
+            landmarkName = "-networkDataCell:row:type:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.ExceptionBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            scope = "0"
+            stopOnStyle = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "YBMercenary/ViewControllers/Pub/TaskDetailVC/&#x5ba1;&#x6838;&#x4e2d;/Controller/ZJNTaskAuditViewController.m"
+            timestampString = "561985385.722819"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "382"
+            endingLineNumber = "382"
+            landmarkName = "-agreeBtnClick"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "YBMercenary/ViewControllers/Login/Certification(&#x8ba4;&#x8bc1;)/Company/ZJNCompanyCertificationViewController.m"
+            timestampString = "562242733.1504149"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "250"
+            endingLineNumber = "250"
+            landmarkName = "-tableView:didSelectRowAtIndexPath:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "YBMercenary/ViewControllers/My/MyIssue(&#x6211;&#x53d1;&#x5e03;&#x7684;)/View/ZJNTaskListView.m"
+            timestampString = "565091431.003431"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "332"
+            endingLineNumber = "332"
+            landmarkName = "-myIssueTableViewCellAuditButtonClickWithCell:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "YBMercenary/ViewControllers/My/MySeniority(&#x6211;&#x7684;&#x8d44;&#x5386;)/YBMySeniorityViewController.m"
+            timestampString = "561474068.3240221"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "161"
+            endingLineNumber = "161"
+            landmarkName = "-btn_1:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "YBMercenary/ViewControllers/Publish/PublishTask/Custom/Controller/PublicCustomTaskVC.m"
+            timestampString = "561636825.837723"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "193"
+            endingLineNumber = "193"
+            landmarkName = "-requestCommonDrunkery_post_add"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[PublicCustomTaskVC requestCommonDrunkery_post_add]"
+                  moduleName = "YBMercenary"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/zhujianan/Desktop/%E4%BD%A3%E5%85%B5%E6%9C%80%E6%96%B0/YBMercenary%E6%9C%80%E6%96%B0/YBMercenary/ViewControllers/Publish/PublishTask/Custom/Controller/PublicCustomTaskVC.m"
+                  timestampString = "565091431.339972"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "193"
+                  endingLineNumber = "193"
+                  offsetFromSymbolStart = "1372">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__52-[PublicCustomTaskVC requestCommonDrunkery_post_add]_block_invoke"
+                  moduleName = "YBMercenary"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/zhujianan/Desktop/%E4%BD%A3%E5%85%B5%E6%9C%80%E6%96%B0/YBMercenary%E6%9C%80%E6%96%B0/YBMercenary/ViewControllers/Publish/PublishTask/Custom/Controller/PublicCustomTaskVC.m"
+                  timestampString = "565091431.341699"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "195"
+                  endingLineNumber = "195"
+                  offsetFromSymbolStart = "64">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__destroy_helper_block_.215"
+                  moduleName = "YBMercenary"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/zhujianan/Desktop/%E4%BD%A3%E5%85%B5%E6%9C%80%E6%96%B0/YBMercenary%E6%9C%80%E6%96%B0/YBMercenary/ViewControllers/Publish/PublishTask/Custom/Controller/PublicCustomTaskVC.m"
+                  timestampString = "565091431.343411"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "193"
+                  endingLineNumber = "193"
+                  offsetFromSymbolStart = "20">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "YBMercenary/ViewControllers/Pub/TaskDetailVC/&#x5ba1;&#x6838;&#x4e2d;/Controller/ZJNTaskAuditViewController.m"
+            timestampString = "561985385.723258"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "391"
+            endingLineNumber = "391"
+            landmarkName = "-getDataFromServiceWithType:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "YBMercenary/ViewControllers/Pub/TaskDetailVC/&#x5ba1;&#x6838;&#x4e2d;/Controller/ZJNTaskAuditViewController.m"
+            timestampString = "561985385.72337"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "396"
+            endingLineNumber = "396"
+            landmarkName = "-getDataFromServiceWithType:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "YBMercenary/ViewControllers/Pub/TaskDetailVC/&#x5ba1;&#x6838;&#x4e2d;/Controller/ZJNTaskAuditViewController.m"
+            timestampString = "561985385.723464"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "389"
+            endingLineNumber = "389"
+            landmarkName = "-getDataFromServiceWithType:"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[ZJNTaskAuditViewController getDataFromServiceWithType:]"
+                  moduleName = "YBMercenary"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/zhujianan/Desktop/%E4%BD%A3%E5%85%B5%E6%9C%80%E6%96%B0/YBMercenary%E6%9C%80%E6%96%B0/YBMercenary/ViewControllers/Pub/TaskDetailVC/%E5%AE%A1%E6%A0%B8%E4%B8%AD/Controller/ZJNTaskAuditViewController.m"
+                  timestampString = "565091431.35719"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "389"
+                  endingLineNumber = "389"
+                  offsetFromSymbolStart = "448">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__57-[ZJNTaskAuditViewController getDataFromServiceWithType:]_block_invoke"
+                  moduleName = "YBMercenary"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/zhujianan/Desktop/%E4%BD%A3%E5%85%B5%E6%9C%80%E6%96%B0/YBMercenary%E6%9C%80%E6%96%B0/YBMercenary/ViewControllers/Pub/TaskDetailVC/%E5%AE%A1%E6%A0%B8%E4%B8%AD/Controller/ZJNTaskAuditViewController.m"
+                  timestampString = "565091431.358871"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "390"
+                  endingLineNumber = "390"
+                  offsetFromSymbolStart = "48">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "YBMercenary/ViewControllers/Pub/TaskDetailVC/&#x53ef;&#x62a5;&#x540d;/Controller/ZJNSignUpViewController.m"
+            timestampString = "565086212.856562"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "445"
+            endingLineNumber = "445"
+            landmarkName = "-getDataFromServiceWithType:Id:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "YBMercenary/AppDelegate+RCPush.m"
+            timestampString = "565005779.40141"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "58"
+            endingLineNumber = "58"
+            landmarkName = "-application:didReceiveRemoteNotification:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "YBMercenary/ViewControllers/Login/Certification(&#x8ba4;&#x8bc1;)/Individual/ZJNIndividualCertificationViewController.m"
+            timestampString = "565091431.0039181"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "358"
+            endingLineNumber = "358"
+            landmarkName = "-submitBtnClick"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "YBMercenary/ViewControllers/Login/Certification(&#x8ba4;&#x8bc1;)/Individual/ZJNIndividualCertificationViewController.m"
+            timestampString = "565091431.003986"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "367"
+            endingLineNumber = "367"
+            landmarkName = "-submitBtnClick"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "YBMercenary/ViewControllers/Login/Certification(&#x8ba4;&#x8bc1;)/Individual/ZJNIndividualCertificationViewController.m"
+            timestampString = "565091431.004046"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "362"
+            endingLineNumber = "362"
+            landmarkName = "-submitBtnClick"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "YBMercenary/Tool/Utile.m"
+            timestampString = "565083212.818169"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "383"
+            endingLineNumber = "383"
+            landmarkName = "+reSizeImageData:maxImageSize:maxSizeWithKB:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "YBMercenary/Tool/Utile.m"
+            timestampString = "565083235.97403"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "392"
+            endingLineNumber = "392"
+            landmarkName = "+reSizeImageData:maxImageSize:maxSizeWithKB:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "YBMercenary/Tool/Utile.m"
+            timestampString = "565083257.9572361"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "399"
+            endingLineNumber = "399"
+            landmarkName = "+reSizeImageData:maxImageSize:maxSizeWithKB:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "YBMercenary/Tool/Utile.m"
+            timestampString = "565083312.9862"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "389"
+            endingLineNumber = "389"
+            landmarkName = "+reSizeImageData:maxImageSize:maxSizeWithKB:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

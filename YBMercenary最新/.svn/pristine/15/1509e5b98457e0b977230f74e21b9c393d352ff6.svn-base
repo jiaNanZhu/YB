@@ -1,0 +1,242 @@
+//
+//  YBMyIssueTableViewCell.m
+//  YBMercenary
+//
+//  Created by 飞哥 on 2018/3/29.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "YBMyIssueTableViewCell.h"
+
+@implementation YBMyIssueTableViewCell
+-(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if(self){
+        
+        _titleLab = [F_UI SL_UI_Label:@"搬家" color:[UIColor hex:@"444444"] textAlignment:NSTextAlignmentLeft textFont:AdFloat(28) numberOfLines:1];
+        _titleLab.frame = CGRectMake(AdFloat(30), AdFloat(30), AdFloat(350), AdFloat(30));
+        [self addSubview:_titleLab];
+        
+        _contentLab = [F_UI SL_UI_Label:@"限北京市区搬运" color:[UIColor hex:@"666666"] textAlignment:NSTextAlignmentLeft textFont:AdFloat(28) numberOfLines:1];
+        _contentLab.frame = CGRectMake(AdFloat(30), _titleLab.maxY+AdFloat(20), d_Device_width-AdFloat(60), AdFloat(30));
+        [self addSubview:_contentLab];
+        
+        _numLab = [F_UI SL_UI_Label:@"¥88888.00" color:[UIColor hex:@"FFC90E"] textAlignment:NSTextAlignmentRight textFont:AdFloat(38) numberOfLines:1];
+        _numLab.frame = CGRectMake(d_Device_width-AdFloat(300), AdFloat(30), AdFloat(270), AdFloat(40));
+        [self addSubview:_numLab];
+        
+        
+        UIView *xianView = [F_UI SL_UI_View:COlOR_R_G_B_A(242, 242, 242, 1) cornerRadius:0 borderColor:nil borderWidth:0];
+        xianView.frame = CGRectMake(0, AdFloat(218), d_Device_width, AdFloat(2));
+        [self addSubview:xianView];
+        
+        UIView *xianView_1 = [F_UI SL_UI_View:COlOR_R_G_B_A(242, 242, 242, 1) cornerRadius:0 borderColor:nil borderWidth:0  ];
+        xianView_1.frame = CGRectMake(0, AdFloat(314), d_Device_width, AdFloat(16));
+        [self addSubview:xianView_1];
+        
+        _totalLab = [F_UI SL_UI_Label:@"浏览数：0   分享数：0" color:[UIColor hex:@"666666"] textAlignment:NSTextAlignmentLeft textFont:AdFloat(24) numberOfLines:1];
+        _totalLab.frame = CGRectMake(AdFloat(30), xianView.maxY, AdFloat(345), AdFloat(90));
+        [self addSubview:_totalLab];
+        
+        _amendBtn = [F_UI SL_UI_Btn:@"修改" Color:[UIColor hex:@"888888"] Font:AdFloat(24) bgimage:nil selecteImage:nil target:self action:@selector(amendBtn:) cornerRadius:AdFloat(4)];
+        _amendBtn.frame = CGRectMake(AdFloat(400), xianView.maxY+AdFloat(20), AdFloat(96), AdFloat(52));
+        _amendBtn.layer.borderColor = [UIColor hex:@"E5E5E5"].CGColor;//边框颜色
+        _amendBtn.layer.borderWidth = AdFloat(2);//边框宽度
+        _amendBtn.hidden = YES;
+        [self addSubview:_amendBtn];
+        
+        _revocationBtn = [F_UI SL_UI_Btn:@"撤销" Color:[UIColor hex:@"888888"] Font:AdFloat(24) bgimage:nil selecteImage:nil target:self action:@selector(revocationBtn:) cornerRadius:AdFloat(4)];
+        _revocationBtn.frame = CGRectMake(_amendBtn.maxX+AdFloat(16), xianView.maxY+AdFloat(20), AdFloat(96), AdFloat(52));
+        _revocationBtn.layer.borderColor = [UIColor hex:@"E5E5E5"].CGColor;//边框颜色
+        _revocationBtn.layer.borderWidth = AdFloat(2);//边框宽度
+        _revocationBtn.hidden = YES;
+        [self addSubview:_revocationBtn];
+        
+        _inviteBtn = [F_UI SL_UI_Btn:@"邀请" Color:[UIColor hex:@"888888"] Font:AdFloat(24) bgimage:nil selecteImage:nil target:self action:@selector(inviteBtn:) cornerRadius:AdFloat(4)];
+        _inviteBtn.frame = CGRectMake(_revocationBtn.maxX+AdFloat(16), xianView.maxY+AdFloat(20), AdFloat(96), AdFloat(52));
+        _inviteBtn.layer.borderColor = [UIColor hex:@"E5E5E5"].CGColor;//边框颜色
+        _inviteBtn.layer.borderWidth = AdFloat(2);//边框宽度
+        _inviteBtn.hidden = YES;
+        [self addSubview:_inviteBtn];
+        
+        _collectBtn = [F_UI SL_UI_Btn:@"" Color:[UIColor hex:@"888888"] Font:AdFloat(24) bgimage:nil selecteImage:nil target:self action:@selector(collectBtn:) cornerRadius:AdFloat(4)];
+        _collectBtn.layer.borderColor = [UIColor hex:@"E5E5E5"].CGColor;//边框颜色
+        _collectBtn.layer.borderWidth = AdFloat(2);//边框宽度
+        [self addSubview:_collectBtn];
+        
+    }
+    return self;
+}
+//修改
+-(void)amendBtn:(UIButton *)sender{
+    if (_delegate && [_delegate respondsToSelector:@selector(clickAttention:)])
+    {
+        [_delegate clickAttention:(int)sender.tag];
+    }
+}
+//撤销
+-(void)revocationBtn:(UIButton *)sender{
+    if (_delegate && [_delegate respondsToSelector:@selector(clickAttention_1:)])
+    {
+        [_delegate clickAttention_1:(int)sender.tag];
+    }
+}
+//邀请
+-(void)inviteBtn:(UIButton *)sender{
+    if (_delegate && [_delegate respondsToSelector:@selector(clickAttention_2:)])
+    {
+        [_delegate clickAttention_2:(int)sender.tag];
+    }
+}
+//确认审核、评价、上架
+-(void)collectBtn:(UIButton *)sender{
+    if (_delegate && [_delegate respondsToSelector:@selector(clickAttention_3:type:)])
+    {
+        [_delegate clickAttention_3:(int)sender.tag type:_typeS];
+    }
+}
+-(void)networkDataCell:(NSDictionary *)dic row:(int)row type:(int)type{
+    _amendBtn.tag = row+11000;
+    _revocationBtn.tag = row+12000;
+    _inviteBtn.tag = row+13000;
+    _collectBtn.tag = row+14000;
+    NSArray *arr = @[@"赚钱很快",@"赚钱快",@"钱快",@"快"];
+    CGFloat w = 0;
+    CGFloat h = AdFloat(140);
+    for (int i = 0; i < arr.count; i++) {
+        float labW = [YBUser widthForString:arr[i] fontSize:AdFloat(24) andWidth:AdFloat(200) andHeight:AdFloat(20)];
+        UILabel *lab = [F_UI SL_UI_Label:arr[i] color:[UIColor hex:@"F5513C"] textAlignment:NSTextAlignmentCenter textFont:AdFloat(24) numberOfLines:1];
+        lab.frame = CGRectMake(i== 0 ? AdFloat(30) : AdFloat(20)+w, h, labW+AdFloat(20), AdFloat(40));
+        lab.layer.masksToBounds = YES;
+        lab.layer.cornerRadius = AdFloat(4);
+        lab.layer.borderColor = [UIColor hex:@"F5513C"].CGColor;//边框颜色
+        lab.layer.borderWidth = AdFloat(2);//边框宽度
+        [self addSubview:lab];
+        w = lab.width + lab.x;
+    }
+    //type:1.全部 2.未决定 3.任务中 4.审核中 5.待评价 6.已下架
+    if (type == 0) {
+        if (row == 0) {
+            _amendBtn.hidden = NO;
+            _revocationBtn.hidden = NO;
+            _inviteBtn.hidden = NO;
+        }else if (row == 1){
+            _collectBtn.frame = CGRectMake(d_Device_width-AdFloat(190), AdFloat(240), AdFloat(160), AdFloat(52));
+            [_collectBtn setTitle:@"确认审核" forState:UIControlStateNormal];
+            _typeS = 1;
+        }else if (row == 2){
+            _collectBtn.frame = CGRectMake(d_Device_width-AdFloat(126), AdFloat(240), AdFloat(96), AdFloat(52));
+            [_collectBtn setTitle:@"评价" forState:UIControlStateNormal];
+            _typeS = 2;
+        }else if (row == 3){
+            _collectBtn.frame = CGRectMake(d_Device_width-AdFloat(126), AdFloat(240), AdFloat(96), AdFloat(52));
+            [_collectBtn setTitle:@"上架" forState:UIControlStateNormal];
+            _typeS = 3;
+            
+        }else if (row == 4){
+            _collectBtn.frame = CGRectMake(d_Device_width-AdFloat(126), AdFloat(240), AdFloat(96), AdFloat(52));
+            [_collectBtn setTitle:@"评价" forState:UIControlStateNormal];
+            _typeS = 2;
+        }else if (row == 5){
+            _collectBtn.frame = CGRectMake(d_Device_width-AdFloat(190), AdFloat(240), AdFloat(160), AdFloat(52));
+            [_collectBtn setTitle:@"确认审核" forState:UIControlStateNormal];
+            _typeS = 1;
+        }
+    }else if (type == 1){
+        _amendBtn.hidden = NO;
+        _revocationBtn.hidden = NO;
+        _inviteBtn.hidden = NO;
+    }else if (type == 2){
+        
+    }else if (type == 3){
+        _collectBtn.frame = CGRectMake(d_Device_width-AdFloat(190), AdFloat(240), AdFloat(160), AdFloat(52));
+        [_collectBtn setTitle:@"确认审核" forState:UIControlStateNormal];
+    }else if (type == 4){
+        _collectBtn.frame = CGRectMake(d_Device_width-AdFloat(126), AdFloat(240), AdFloat(96), AdFloat(52));
+        [_collectBtn setTitle:@"评价" forState:UIControlStateNormal];
+    }else if (type == 5){
+        _collectBtn.frame = CGRectMake(d_Device_width-AdFloat(126), AdFloat(240), AdFloat(96), AdFloat(52));
+        [_collectBtn setTitle:@"上架" forState:UIControlStateNormal];
+    }
+}
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // Initialization code
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
+-(void)configurationwithmodel:(YBMyIssueModel *)model
+{
+    
+    
+    self.titleLab.text=model.task_name;
+    self.contentLab.text=model.task_description;
+    self.numLab.text=[NSString stringWithFormat:@"¥%@",model.pay_amount];
+    
+
+    self.totalLab.text=[NSString stringWithFormat:@"浏览数：%@   分享数：%@",model.share_num,model.view_num];
+    
+    NSArray *arr = [model.task_tag componentsSeparatedByString:@","];
+    CGFloat w = 0;
+    CGFloat h = AdFloat(140);
+    for (int i = 0; i < arr.count; i++) {
+        
+        if (i == 3) {
+            break;
+        }
+        float labW = [YBUser widthForString:arr[i] fontSize:AdFloat(24) andWidth:AdFloat(200) andHeight:AdFloat(20)];
+        UILabel *lab = [F_UI SL_UI_Label:arr[i] color:[UIColor hex:@"F5513C"] textAlignment:NSTextAlignmentCenter textFont:AdFloat(24) numberOfLines:1];
+        lab.frame = CGRectMake(i== 0 ? AdFloat(30) : AdFloat(20)+w, h, labW+AdFloat(20), AdFloat(40));
+        lab.layer.masksToBounds = YES;
+        lab.layer.cornerRadius = AdFloat(4);
+        lab.layer.borderColor = [UIColor hex:@"F5513C"].CGColor;//边框颜色
+        lab.layer.borderWidth = AdFloat(2);//边框宽度
+        
+        [self addSubview:lab];
+        w = lab.width + lab.x;
+    }
+    
+    
+    
+    switch ([model.task_status intValue]) {
+        case 1:
+            {
+             
+                
+            }
+            break;
+        case 2:
+        {
+            _collectBtn.frame = CGRectMake(d_Device_width-AdFloat(190), AdFloat(240), AdFloat(160), AdFloat(52));
+            [_collectBtn setTitle:@"确认审核" forState:UIControlStateNormal];
+        }
+            break;
+        case 3:
+        {
+            _collectBtn.frame = CGRectMake(d_Device_width-AdFloat(126), AdFloat(240), AdFloat(96), AdFloat(52));
+            [_collectBtn setTitle:@"评价" forState:UIControlStateNormal];
+            
+        }
+            break;
+        case 4:
+        {
+            _collectBtn.frame = CGRectMake(d_Device_width-AdFloat(126), AdFloat(240), AdFloat(96), AdFloat(52));
+            [_collectBtn setTitle:@"上架" forState:UIControlStateNormal];
+        }
+            break;
+        case 5:
+        {
+            _collectBtn.frame = CGRectMake(d_Device_width-AdFloat(126), AdFloat(240), AdFloat(96), AdFloat(52));
+            [_collectBtn setTitle:@"上架" forState:UIControlStateNormal];
+        }
+            break;
+        default:
+            break;
+    }
+}
+@end

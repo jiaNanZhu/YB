@@ -1,0 +1,59 @@
+//
+//  YBMessageXXTableViewCell.m
+//  YBMercenary
+//
+//  Created by 飞哥 on 2018/3/23.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "YBMessageXXTableViewCell.h"
+
+@implementation YBMessageXXTableViewCell
+-(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if(self){
+        
+        _titleLab = [F_UI SL_UI_Label:@"系统消息" color:[UIColor hex:@"444444"] textAlignment:NSTextAlignmentLeft textFont:AdFloat(30) numberOfLines:1];
+        _titleLab.frame = CGRectMake(AdFloat(30), AdFloat(26), d_Device_width-AdFloat(230), AdFloat(40));
+        [self addSubview:_titleLab];
+        
+        _contentLab = [F_UI SL_UI_Label:@"有人评论了你的帖子" color:[UIColor hex:@"666666"] textAlignment:NSTextAlignmentLeft textFont:AdFloat(26) numberOfLines:1];
+        _contentLab.frame = CGRectMake(AdFloat(30), _titleLab.maxY+AdFloat(10), d_Device_width-AdFloat(60), AdFloat(40));
+        [self addSubview:_contentLab];
+        
+        _timeLab = [F_UI SL_UI_Label:@"昨天" color:[UIColor hex:@"999999"] textAlignment:NSTextAlignmentRight textFont:AdFloat(26) numberOfLines:1];
+        _timeLab.frame = CGRectMake(d_Device_width-AdFloat(230), AdFloat(26), AdFloat(200), AdFloat(30));
+        [self addSubview:_timeLab];
+        
+        UIView *xianView = [F_UI SL_UI_View:COlOR_R_G_B_A(242, 242, 242, 1) cornerRadius:0 borderColor:nil borderWidth:0];
+        xianView.frame = CGRectMake(AdFloat(30), AdFloat(138), d_Device_width-AdFloat(60), AdFloat(2));
+        [self addSubview:xianView];
+        
+    }
+    return self;
+}
+
+-(void)networkDataCell:(NSDictionary *)dic type:(int)type{
+    if (type == 0) {
+        _titleLab.text = @"任务消息";
+        _contentLab.text = @"任务已经被领取";
+    }else if (type == 1){
+        _titleLab.text = @"系统消息";
+        _contentLab.text = @"有新的通知";
+    }else{
+        _titleLab.text = @"酒馆消息";
+        _contentLab.text = @"有人评论了你的帖子";
+    }
+}
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // Initialization code
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
+@end

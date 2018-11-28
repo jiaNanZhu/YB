@@ -1,0 +1,71 @@
+//
+//  ZJNAuditButtonView.m
+//  YBMercenary
+//
+//  Created by 朱佳男 on 2018/7/26.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "ZJNAuditButtonView.h"
+
+@implementation ZJNAuditButtonView
+-(id)initWithFrame:(CGRect)frame{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.backgroundColor = [UIColor hex:@"0386FF"];
+        [self addSubview:self.agreeBtn];
+        [self.agreeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.right.equalTo(self);
+            make.width.mas_equalTo(kScreenWidth/2.0);
+            make.height.mas_equalTo(49);
+        }];
+        
+        [self addSubview:self.disAgreeBtn];
+        [self.disAgreeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.top.equalTo(self);
+            make.width.mas_equalTo(kScreenWidth/2.0);
+            make.height.mas_equalTo(49);
+        }];
+        
+        UIView *line = [[UIView alloc]init];
+        line.backgroundColor = [UIColor whiteColor];
+        [self addSubview:line];
+        [line mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.equalTo(self);
+            make.centerY.equalTo(self.agreeBtn);
+            make.width.mas_equalTo(2);
+            make.height.mas_equalTo(30);
+        }];
+        
+    }
+    return self;
+}
+
+-(UIButton *)agreeBtn{
+    if (!_agreeBtn) {
+        _agreeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_agreeBtn setTitle:@"确认完成" forState:UIControlStateNormal];
+        [_agreeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        _agreeBtn.titleLabel.font = SetFont(AdFloat(30));
+    }
+    return _agreeBtn;
+}
+
+-(UIButton *)disAgreeBtn{
+    if (!_disAgreeBtn) {
+        _disAgreeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_disAgreeBtn setTitle:@"审核不通过" forState:UIControlStateNormal];
+        [_disAgreeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        _disAgreeBtn.titleLabel.font = SetFont(AdFloat(30));
+    }
+    return _disAgreeBtn;
+}
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect {
+    // Drawing code
+}
+*/
+
+@end

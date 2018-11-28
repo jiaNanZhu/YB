@@ -1,0 +1,23 @@
+//
+//  TaskRequireCollectionCell.h
+//  YBMercenary
+//
+//  Created by 龙青磊 on 2018/3/27.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@protocol TaskRequireCollectionCellDelegate<NSObject>
+
+- (void)deleteRowWithIndex:(NSInteger)index;
+
+@end
+
+@interface TaskRequireCollectionCell : UICollectionViewCell
+
+@property (nonatomic, strong) UITextField *textField;
+@property(nonatomic, assign) NSInteger row;
+@property (nonatomic, weak) id<TaskRequireCollectionCellDelegate> delegate;
+
+@end

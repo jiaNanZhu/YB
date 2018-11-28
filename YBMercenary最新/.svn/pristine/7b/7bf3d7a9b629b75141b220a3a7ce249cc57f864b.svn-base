@@ -1,0 +1,302 @@
+//
+//  YBLoginViewController.m
+//  YBMercenary
+//
+//  Created by 飞哥 on 2018/4/2.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "YBLoginViewController.h"
+#import "YBForgetPasswordViewController.h"
+#import "YBRegisterViewController.h"
+#import <RongIMKit/RongIMKit.h>
+#import "AppDelegate.h"
+#import "YBTabbarViewController.h"
+@interface YBLoginViewController ()
+{
+    UIImageView *xianImg;
+    UITextField *textField_1;
+    UITextField *textField_2;
+    
+    UIButton *CAPTCHABtn;
+}
+@property(nonatomic,strong)UIView * headView;
+@end
+
+@implementation YBLoginViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    [self nav];
+    [self makeUI];
+}
+-(void)viewWillAppear:(BOOL)animated{
+    self.tabBarController.tabBar.hidden = YES;
+}
+-(void)nav{
+    self.navigationItem.title = @"登录";
+    //设置导航背景颜色
+    [self.navigationController.navigationBar setBarTintColor:[UIColor hex:@"0386FF"]];
+    //设置不透明
+    self.navigationController.navigationBar.translucent = NO;
+    // 导航栏字体颜色
+    NSDictionary * dic=@{NSForegroundColorAttributeName:[UIColor whiteColor],NSFontAttributeName:[UIFont boldSystemFontOfSize:18]};
+    self.navigationController.navigationBar.titleTextAttributes = dic;
+    
+//    UIButton *leftBtn = [[UIButton alloc]init];
+//    [leftBtn setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
+//    leftBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+//    [leftBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+//    [leftBtn addTarget:self action:@selector(leftBtn) forControlEvents:UIControlEventTouchUpInside];
+//    UIBarButtonItem *left = [[UIBarButtonItem alloc]initWithCustomView:leftBtn];
+//    self.navigationItem.leftBarButtonItem = left;
+    
+}
+#pragma mark - 左
+-(void)leftBtn{
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+}
+#pragma mark - UI
+-(void)makeUI{
+    
+    UIImageView *logoIMG = [F_UI SL_UI_UIimg:[UIImage imageNamed:@"佣兵天下APP图标 Copy 3"] cornerRadius:0];
+    logoIMG.frame = CGRectMake(AdFloat(294), AdFloat(70), AdFloat(164), AdFloat(164));
+    [self.view addSubview:logoIMG];
+    
+    _headView = [F_UI SL_UI_View:[UIColor clearColor] cornerRadius:0 borderColor:nil borderWidth:0];
+    _headView.frame = CGRectMake(0, logoIMG.maxY+AdFloat(40), d_Device_width, AdFloat(100));
+    [self.view addSubview:_headView];
+    
+    xianImg = [F_UI SL_UI_UIimg:[UIImage imageNamed:@"xianIMG"] cornerRadius:0];
+    xianImg.frame = CGRectMake(AdFloat(148), AdFloat(95), AdFloat(180), AdFloat(5));
+    [_headView addSubview:xianImg];
+    
+    NSArray *titleArr = @[@"验证码登录",@"密码登录"];
+    for (int i = 0; i < titleArr.count; i++) {
+        UIButton *btn = [F_UI SL_UI_Btn:titleArr[i] Color:[UIColor hex:@"666666"] Font:AdFloat(32) bgimage:nil selecteImage:nil target:self action:@selector(btn:) cornerRadius:0];
+        btn.frame = CGRectMake(AdFloat(148)+i*AdFloat(274), 0, AdFloat(180), AdFloat(100));
+        btn.tag = i+370;
+        [_headView addSubview:btn];
+        
+        if (i == 0) {
+            [btn setUserInteractionEnabled:NO];
+            [btn setTitleColor:[UIColor hex:@"0386FF"] forState:UIControlStateNormal];
+        }
+    }
+    
+    UIView *loginView = [F_UI SL_UI_View:[UIColor whiteColor] cornerRadius:0 borderColor:nil borderWidth:0];
+    loginView.frame = CGRectMake(0, logoIMG.maxY+AdFloat(171), d_Device_width, AdFloat(200));
+    [self.view addSubview:loginView];
+    
+    UIView *xianView = [F_UI SL_UI_View:[UIColor hex:@"E5E5E5"] cornerRadius:0 borderColor:nil borderWidth:0];
+    xianView.frame = CGRectMake(AdFloat(60), AdFloat(99), d_Device_width-AdFloat(120), AdFloat(2));
+    [loginView addSubview:xianView];
+    
+    UIImageView *phoneIMG = [F_UI SL_UI_UIimg:[UIImage imageNamed:@"login_phone"] cornerRadius:0];
+    phoneIMG.frame = CGRectMake(AdFloat(60), AdFloat(24), AdFloat(30), AdFloat(50));
+    [loginView addSubview:phoneIMG];
+    
+    UIImageView *passIMG = [F_UI SL_UI_UIimg:[UIImage imageNamed:@"login_MM"] cornerRadius:0];
+    passIMG.frame = CGRectMake(AdFloat(60), xianView.maxY+AdFloat(26), AdFloat(34), AdFloat(43));
+    [loginView addSubview:passIMG];
+    
+    textField_1 = [F_UI SL_UI_Field:@"请输入手机号" font:AdFloat(28) textAlignment:NSTextAlignmentLeft borderStyle:UITextBorderStyleNone clearOnBeginEditing:YES secure:NO keyBoardStyle:UIKeyboardTypeNumberPad];
+    textField_1.frame = CGRectMake(phoneIMG.maxX+AdFloat(20), 0, AdFloat(500), AdFloat(99));
+    [loginView addSubview:textField_1];
+    
+    textField_2 = [F_UI SL_UI_Field:@"请输入验证码" font:AdFloat(28) textAlignment:NSTextAlignmentLeft borderStyle:UITextBorderStyleNone clearOnBeginEditing:YES secure:NO keyBoardStyle:UIKeyboardTypeNumberPad];
+    textField_2.frame = CGRectMake(phoneIMG.maxX+AdFloat(20), xianView.maxY, AdFloat(400), AdFloat(99));
+    [loginView addSubview:textField_2];
+    
+    CAPTCHABtn = [F_UI SL_UI_Btn:@"发送验证码" Color:[UIColor hex:@"666666"] Font:AdFloat(28) bgimage:nil selecteImage:nil target:self action:@selector(CAPTCHABtn) cornerRadius:0];
+    CAPTCHABtn.frame = CGRectMake(d_Device_width-AdFloat(205), xianView.maxY, AdFloat(150), AdFloat(99));
+    [loginView addSubview:CAPTCHABtn];
+    
+    UIButton *forgetBtn = [F_UI SL_UI_Btn:@"忘记密码？" Color:[UIColor hex:@"999999"] Font:AdFloat(26) bgimage:nil selecteImage:nil target:self action:@selector(forgetBtn) cornerRadius:0];
+    forgetBtn.frame = CGRectMake(d_Device_width-AdFloat(192), loginView.maxY+AdFloat(14), AdFloat(142), AdFloat(36));
+    [self.view addSubview:forgetBtn];
+    
+    UIButton *loginBtn = [F_UI SL_UI_Btn:@"登录" Color:[UIColor whiteColor] Font:AdFloat(32) bgimage:nil selecteImage:nil target:self action:@selector(loginBtn) cornerRadius:AdFloat(45)];
+    loginBtn.frame = CGRectMake(AdFloat(60),loginView.maxY+AdFloat(150), d_Device_width-AdFloat(120), AdFloat(90));
+    [loginBtn setBackgroundColor:[UIColor hex:@"0386FF"]];
+    [self.view addSubview:loginBtn];
+    
+    UIButton *establishBtn = [F_UI SL_UI_Btn:@"创建账号" Color:[UIColor hex:@"038CFF"] Font:AdFloat(26) bgimage:nil selecteImage:nil target:self action:@selector(establishBtn) cornerRadius:0];
+    establishBtn.frame = CGRectMake((d_Device_width-AdFloat(120))/2, loginBtn.maxY+AdFloat(14), AdFloat(120), AdFloat(36));
+    [self.view addSubview:establishBtn];
+}
+#pragma mark - 选择
+-(void)btn:(UIButton *)sender{
+    for (int i = 0; i < 2; i++) {
+        UIButton *btn = (UIButton *)[self.view viewWithTag:(370+i)];
+        if (btn.tag == sender.tag) {
+            if (i == 1) {
+                CAPTCHABtn.hidden = YES;
+                textField_1.text = @"";
+                textField_2.text = @"";
+                textField_2.placeholder = @"请输入密码";
+            }else{
+                CAPTCHABtn.hidden = NO;
+                textField_1.text = @"";
+                textField_2.text = @"";
+                textField_2.placeholder = @"请输入验证码";
+            }
+            
+            [btn setUserInteractionEnabled:NO];
+            [btn setTitleColor:[UIColor hex:@"0386FF"] forState:UIControlStateNormal];
+            [UIView animateWithDuration:0.3 animations:^{
+                xianImg.frame = CGRectMake(AdFloat(148)+i*i*AdFloat(274), AdFloat(95), AdFloat(180), AdFloat(5));
+            }];
+            
+        }else{
+            [btn setUserInteractionEnabled:YES];
+            [btn setTitleColor:[UIColor hex:@"666666"] forState:UIControlStateNormal];
+            
+        }
+    }
+}
+#pragma mark - 忘记密码
+-(void)forgetBtn{
+    YBForgetPasswordViewController *vc = [[YBForgetPasswordViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+#pragma mark - 登录
+-(void)loginBtn{
+//    [YBUser setBoolLogin:@"1"];
+//    [self leftBtn];
+ 
+    [self requestloginwithisbycode:!CAPTCHABtn.hidden];
+}
+#pragma mark - 创建账号
+-(void)establishBtn{
+    YBRegisterViewController *vc = [[YBRegisterViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+#pragma mark - 发送验证码
+-(void)CAPTCHABtn{
+
+}
+//点击屏幕空白处去掉键盘
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [textField_1 resignFirstResponder];
+    [textField_2 resignFirstResponder];
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+
+#pragma mark  验证码登录请求
+-(void)requestloginwithisbycode:(BOOL)isbycode
+{
+    NSDictionary *signDict=nil;
+    
+    NSString *url=nil;
+    
+    
+    if (isbycode) {
+        //验证码登录
+        url=Loginbycode;
+        signDict  =@{@"mobile":textField_1.text,@"code":textField_2.text};
+        
+    }
+    else{
+        //密码登录
+        url=Login;
+        signDict =@{@"mobile":textField_1.text,@"pwd":textField_2.text};
+    }    
+    NSMutableDictionary *parameters=[NSMutableDictionary dictionaryWithDictionary:signDict];
+   
+    [parameters setObject:[SignTool signStr:signDict] forKey:@"signature"];
+    
+    [[YBRequestManager sharedYBManager]postWithUrlString:url parameters:parameters success:^(id data) {
+        
+        if ([data[@"code"] integerValue] ==0) {
+            
+//            NSString*token=data[@"data"][@"token"];
+//
+//
+//            [[NSUserDefaults standardUserDefaults]setObject:token forKey:APPUserTokenKey];
+//            [[NSUserDefaults standardUserDefaults] synchronize];
+//            [YBUser setBoolLogin:@"1"];
+//            [self leftBtn];
+//
+//
+//            AppDelegate * delegate = (id)[UIApplication sharedApplication].delegate;
+//            delegate.window.rootViewController = [[YBTabbarViewController alloc]init];
+            
+            [self loginRCloudwith:data];
+        }else{
+            [DWBToast showCenterWithText:data[@"msg"]];
+        }
+       
+    } failure:^(NSError *error) {
+        
+    }];
+}
+
+#pragma mark 登陆融云服务器
+-(void)loginRCloudwith:(id)data
+{
+//    RCUserInfo *_currentUserInfo =[[RCUserInfo alloc] initWithUserId:user.id name:user.nickname portrait:user.pic];
+//    [RCIM sharedRCIM].currentUserInfo = _currentUserInfo;
+    //登录融云服务器
+    
+//    WeakSelf;
+    
+    KWeakSelf(self);
+    [[RCIM sharedRCIM] connectWithToken:data[@"data"][@"yun_token"]
+                                success:^(NSString *userId) {
+                                    
+                                    
+                                    
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        
+                                        
+                                        NSString*token=data[@"data"][@"token"];
+                                        
+                                        
+                                        [[NSUserDefaults standardUserDefaults]setObject:token forKey:APPUserTokenKey];
+                                        
+                                        [[NSUserDefaults standardUserDefaults]setObject:data[@"data"][@"yun_token"] forKey:APPUserRCTokenKey];
+                                        [[NSUserDefaults standardUserDefaults] synchronize];
+                                        [YBUser setBoolLogin:@"1"];
+                                        AppDelegate * delegate = (id)[UIApplication sharedApplication].delegate;
+                                        delegate.window.rootViewController = [[YBTabbarViewController alloc]init];
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    });
+                                    
+                                    
+                                    
+                                    
+                                    
+                                }
+                                  error:^(RCConnectErrorCode status) {
+                                      
+                                      dispatch_async(dispatch_get_main_queue(), ^{
+                                          
+                                          
+                                          [DWBToast showCenterWithText:@"登录失败"];
+                                          
+                                      });
+                                  }
+                         tokenIncorrect:^{
+                             NSLog(@"IncorrectToken");
+                             dispatch_async(dispatch_get_main_queue(), ^{
+                                 [DWBToast showCenterWithText:@"登录失败"];
+                                 
+                             });
+                             
+                         }];
+    
+}
+
+@end

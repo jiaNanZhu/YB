@@ -1,0 +1,44 @@
+//
+//  YBUser.h
+//  YBMercenary
+//
+//  Created by 飞哥 on 2018/3/23.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface YBUser : NSObject<NSCopying>
+
+@property(nonatomic,strong)NSString *age;
+@property(nonatomic,strong)NSString *business_license;
+@property(nonatomic,strong)NSString *certificate;
+@property(nonatomic,strong)NSString *create_time;
+@property(nonatomic,strong)NSString *experience;
+@property(nonatomic,strong)NSString *head_img;
+@property(nonatomic,strong)NSString *id_card;
+@property(nonatomic,strong)NSString *identity_front;
+@property(nonatomic,strong)NSString *industry;
+@property(nonatomic,strong)NSString *is_check;
+@property(nonatomic,strong)NSString *mail;
+@property(nonatomic,strong)NSString *mobile;
+@property(nonatomic,strong)NSString *name;
+@property(nonatomic,strong)NSString *nick_name;
+@property(nonatomic,strong)NSString *sex;
+@property(nonatomic,strong)NSString *speciality;
+@property(nonatomic,strong)NSString *user_type;
+@property(nonatomic,strong)NSString *workyear;
+@property(nonatomic,copy)NSString *id;
+
+//类型强转
++(NSString *)stringValueOf:(id)_string;
+
+//暂时用做判断是否登录
++(void)setBoolLogin:(id)string;
++(NSString *)boolLogin;
+
+//获取字符串宽度
++(float)widthForString:(NSString *)value fontSize:(float)fontSize andWidth:(float)width  andHeight:(float)height;
+//获取字符串的高度
++(float)heightForString:(NSString *)value fontSize:(float)fontSize andWidth:(float)width  andHeight:(float)height;
+@end

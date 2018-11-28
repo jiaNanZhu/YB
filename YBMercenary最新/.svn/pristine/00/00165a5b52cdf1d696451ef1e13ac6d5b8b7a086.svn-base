@@ -1,0 +1,69 @@
+//
+//  RanchConst.h
+//  Ranch
+//
+//  Created by GZP on 2018/1/25.
+//  Copyright © 2018年 gzp_macbook. All rights reserved.
+//
+
+//普通商品详情
+UIKIT_EXTERN NSString *const CMProduceDetail;
+//系列右列表
+UIKIT_EXTERN NSString *const XiLieRightList;
+//商场首页分类
+UIKIT_EXTERN NSString *const MallAllCategory;
+//HOST
+UIKIT_EXTERN NSString *const HOST;
+
+//============= 个人信息 ====================
+//uid
+UIKIT_EXTERN NSString *const User_id;
+//mobile
+UIKIT_EXTERN NSString *const User_mobile;
+//token
+UIKIT_EXTERN NSString *const User_token;
+
+
+//============= 默认颜色 ====================
+UIKIT_EXTERN NSString *const Green_Color;
+UIKIT_EXTERN NSString *const Nav_Color;
+UIKIT_EXTERN NSString *const Back_Color;
+UIKIT_EXTERN NSString *const Gray_Color;
+UIKIT_EXTERN NSString *const Yellow_Color;
+UIKIT_EXTERN NSString *const Blue_Color;
+
+
+//============= 网络接口====================
+#pragma mark 个人中心
+//获取用户基本信息
+UIKIT_EXTERN NSString *const UserCenter_getinfo;
+
+#pragma mark 登录/注册
+//登录
+UIKIT_EXTERN NSString *const Login;
+//验证码登录
+UIKIT_EXTERN NSString *const Loginbycode;
+//注册
+UIKIT_EXTERN NSString *const Regist;
+//重置密码
+UIKIT_EXTERN NSString *const Resetpwd;
+//获取验证码
+UIKIT_EXTERN NSString *const GetVerifyCode;
+
+//基本信息设置
+UIKIT_EXTERN NSString *const UserCenter_setinfo;
+
+//修改绑定手机号
+UIKIT_EXTERN NSString *const UserCenter_setmobile;
+<<<<<<< .mine
+
+//获取任务列表
+UIKIT_EXTERN NSString *const Get_tasklist;
+
+//获取任务详情
+UIKIT_EXTERN NSString *const Get_taskdetail;
+=======
+
+//图片上传
+UIKIT_EXTERN NSString *const UserCenter_imgupload;
+>>>>>>> .r69

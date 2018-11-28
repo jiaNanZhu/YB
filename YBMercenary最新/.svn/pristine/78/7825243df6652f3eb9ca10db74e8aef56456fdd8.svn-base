@@ -1,0 +1,122 @@
+//
+//  TaskInfoCell.m
+//  YBMercenary
+//
+//  Created by 龙青磊 on 2018/4/16.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "TaskInfoCell.h"
+
+
+@interface TaskInfoCell ()
+
+
+@end
+
+@implementation TaskInfoCell
+
++ (instancetype)creatTableViewCellWithTableView:(UITableView *)tableView{
+    TaskInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TaskInfoCell"];
+    if (cell == nil) {
+        cell = [[TaskInfoCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TaskInfoCell"];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.contentView.backgroundColor = [UIColor hex:Back_Color];
+    }
+    return cell;
+}
+
+- (void)initSubViews{
+    
+    UIView *backView = [[UIView alloc]init];
+    backView.backgroundColor = [UIColor whiteColor];
+    [self.contentView addSubview:backView];
+    [backView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.contentView);
+        make.right.equalTo(self.contentView.mas_right);
+        make.top.equalTo(self.contentView);
+        make.bottom.equalTo(self.contentView.mas_bottom).offset(-Width(8));
+    }];
+    
+    _iconImage = [[UIImageView alloc]init];
+    _iconImage.layer.cornerRadius = Width(20);
+    _iconImage.layer.borderWidth = 1;
+    _iconImage.layer.borderColor = [UIColor whiteColor].CGColor;
+    _iconImage.layer.masksToBounds = YES;
+    _iconImage.image = [UIImage imageNamed:@"头像"];
+    [self.contentView addSubview:_iconImage];
+    [_iconImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(backView).offset(Width(15));
+        make.top.equalTo(backView).offset(Width(15));
+        make.width.height.mas_equalTo(Width(50));
+    }];
+    
+    _nameLabel = [[UILabel alloc]init];
+    _nameLabel.text = @"张三";
+    _nameLabel.textColor = [UIColor hex:@"444444"];
+    _nameLabel.font = [UIFont systemFontOfSize:14];
+    [self.contentView addSubview:_nameLabel];
+    [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(_iconImage).offset(Width(5));
+        make.left.equalTo(_iconImage.mas_right).offset(Width(10));
+    }];
+    
+    _timeLabel = [[UILabel alloc]init];
+    _timeLabel.text = @"2018-02-14";
+    _timeLabel.textColor = [UIColor hex:@"999999"];
+    _timeLabel.font = [UIFont systemFontOfSize:14];
+    [self.contentView addSubview:_timeLabel];
+    [_timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(_iconImage.mas_bottom).offset(-Width(5));
+        make.left.equalTo(_nameLabel);
+    }];
+    
+    _priceLabel = [F_UI SL_UI_Label:@"¥100.00" color:[UIColor hex:Yellow_Color] textAlignment:0 textFont:15 numberOfLines:1];
+    [self.contentView addSubview:_priceLabel];
+    [_priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(_iconImage);
+        make.right.equalTo(backView.mas_right).offset(-Width(15));
+    }];
+    
+    UIView *line = [[UIView alloc]init];
+    line.backgroundColor = [UIColor hex:@"f5f5f5"];
+    [self.contentView addSubview:line];
+    [line mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(backView).offset(Width(15));
+        make.right.equalTo(backView).offset(-Width(15));
+        make.top.equalTo(_iconImage.mas_bottom).offset(Width(15));
+        make.height.mas_equalTo(Width(1));
+    }];
+    
+    _taskNameLabel = [F_UI SL_UI_Label:@"任务名称" color:[UIColor hex:@"444444"] textAlignment:0 textFont:15 numberOfLines:1];
+    [self.contentView addSubview:_taskNameLabel];
+    [_taskNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(_iconImage);
+        make.top.equalTo(line.mas_bottom).offset(Width(15));
+    }];
+    
+    _choseStateLabel = [F_UI SL_UI_Label:@"未筛选接单人" color:[UIColor hex:@"666666"] textAlignment:0 textFont:15 numberOfLines:1];
+    [self.contentView addSubview:_choseStateLabel];
+    [_choseStateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(backView).offset(-Width(15));
+        make.centerY.equalTo(_taskNameLabel);
+    }];
+    
+    _markView = [[TaskMarkView alloc]init];
+    [self.contentView addSubview:_markView];
+    [_markView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(backView.mas_bottom).offset(-Width(20));
+        make.left.equalTo(_iconImage);
+        make.right.equalTo(backView).offset(-Width(15));
+        make.top.equalTo(_taskNameLabel.mas_bottom).offset(Width(15));
+        make.height.mas_equalTo(Width(20)).priority(999);
+    }];
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
+@end

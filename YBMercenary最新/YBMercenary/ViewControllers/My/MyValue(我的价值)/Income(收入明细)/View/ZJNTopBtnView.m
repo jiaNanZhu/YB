@@ -1,0 +1,128 @@
+//
+//  ZJNTopBtnView.m
+//  YBMercenary
+//
+//  Created by 险峰科技 on 2018/8/2.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "ZJNTopBtnView.h"
+#import "ZJNTopBtnSelectedView.h"
+#import "SelectModel.h"
+@interface ZJNTopBtnView()
+@property (nonatomic ,strong)UIButton *signBtn;
+@property (nonatomic ,strong)ZJNTopBtnSelectedView *selectedView;
+@property (nonatomic ,copy)NSArray *leftArr;
+@property (nonatomic ,copy)NSArray *rightArr;
+@end
+@implementation ZJNTopBtnView
+-(instancetype)initWithFrame:(CGRect)frame{
+    self = [super initWithFrame:frame];
+    if (self) {
+        NSArray *left = @[@"全部",@"收入",@"支出"];
+        NSMutableArray *tempLArr = [NSMutableArray array];
+        for (int i = 0; i <left.count; i ++) {
+            SelectModel *model = [[SelectModel alloc]init];
+            model.text = left[i];
+            model.selected = NO;
+            [tempLArr addObject:model];
+        }
+        self.leftArr = [tempLArr copy];
+        
+        NSArray *right = @[@"时间由远及近",@"时间由近及远"];
+        NSMutableArray *tempRArr = [NSMutableArray array];
+        for (int i = 0; i <right.count; i ++) {
+            SelectModel *model = [[SelectModel alloc]init];
+            model.text = right[i];
+            model.selected = NO;
+            [tempRArr addObject:model];
+        }
+        self.rightArr = [tempRArr copy];
+        
+        NSArray *titleArray = @[@"全部",@"时间由远及近",@"推广"];
+        CGFloat width = kScreenWidth/3.0;
+        for (int i = 0; i <3; i ++) {
+            UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+            button.frame = CGRectMake(i *width, 0, width, 44);
+            [button setTitleColor:[UIColor hex:@"444444"] forState:UIControlStateNormal];
+            [button setTitleColor:[UIColor hex:@"0386FF"] forState:UIControlStateSelected];
+            [button setTitle:titleArray[i] forState:UIControlStateNormal];
+            button.highlighted = NO;
+            if (i != 2) {
+                [button setImage:SetImage(@"下") forState:UIControlStateNormal];
+                [button setImage:SetImage(@"上") forState:UIControlStateSelected];
+            }
+            button.titleLabel.font = SetFont(AdFloat(32));
+            button.tag = 10+i;
+            [button addTarget:self action:@selector(buttonClikc:) forControlEvents:UIControlEventTouchUpInside];
+            CGFloat imageViewWidth = CGRectGetWidth(button.imageView.frame);
+            
+            CGFloat labelWidth = CGRectGetWidth(button.titleLabel.frame);
+            button.imageEdgeInsets = UIEdgeInsetsMake(0,0 + labelWidth+4,0,0 - labelWidth-4);
+            button.titleEdgeInsets = UIEdgeInsetsMake(0,0 - imageViewWidth-4,0, 0 + imageViewWidth+4);
+            [self addSubview:button];
+        }
+    }
+    return self;
+}
+-(ZJNTopBtnSelectedView *)selectedView{
+    if (!_selectedView) {
+        _selectedView = [[ZJNTopBtnSelectedView alloc]initWithFrame:CGRectMake(0, KNavHeight+44, kScreenWidth, kScreenHeight-KNavHeight-44)];
+        __weak typeof(self) weakSelf = self;
+        _selectedView.refreshSelectedBlock = ^(NSInteger index) {
+            if (weakSelf.signBtn.tag == 10) {
+                for (SelectModel *model in weakSelf.leftArr) {
+                    model.selected = NO;
+                }
+                SelectModel *model = weakSelf.leftArr[index];
+                model.selected = YES;
+                [weakSelf.signBtn setTitle:model.text forState:UIControlStateNormal];
+                weakSelf.selectedView.sourceArr = weakSelf.leftArr;
+                [weakSelf.selectedView removeFromSuperview];
+            }else{
+                for (SelectModel *model in weakSelf.rightArr) {
+                    model.selected = NO;
+                }
+                SelectModel *model = weakSelf.rightArr[index];
+                model.selected = YES;
+                [weakSelf.signBtn setTitle:model.text forState:UIControlStateNormal];
+                weakSelf.selectedView.sourceArr = weakSelf.rightArr;
+                [weakSelf.selectedView removeFromSuperview];
+            }
+            [weakSelf buttonClikc:weakSelf.signBtn];
+            NSDictionary *dic = @{@"tag":@(weakSelf.signBtn.tag),@"index":@(index)};
+            if (weakSelf.refreshListBlock) {
+                weakSelf.refreshListBlock(dic);
+            }
+        };
+    }
+    return _selectedView;
+}
+-(void)buttonClikc:(UIButton *)button{
+    if (button.selected) {
+        self.signBtn.selected = NO;
+        [self.selectedView removeFromSuperview];
+        return;
+    }
+    self.signBtn.selected = NO;
+    button.selected = YES;
+    self.signBtn = button;
+    if (button.tag == 10) {
+        [[UIApplication sharedApplication].keyWindow addSubview:self.selectedView];
+        self.selectedView.sourceArr = self.leftArr;
+    }else if (button.tag == 11){
+        [[UIApplication sharedApplication].keyWindow addSubview:self.selectedView];
+        self.selectedView.sourceArr = self.rightArr;
+    }else{
+        
+    }
+}
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect {
+    // Drawing code
+}
+*/
+
+@end

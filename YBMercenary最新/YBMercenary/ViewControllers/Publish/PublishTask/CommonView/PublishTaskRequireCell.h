@@ -1,0 +1,26 @@
+//
+//  PublishTaskRequireCell.h
+//  YBMercenary
+//
+//  Created by 龙青磊 on 2018/3/27.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@protocol PublishTaskRequireCellDelegate<NSObject>
+
+- (void)reloadeViewWithLineCount:(NSInteger)count;
+
+@end
+
+@interface PublishTaskRequireCell : UITableViewCell
+@property(nonatomic, strong) NSMutableArray *dataArr;
+@property(nonatomic, assign) NSInteger linecount;
+@property(nonatomic, copy) void (^publishTaskRequireBlock)(NSArray *require);
+@property (nonatomic, weak) id<PublishTaskRequireCellDelegate> delegate;
+
++ (instancetype)creatTableViewCellWithTableView:(UITableView *)tableView;
+
+
+@end

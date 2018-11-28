@@ -1,0 +1,152 @@
+//
+//  PostsDetailVC.m
+//  YBMercenary
+//
+//  Created by 龙青磊 on 2018/4/10.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "PostsDetailVC.h"
+#import "PostsContentCell.h"
+#import "PostsCommentCell.h"
+#import "PostsCommentModel.h"
+
+@interface PostsDetailVC ()
+
+@property (nonatomic, strong) NSMutableArray *listArr;
+
+@end
+
+@implementation PostsDetailVC
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    [self initNav];
+    [self configTableView];
+    [self loadData];
+}
+
+- (void)initNav{
+    self.navigationItem.title = @"帖子详情";
+}
+
+- (void)configTableView{
+    self.tableView.estimatedRowHeight = 100;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.backgroundColor = [UIColor hex:Back_Color];
+}
+
+
+- (void)loadData{
+    [self loadTestData];
+}
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (section == 0) {
+        return 1;
+    }else{
+        return self.listArr.count;
+    }
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0) {
+        PostsContentCell *cell = [PostsContentCell creatTableViewCellWithTableView:tableView];
+        return cell;
+    }else{
+        PostsCommentCell *cell = [PostsCommentCell creatTableViewCellWithTableView:tableView];
+        cell.model = self.listArr[indexPath.row];
+        return cell;
+    }
+}
+
+
+/*
+// Override to support conditional editing of the table view.
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return NO if you do not want the specified item to be editable.
+    return YES;
+}
+*/
+
+/*
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        // Delete the row from the data source
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+    }   
+}
+*/
+
+/*
+// Override to support rearranging the table view.
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+}
+*/
+
+/*
+// Override to support conditional rearranging of the table view.
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return NO if you do not want the item to be re-orderable.
+    return YES;
+}
+*/
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+
+- (void)loadTestData{
+    self.listArr = [NSMutableArray array];
+    
+    PostsCommentModel *model1 = [[PostsCommentModel alloc]init];
+    model1.content = @"步骤很详细,感谢分享";
+    PostsCommentListModel *comment1 = [PostsCommentListModel mj_objectWithKeyValues:@{@"commenter":@{@"username":@"小小",@"userid":@"1"},@"content":@"评论很精辟!"}];
+    PostsCommentListModel *comment2 = [PostsCommentListModel mj_objectWithKeyValues:@{@"commenter":@{@"username":@"无敌",@"userid":@"1"},@"content":@"评论很精辟!"}];
+    model1.commentList = @[comment1,comment2];
+    
+    PostsCommentModel *model2 = [[PostsCommentModel alloc]init];
+    model2.content = @"步骤很详细,感谢分享";
+    PostsCommentListModel *comment3 = [PostsCommentListModel mj_objectWithKeyValues:@{@"commenter":@{@"username":@"小小",@"userid":@"1"},@"content":@"评论很精辟!"}];
+    PostsCommentListModel *comment4 = [PostsCommentListModel mj_objectWithKeyValues:@{@"commenter":@{@"username":@"无敌",@"userid":@"1"},@"content":@"评论很精辟!"}];
+    model2.commentList = @[comment4,comment3];
+//
+//    PostsCommentModel *model3 = [[PostsCommentModel alloc]init];
+//    model3.content = @"步骤很详细,感谢分享";
+//    model3.commentList = @[@{@"replyname":@"小小",@"content":@"评论很精辟!"},
+//                          @{@"replyname":@"无敌",@"content":@"评论很精辟"}];
+    [self.listArr addObject:model1];
+    [self.listArr addObject:model2];
+//    [self.listArr addObject:model3];
+    
+    [self reloadTableView];
+}
+
+
+
+@end

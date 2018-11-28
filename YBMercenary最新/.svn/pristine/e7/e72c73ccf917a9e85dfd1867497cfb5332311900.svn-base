@@ -1,0 +1,131 @@
+//
+//  BMNavigationBar.m
+//  BMTNavigationBar
+//
+//  Created by Jashion on 2017/11/6.
+//  Copyright © 2017年 BMu. All rights reserved.
+//
+
+#import "BMNavigationBar.h"
+#import "BMNavigationBarHeader.h"
+#import "UIView+ExtendRegion.h"
+
+@interface BMNavigationBar()
+
+
+
+@end
+
+@implementation BMNavigationBar
+
+- (instancetype)init {
+    self = [super initWithFrame: CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - NavigationBarTitleViewMargin * 2, 44)];
+    if (self) {
+        self.extendRegionType = ExtendClickedRegion;
+        self.backgroundColor=[UIColor clearColor];
+    }
+    return self;
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview {
+    [super willMoveToSuperview: newSuperview];
+    if (newSuperview) {
+        if (self.buttonType & LeftButtonType && !self.leftButton.superview) {
+            self.leftButton = [UIButton buttonWithType: UIButtonTypeSystem];
+
+//            [self.leftButton setTitle:@"" forState:UIControlStateNormal];
+            [self.leftButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//            [self.leftButton setImage:[UIImage imageNamed:self.imgName] forState:UIControlStateNormal];
+            
+            [self.leftButton setTitle:@"    " forState:UIControlStateNormal];
+            [self.leftButton setImage:[UIImage imageNamed:@"返回-4 copy 6"] forState:UIControlStateNormal];
+            
+            self.leftButton.titleLabel.font=[UIFont systemFontOfSize:AdFloat(16*2)];
+            self.leftButton.frame = CGRectMake(- NavigationBarTitleViewMargin, 0, 60, 44);;
+            self.leftButton.tag = 0;
+            [self.leftButton addTarget: self action: @selector(handleLeftButtonEvent:) forControlEvents: UIControlEventTouchUpInside];
+            [self addSubview: self.leftButton];
+        }
+        if (self.buttonType & RightButtonType && !self.rightButton.superview) {
+//            self.rightButton = [UIButton buttonWithType: UIButtonTypeSystem];
+//            self.rightButton.backgroundColor = [UIColor blueColor];
+            
+            [self.rightButton setImage:[UIImage imageNamed:self.imgName] forState:UIControlStateNormal];
+
+            [self.rightButton setTitle:self.btntitle forState:UIControlStateNormal];
+            [self.rightButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            
+            self.rightButton.titleLabel.font=[UIFont systemFontOfSize:AdFloat(16*2)];;
+            self.rightButton.frame = CGRectMake(self.frame.size.width + NavigationBarTitleViewMargin - 60, 0, 60, 44);
+            self.rightButton.tag = 1;
+            [self.rightButton addTarget: self action: @selector(handleRightButtonEvent:) forControlEvents: UIControlEventTouchUpInside];
+            [self addSubview: self.rightButton];
+        }
+        self.titleLab.textColor=[UIColor whiteColor];
+        self.titleLab.font=[UIFont systemFontOfSize:AdFloat(18*2)];;
+        self.titleLab.text=self.title;
+        self.titleLab.textAlignment=NSTextAlignmentCenter;
+        self.titleLab.frame=self.frame;
+        [self addSubview:self.titleLab];
+        if (_isSearch) {
+            [self addSubview:self.searchBarView];
+        }
+        else{
+            [self.searchBarView removeFromSuperview];
+        }
+    }
+}
+-(UILabel *)titleLab
+{
+    if (!_titleLab) {
+        _titleLab =[[UILabel alloc]init];
+        _titleLab.backgroundColor=[UIColor clearColor];
+    }
+    return _titleLab;
+}
+-(UIButton *)rightButton
+{
+    if (!_rightButton) {
+        _rightButton=[UIButton buttonWithType: UIButtonTypeSystem];
+    }
+    return _rightButton;
+}
+-(void)setRightButtonFrame
+{
+    
+}
+-(UISearchBar *)searchBarView
+{
+    if (!_searchBarView) {
+        _searchBarView=[[UISearchBar alloc] initWithFrame:CGRectMake(5, 7, self.frame.size.width-30, 30)];
+        _searchBarView.placeholder =@"请输入查询内容";
+        
+        _searchBarView.tintColor=[UIColor blackColor];
+        _searchBarView.barTintColor=[UIColor blackColor];
+        //        _searchBarView.searchBarStyle=UISearchBarStyleMinimal;
+        _searchBarView.backgroundColor=[UIColor whiteColor];
+        _searchBarView.clipsToBounds=YES;
+        _searchBarView.layer.cornerRadius=2.f;
+        
+        UITextField * searchField = [_searchBarView valueForKey:@"_searchField"];
+        searchField.tintColor=[UIColor hex:Blue_Color];
+        
+        [searchField setValue:[UIColor lightGrayColor] forKeyPath:@"_placeholderLabel.textColor"];
+        [searchField setValue:[UIFont systemFontOfSize:14] forKeyPath:@"_placeholderLabel.font"];
+    }
+    
+    return _searchBarView;
+}
+- (void)handleLeftButtonEvent: (UIButton *)button {
+    if (self.clickLeftButtonBlock) {
+        self.clickLeftButtonBlock(button);
+    }
+}
+
+- (void)handleRightButtonEvent: (UIButton *)button {
+    if (self.clickRightButtonBlock) {
+        self.clickRightButtonBlock(button);
+    }
+}
+
+@end

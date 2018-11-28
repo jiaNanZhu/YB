@@ -1,0 +1,18 @@
+//
+//  NSString+Size.h
+//  Ranch
+//
+//  Created by 龙青磊 on 2018/3/7.
+//  Copyright © 2018年 xfkeji_Ranch. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface NSString (Size)
+
+- (CGFloat)zonePraiseGetHeightWithWidth:(CGFloat)width font:(UIFont *)font;
+
+
+- (CGFloat)zoneCommentGetHeightWithWidth:(CGFloat)width nameFont:(UIFont *)nameFont conetnFont:(UIFont *)contentFont;
++ (BOOL)isStringContainsEmoji:(NSString *)string;
+@end

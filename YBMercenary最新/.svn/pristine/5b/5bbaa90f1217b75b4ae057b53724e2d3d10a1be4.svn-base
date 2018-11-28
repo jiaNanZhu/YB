@@ -1,0 +1,33 @@
+//
+//  NSString+Size.m
+//  Ranch
+//
+//  Created by 龙青磊 on 2018/3/7.
+//  Copyright © 2018年 xfkeji_Ranch. All rights reserved.
+//
+
+#import "NSString+Size.h"
+
+@implementation NSString (Size)
+
+- (CGFloat)zonePraiseGetHeightWithWidth:(CGFloat)width font:(UIFont *)font{
+    
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.alignment = NSTextAlignmentLeft;  //对齐
+    style.headIndent = 0.0f;//行首缩进
+    style.firstLineHeadIndent = Width(20);//首行缩进
+    style.tailIndent = 0.0f;//行尾缩进
+    style.lineSpacing = 2.0f;//行间距
+    
+    CGSize strSize = [self boundingRectWithSize:CGSizeMake(width, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:font,NSParagraphStyleAttributeName:style} context:nil].size;
+    return strSize.height; 
+}
+
+- (CGFloat)zoneCommentGetHeightWithWidth:(CGFloat)width nameFont:(UIFont *)nameFont conetnFont:(UIFont *)contentFont{
+    
+    CGSize strSize = [self boundingRectWithSize:CGSizeMake(width, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:contentFont} context:nil].size;
+    return strSize.height;
+}
+
+
+@end

@@ -1,0 +1,22 @@
+platform :ios, '9.0'
+target 'YBMercenary' do
+pod 'UMCCommon'
+pod 'IQKeyboardManager'
+pod 'UMCSecurityPlugins'
+# 集成QQ/QZone/TIM(精简版0.5M)
+pod 'UMCShare/Social/ReducedQQ'
+# 集成微信(精简版0.2M)
+pod 'UMCShare/Social/ReducedWeChat'
+# 集成新浪微博(精简版1M)
+pod 'UMCShare/Social/ReducedSina'
+pod “BaiduMapKit” #百度地图SDK
+pod 'AFNetworking'
+pod 'Masonry'
+pod 'MJRefresh'
+pod 'MJExtension'
+pod 'SDWebImage'
+pod 'KVNProgress'
+pod 'YYModel'
+pod 'RongCloudIM/IMLib', '~> 2.8.32'
+pod 'RongCloudIM/IMKit', '~> 2.8.32'
+end

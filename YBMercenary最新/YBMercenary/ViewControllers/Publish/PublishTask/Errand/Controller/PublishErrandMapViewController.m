@@ -1,0 +1,181 @@
+//
+//  PublishErrandMapViewController.m
+//  YBMercenary
+//
+//  Created by 险峰科技 on 2018/7/20.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "PublishErrandMapViewController.h"
+#import <BaiduMapAPI_Map/BMKMapComponent.h>//引入地图功能所有的头文件
+#import <BaiduMapAPI_Location/BMKLocationService.h>
+#import <BaiduMapAPI_Search/BMKPoiSearch.h>
+#import <BaiduMapAPI_Search/BMKPoiSearchOption.h>
+#import "PublishErrandPoiAddressView.h"
+#import "PublishErrandSearchNavigationView.h"
+#import "PublishErrandSearchViewController.h"
+
+@interface PublishErrandMapViewController ()<BMKMapViewDelegate,BMKLocationServiceDelegate,BMKPoiSearchDelegate>
+@property (nonatomic ,assign)CGFloat latitude;
+@property (nonatomic ,assign)CGFloat longitude;
+@property (nonatomic ,strong)BMKMapView *mapView;
+@property (nonatomic ,strong)BMKLocationService *locService;
+@property (nonatomic ,strong)BMKPoiSearch *poiSearch;
+@property (nonatomic ,strong)PublishErrandPoiAddressView *addressView;
+@property (nonatomic ,strong)PublishErrandSearchNavigationView *navigationView;
+@end
+
+@implementation PublishErrandMapViewController
+-(void)viewWillAppear:(BOOL)animated
+{
+    [_mapView viewWillAppear];
+    self.navigationController.navigationBarHidden = YES;
+    _mapView.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放
+    _locService.delegate = self;
+}
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [_mapView viewWillDisappear];
+    self.navigationController.navigationBarHidden = NO;
+    _mapView.delegate = nil; // 不用时，置nil
+    _locService.delegate = nil;
+    _poiSearch.delegate = nil;
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    _mapView = [[BMKMapView alloc]initWithFrame:self.view.bounds];
+    _mapView.delegate = self;
+    _mapView.showsUserLocation = NO;//显示定位图层
+    _mapView.userTrackingMode = BMKUserTrackingModeNone;//设置定位的状态为普通定位模式
+    _mapView.showsUserLocation = YES;
+    self.view = _mapView;
+    _locService = [[BMKLocationService alloc] init];
+    [_locService startUserLocationService];
+    //初始化检索对象
+    _poiSearch =[[BMKPoiSearch alloc]init];
+    _poiSearch.delegate = self;
+    
+    [self.view addSubview:self.addressView];
+    [self.addressView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.equalTo(self.view);
+        make.height.mas_equalTo(AdFloat(520));
+    }];
+    [self.view addSubview:self.navigationView];
+    [self.navigationView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.equalTo(self.view);
+        make.height.mas_equalTo(KNavHeight);
+    }];
+    // Do any additional setup after loading the view.
+}
+-(PublishErrandSearchNavigationView *)navigationView{
+    if (!_navigationView) {
+        _navigationView = [[PublishErrandSearchNavigationView alloc]init];
+        __weak typeof(self) weakSelf = self;
+        _navigationView.searchTextBlock = ^(NSString *text) {
+            PublishErrandSearchViewController *viewC = [[PublishErrandSearchViewController alloc]init];
+            viewC.selectAddressBlock = ^(NSString *address) {
+//                [weakSelf popViewControllerWithAddress:address];
+                if ([weakSelf.type isEqualToString:@"0"]) {
+                    if (weakSelf.startAddressBlock) {
+                        weakSelf.startAddressBlock(address);
+                    }
+                }else{
+                    if (weakSelf.endAddressBlock) {
+                        weakSelf.endAddressBlock(address);
+                    }
+                }
+            };
+            viewC.type = weakSelf.type;
+            viewC.latitude = weakSelf.latitude;
+            viewC.longitude = weakSelf.longitude;
+            viewC.searchText = text;
+            viewC.hidesBottomBarWhenPushed = YES;
+            [weakSelf.navigationController pushViewController:viewC animated:YES];
+        };
+    }
+    return _navigationView;
+}
+-(PublishErrandPoiAddressView *)addressView{
+    if (!_addressView) {
+        _addressView = [[PublishErrandPoiAddressView alloc]initWithFrame:CGRectZero];
+        __weak typeof(self)weakSelf = self;
+        _addressView.selectedAddressBlock = ^(NSString *address) {
+            [weakSelf popViewControllerWithAddress:address];
+        };
+    }
+    return _addressView;
+}
+-(void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation{
+    [_mapView updateLocationData:userLocation];
+    NSLog(@"%f",userLocation.location.coordinate.latitude);
+    self.latitude = userLocation.location.coordinate.latitude;
+    self.longitude = userLocation.location.coordinate.longitude;
+    [_mapView setCenterCoordinate:userLocation.location.coordinate];
+    [_locService stopUserLocationService];
+    [self poiSearchWithCoordinate:userLocation.location.coordinate];
+}
+
+-(void)poiSearchWithCoordinate:(CLLocationCoordinate2D)coordinate{
+    //发起检索
+    BMKPOINearbySearchOption *option = [[BMKPOINearbySearchOption alloc]init];
+    option.pageIndex = 0;
+    option.pageSize = 10;
+    option.location = coordinate;
+    option.keywords = @[@"大厦"];
+    BOOL flag = [_poiSearch poiSearchNearBy:option];
+    
+    if(flag)
+    {
+        NSLog(@"周边检索发送成功");
+    }
+    else
+    {
+        NSLog(@"周边检索发送失败");
+    }
+}
+//实现PoiSearchDeleage处理回调结果
+-(void)onGetPoiResult:(BMKPoiSearch *)searcher result:(BMKPOISearchResult *)poiResult errorCode:(BMKSearchErrorCode)errorCode{
+    if (errorCode == BMK_SEARCH_NO_ERROR) {
+        //在此处理正常结果
+        self.addressView.dataArr = poiResult.poiInfoList;
+    }else if (errorCode == BMK_SEARCH_AMBIGUOUS_KEYWORD){
+        //当在设置城市未找到结果，但在其他城市找到结果时，回调建议检索城市列表
+        // result.cityList;
+        NSLog(@"起始点有歧义");
+    } else {
+        NSLog(@"抱歉，未找到结果");
+    }
+}
+-(void)popViewControllerWithAddress:(NSString *)address{
+    if ([self.type isEqualToString:@"0"]) {
+        if (self.startAddressBlock) {
+            self.startAddressBlock(address);
+        }
+    }else{
+        if (self.endAddressBlock) {
+            self.endAddressBlock(address);
+        }
+    }
+    [self.navigationController popViewControllerAnimated:YES];
+}
+- (void)dealloc {
+    if (_mapView) {
+        _mapView = nil;
+    }
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

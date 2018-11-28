@@ -1,0 +1,116 @@
+//
+//  SelectedTimeView.m
+//  YBMercenary
+//
+//  Created by 险峰科技 on 2018/8/2.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "SelectedTimeView.h"
+@interface SelectedTimeView()
+@property (nonatomic ,strong)UIView *bgView;
+@property (nonatomic ,strong)UIButton *cancelBtn;
+@property (nonatomic ,strong)UIButton *okBtn;
+@property (nonatomic ,strong)UILabel *titleLabel;
+@property (nonatomic ,strong)UIDatePicker *datePicker;
+@end
+@implementation SelectedTimeView
+-(instancetype)initWithFrame:(CGRect)frame{
+    self = [super initWithFrame:frame];
+    if (self) {
+        
+        self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.3];
+        
+        [self addSubview:self.bgView];
+        [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.bottom.equalTo(self);
+            make.height.mas_equalTo(AdFloat(560));
+        }];
+        [self.bgView addSubview:self.cancelBtn];
+        [self.cancelBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.top.equalTo(self.bgView);
+            make.size.mas_equalTo(CGSizeMake(AdFloat(160), AdFloat(100)));
+        }];
+        
+        [self.bgView addSubview:self.okBtn];
+        [self.okBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.right.equalTo(self.bgView);
+            make.size.equalTo(self.cancelBtn);
+        }];
+        
+        [self.bgView addSubview:self.titleLabel];
+        [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.bgView);
+            make.left.equalTo(self.cancelBtn.mas_right);
+            make.right.equalTo(self.okBtn.mas_left);
+            make.height.mas_equalTo(AdFloat(100));
+        }];
+        
+        [self.bgView addSubview:self.datePicker];
+        [self.datePicker mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.bgView).with.insets(UIEdgeInsetsMake(AdFloat(100), 0, 0, 0));
+        }];
+    }
+    return self;
+}
+-(UIView *)bgView{
+    if (!_bgView) {
+        _bgView = [[UIView alloc]init];
+        _bgView.backgroundColor = [UIColor whiteColor];
+    }
+    return _bgView;
+}
+-(UIButton *)cancelBtn{
+    if (!_cancelBtn) {
+        _cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        _cancelBtn.titleLabel.font = SetFont(AdFloat(32));
+        [_cancelBtn setTitleColor:[UIColor hex:@"444444"] forState:UIControlStateNormal];        [_cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
+        [_cancelBtn addTarget:self action:@selector(cancelBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _cancelBtn;
+}
+-(UIButton *)okBtn{
+    if (!_okBtn) {
+        _okBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        _okBtn.titleLabel.font = SetFont(AdFloat(32));
+        [_okBtn setTitleColor:[UIColor hex:@"444444"] forState:UIControlStateNormal];
+        [_okBtn setTitle:@"确定" forState:UIControlStateNormal];
+        [_okBtn addTarget:self action:@selector(okBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _okBtn;
+}
+-(UILabel *)titleLabel{
+    if (!_titleLabel) {
+        _titleLabel = [[UILabel alloc]init];
+        _titleLabel.textAlignment = NSTextAlignmentCenter;
+        _titleLabel.font = SetFont(AdFloat(32));
+        _titleLabel.textColor = [UIColor hex:@"444444"];
+        _titleLabel.text = @"请选择日期";
+    }
+    return _titleLabel;
+}
+-(UIDatePicker *)datePicker{
+    if (!_datePicker) {
+        _datePicker = [[UIDatePicker alloc]init];
+        _datePicker.datePickerMode = UIDatePickerModeDate;
+        _datePicker.locale = [NSLocale localeWithLocaleIdentifier:@"zh"];
+    }
+    return _datePicker;
+}
+
+-(void)cancelBtnClick{
+    [self removeFromSuperview];
+}
+
+-(void)okBtnClick{
+    [self removeFromSuperview];
+}
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect {
+    // Drawing code
+}
+*/
+
+@end

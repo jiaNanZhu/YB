@@ -1,0 +1,116 @@
+//
+//  ZJNDoubleBtnView.m
+//  YBMercenary
+//
+//  Created by 险峰科技 on 2018/7/19.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "ZJNDoubleBtnView.h"
+@interface ZJNDoubleBtnView()
+
+
+@property (nonatomic ,strong)UIView *sliderView;//滑块儿
+@end
+
+@implementation ZJNDoubleBtnView
+-(id)initWithFrame:(CGRect)frame{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.backgroundColor = [UIColor hex:@"f5f5f5"];
+        
+        [self addSubview:self.leftButton];
+        [_leftButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.left.equalTo(self);
+            make.width.mas_equalTo(kScreenWidth/2.0-0.5);
+            make.bottom.equalTo(self).offset(-2);
+        }];
+        
+        [self addSubview:self.rightButton];
+        [_rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.equalTo(self.leftButton);
+            make.right.equalTo(self);
+            make.width.mas_equalTo(kScreenWidth/2.0-0.5);
+        }];
+        
+        [self addSubview:self.sliderView];
+        [self.sliderView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.bottom.equalTo(self);
+            make.width.mas_equalTo(kScreenWidth/2.0-0.5);
+            make.height.mas_equalTo(2);
+        }];
+        
+    }
+    return self;
+}
+
+-(UIButton *)leftButton{
+    if (!_leftButton) {
+        _leftButton = [F_UI creatBtnWithTager:self title:@"已报名人" font:AdFloat(30) image:nil backImage:nil color:[UIColor whiteColor] textColor:[UIColor hex:@"666666"] cornerRadius:0 action:@selector(leftButtonClick:)];
+        [_leftButton setTitleColor:[UIColor hex:Blue_Color] forState:UIControlStateSelected];
+        
+    }
+    return _leftButton;
+}
+-(UIButton *)rightButton{
+    if (!_rightButton) {
+        _rightButton = [F_UI creatBtnWithTager:self title:@"待选人" font:AdFloat(30) image:nil backImage:nil color:[UIColor whiteColor] textColor:[UIColor hex:@"666666"] cornerRadius:0 action:@selector(rightButtonClick:)];
+        [_rightButton setTitleColor:[UIColor hex:Blue_Color] forState:UIControlStateSelected];
+        
+    }
+    return _rightButton;
+}
+-(UIView *)sliderView{
+    if (!_sliderView) {
+        _sliderView = [[UIView alloc]init];
+        _sliderView.backgroundColor = [UIColor hex:Blue_Color];
+    }
+    return _sliderView;
+}
+
+#pragma mark-左按钮方法
+-(void)leftButtonClick:(UIButton *)button{
+    if (button.selected == YES) {
+        return;
+    }
+    self.type = @"left";
+    if (self.tableViewReloadBlock) {
+        self.tableViewReloadBlock(@"left");
+    }
+}
+#pragma mark-右按钮方法
+-(void)rightButtonClick:(UIButton *)button{
+    if (button.selected == YES) {
+        return;
+    }
+    self.type = @"right";
+    if (self.tableViewReloadBlock) {
+        self.tableViewReloadBlock(@"right");
+    }
+}
+
+-(void)setType:(NSString *)type{
+    _type = type;
+    if ([self.type isEqualToString:@"left"]) {
+        self.leftButton.selected = YES;
+        self.rightButton.selected = NO;
+        [UIView animateWithDuration:0.1 animations:^{
+            self.sliderView.transform = CGAffineTransformMakeTranslation(0, 0);
+        }];
+    }else{
+        self.leftButton.selected = NO;
+        self.rightButton.selected = YES;
+        [UIView animateWithDuration:0.1 animations:^{
+            self.sliderView.transform = CGAffineTransformMakeTranslation(kScreenWidth/2, 0);
+        }];
+    }
+}
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect {
+    // Drawing code
+}
+*/
+
+@end

@@ -1,0 +1,22 @@
+//
+//  YBTaskMessagModel.h
+//  YBMercenary
+//
+//  Created by JW on 2018/8/7.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface YBTaskMessagModel : NSObject
+@property(nonatomic,strong)NSString *id;
+@property(nonatomic,strong)NSString *task_id;
+@property(nonatomic,strong)NSString *push_type;
+@property(nonatomic,strong)NSString *content;
+@property(nonatomic,strong)NSString *push_time;
+@property(nonatomic,strong)NSString *task_name;
+@property(nonatomic,strong)NSString *read_status;
+
+@property(nonatomic,strong)NSString *touserid;
+
+@end

@@ -1,0 +1,157 @@
+//
+//  ZJNAcceptTaskListView.m
+//  YBMercenary
+//
+//  Created by 朱佳男 on 2018/7/27.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "ZJNAcceptTaskListView.h"
+#import "SignUpVC.h"
+#import "ZJNMyAcceptTaskTableViewCell.h"
+#import "YBMyIssueModel.h"
+#import "ZJNSignUpViewController.h"
+#import "ZJNWhileTaskViewController.h"
+#import "ZJNTaskAuditViewController.h"
+#import "ZJNTaskDoneViewController.h"
+#import "ZJNTaskWaitEvaluteViewController.h"
+@interface ZJNAcceptTaskListView()<UITableViewDelegate,UITableViewDataSource>{
+    NSInteger pageNum;
+}
+@property(nonatomic,strong)NSMutableArray *dataArr;
+@property(nonatomic,strong)UITableView * tableView;
+
+@end
+@implementation ZJNAcceptTaskListView
+-(id)initWithFrame:(CGRect)frame{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.backgroundColor = [UIColor redColor];
+        self.userInteractionEnabled = YES;
+        pageNum = 0;
+        self.dataArr = [NSMutableArray array];
+        [self addSubview:self.tableView];
+        [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self);
+            make.top.equalTo(self);
+            make.width.mas_equalTo(kScreenWidth);
+            make.height.mas_equalTo(frame.size.height);
+        }];
+    }
+    return self;
+}
+-(void)getDataFromService{
+    pageNum += 1;
+    NSDictionary *dic;
+    if (self.taskStatus == 0) {
+        dic = @{@"token":USERTOKEN,@"pageNum":@(pageNum)};
+    }else{
+        dic = @{@"token":USERTOKEN,@"pageNum":@(pageNum),@"task_status":@(self.taskStatus)};
+    }
+    
+    [[YBRequestManager sharedYBManager] postWithUrlString:UserCenter_MyTask_receive_list parameters:dic success:^(id data) {
+        if ([data[@"code"] integerValue] == 0) {
+            if (pageNum == 1) {
+                [self.dataArr removeAllObjects];
+            }
+            for (NSDictionary *dict in data[@"data"]) {
+                YBMyIssueModel *model=[YBMyIssueModel yy_modelWithDictionary:dict];
+                
+                [self.dataArr addObject:model];
+            }
+            [self.tableView reloadData];
+        }else{
+            pageNum -= 1;
+            [DWBToast showCenterWithText:data[@"msg"]];
+        }
+    } failure:^(NSError *error) {
+        pageNum -= 1;
+        [DWBToast showCenterWithText:ErrorInfo];
+    }];
+}
+-(UITableView *)tableView{
+    if (!_tableView) {
+        _tableView = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+        if (@available(iOS 11.0, *)) {
+            _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
+    }
+    return _tableView;
+}
+#pragma mark - 分组cell数量
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return self.dataArr.count;
+}
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 1;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 8;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    return 0;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    return AdFloat(220);
+}
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    return nil;
+}
+-(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    return nil;
+}
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    ZJNMyAcceptTaskTableViewCell *cell = [ZJNMyAcceptTaskTableViewCell creatTableViewCellWithTableView:tableView];
+    cell.model = self.dataArr[indexPath.section];
+    return cell;
+    
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    YBMyIssueModel *model = self.dataArr[indexPath.section];
+    if ([model.task_status isEqualToString:@"1"]) {
+        //已报名
+        ZJNSignUpViewController *vc = [[ZJNSignUpViewController alloc]init];
+        vc.type = [model.task_type intValue];
+        vc.taskId = [model.id integerValue];
+        [self.viewController.navigationController pushViewController:vc animated:YES];
+    }else if ([model.task_status isEqualToString:@"2"]){
+        //任务中
+        ZJNWhileTaskViewController *vc = [[ZJNWhileTaskViewController alloc]initWithTaskType:MyAcceptTask];
+        vc.type = [model.task_type intValue];
+        vc.taskId = [model.id integerValue];
+        [self.viewController.navigationController pushViewController:vc animated:YES];
+    }else if ([model.task_status isEqualToString:@"3"]){
+        //审核中
+        ZJNTaskAuditViewController *vc = [[ZJNTaskAuditViewController alloc]initWithTaskType:MyAcceptTaskAudit];
+        vc.type = [model.task_type intValue];
+        vc.taskId = [model.id integerValue];
+        [self.viewController.navigationController pushViewController:vc animated:YES];
+    }else{
+        //6 已完成
+        ZJNTaskDoneViewController *vc = [[ZJNTaskDoneViewController alloc]init];
+        vc.type = [model.task_type intValue];
+        vc.taskId = [model.id integerValue];
+        [self.viewController.navigationController pushViewController:vc animated:YES];
+    }
+}
+-(void)setTaskStatus:(NSInteger)taskStatus{
+    _taskStatus = taskStatus;
+    [self getDataFromService];
+}
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect {
+    // Drawing code
+}
+*/
+
+@end

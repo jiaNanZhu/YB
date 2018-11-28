@@ -1,0 +1,121 @@
+//
+//  PublishErrandTaskVC.m
+//  YBMercenary
+//
+//  Created by 龙青磊 on 2018/3/28.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "PublishErrandTaskVC.h"
+
+#import "ErrandHeaderCell.h"
+#import "PublishTaskGoal.h"
+#import "PublishTaskMarkCell.h"
+#import "ErrandTimeCell.h"
+#import "ErrandAdressCell.h"
+
+@interface PublishErrandTaskVC ()<UIScrollViewDelegate,ErrandHeaderCellDelegate>
+
+@property (nonatomic, assign) NSInteger lineCount;
+
+@end
+
+@implementation PublishErrandTaskVC
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    _lineCount = 1;
+    [self configNav];
+    [self configTableView];
+}
+
+- (void)configNav{
+    self.navigationItem.title = @"发布任务";
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"发布" style:UIBarButtonItemStylePlain target:self action:@selector(publishAction)];
+    self.navigationItem.rightBarButtonItem.tintColor = [UIColor whiteColor];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"back"] style:UIBarButtonItemStylePlain target:self action:@selector(cancleAction)];
+    self.navigationItem.leftBarButtonItem.tintColor = [UIColor whiteColor];
+}
+
+- (void)configTableView{
+    self.tableView.estimatedRowHeight = 100;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.backgroundColor = [UIColor hex:Back_Color];
+    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, Width(10), 0);
+}
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 5;
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row == 0) {
+        ErrandHeaderCell *cell = [ErrandHeaderCell creatTableViewCellWithTableView:tableView];
+        cell.delegate = self;
+        return cell;
+    }else if(indexPath.row == 1){
+        PublishTaskGoal *cell = [PublishTaskGoal creatTableViewCellWithTableView:tableView];
+        return cell;
+    }else if(indexPath.row == 2){
+        ErrandTimeCell *cell = [ErrandTimeCell creatTableViewCellWithTableView:tableView];
+        return cell;
+    }else if(indexPath.row == 3){
+        ErrandAdressCell *cell = [ErrandAdressCell creatTableViewCellWithTableView:tableView];
+        return cell;
+    }else{
+        PublishTaskMarkCell *cell = [PublishTaskMarkCell creatTableViewCellWithTableView:tableView];
+        return cell;
+    }
+}
+
+
+
+#pragma mark 点击导航右侧按钮
+- (void)publishAction{
+    [DWBToast showCenterWithText:@"开始发布"];
+}
+
+- (void)reloadeViewWithLineCount:(NSInteger)count{
+    _lineCount = count;
+    [self.tableView reloadData];
+}
+
+- (void)cancleAction{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    [self.view endEditing:YES];
+}
+
+#pragma mark 0区单元格代理方法
+-(void)errandHeaderCellTextFieldEndChanged:(NSString *)text index:(NSInteger)index{
+    if (index == 0) {
+        //任务名称
+        DBLog(@"%@",text);
+    }else if (index == 1){
+        //物品名称
+        DBLog(@"%@",text);
+    }else if (index == 2){
+        //数量
+        DBLog(@"%@",text);
+    }else{
+        //佣金
+        DBLog(@"%@",text);
+    }
+}
+@end

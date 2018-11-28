@@ -1,0 +1,264 @@
+//
+//  YBMySeniorityViewController.m
+//  YBMercenary
+//
+//  Created by 飞哥 on 2018/3/23.
+//  Copyright © 2018年 pengfei.li. All rights reserved.
+//
+
+#import "YBMySeniorityViewController.h"
+#import "YBMySeniorityPublicViewController.h"
+#import "YBMySeniorityTextViewController.h"
+#import "MyCertificationViewController.h"
+#import "YBMyUploadCertificateViewController.h"
+#import "UserInfoVC.h"
+@interface YBMySeniorityViewController ()
+{
+    UILabel *industryLab;//行业
+    UILabel *termLab;//年限
+    UILabel *specialityLab;//特长
+    UILabel *introduceLab;//介绍
+    UILabel *CertificationLab;//实名认证
+    UILabel *certificateLab;//证书
+    UILabel *timeLab;//时间
+}
+@end
+
+@implementation YBMySeniorityViewController
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self requestUserCenter_get_zili];
+    
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    [self makeUI];
+    
+    
+}
+#pragma mark - UI
+-(void)makeUI{
+    //1
+    UIView *backdropView = [F_UI SL_UI_View:[UIColor whiteColor] cornerRadius:0 borderColor:nil borderWidth:0];
+    backdropView.frame = CGRectMake(0, AdFloat(16), d_Device_width, AdFloat(278));
+    [self.view addSubview:backdropView];
+    
+    industryLab = [F_UI SL_UI_Label:@"未填写" color:[UIColor hex:@"999999"] textAlignment:NSTextAlignmentRight textFont:AdFloat(28) numberOfLines:1];
+    industryLab.frame = CGRectMake(AdFloat(250), 0, AdFloat(444), AdFloat(90));
+    [backdropView addSubview:industryLab];
+    
+    termLab = [F_UI SL_UI_Label:@"未填写" color:[UIColor hex:@"999999"] textAlignment:NSTextAlignmentRight textFont:AdFloat(28) numberOfLines:1];
+    termLab.frame = CGRectMake(AdFloat(250), industryLab.maxY+AdFloat(2), AdFloat(444), AdFloat(90));
+    [backdropView addSubview:termLab];
+    
+    specialityLab = [F_UI SL_UI_Label:@"未填写" color:[UIColor hex:@"999999"] textAlignment:NSTextAlignmentRight textFont:AdFloat(28) numberOfLines:1];
+    specialityLab.frame = CGRectMake(AdFloat(250), termLab.maxY+AdFloat(2), AdFloat(444), AdFloat(90));
+    [backdropView addSubview:specialityLab];
+    
+    //2
+    UIView *backdropView_1 = [F_UI SL_UI_View:[UIColor whiteColor] cornerRadius:0 borderColor:nil borderWidth:0];
+    backdropView_1.frame = CGRectMake(0, backdropView.maxY+AdFloat(16), d_Device_width, AdFloat(90));
+    [self.view addSubview:backdropView_1];
+    
+    UIImageView *img_2 = [F_UI SL_UI_UIimg:[UIImage imageNamed:@"返回-4 copy 6"] cornerRadius:0];
+    img_2.frame = CGRectMake(d_Device_width-AdFloat(42), AdFloat(34), AdFloat(12), AdFloat(24));
+    [backdropView_1 addSubview:img_2];
+    
+    introduceLab = [F_UI SL_UI_Label:@"未填写" color:[UIColor hex:@"999999"] textAlignment:NSTextAlignmentRight textFont:AdFloat(28) numberOfLines:1];
+    introduceLab.frame = CGRectMake(AdFloat(250), 0, AdFloat(444), AdFloat(90));
+    [backdropView_1 addSubview:introduceLab];
+    
+    UILabel *lab = [F_UI SL_UI_Label:@"我的介绍" color:[UIColor hex:@"444444"] textAlignment:NSTextAlignmentLeft textFont:AdFloat(28) numberOfLines:1];
+    lab.frame = CGRectMake(AdFloat(30), 0, AdFloat(200), AdFloat(90));
+    [backdropView_1 addSubview:lab];
+    
+    UIButton *introduceBtn = [F_UI SL_UI_Btn:nil Color:nil Font:0 bgimage:nil selecteImage:nil target:self action:@selector(introduceBtn:) cornerRadius:1];
+    introduceBtn.frame = CGRectMake(0, 0, d_Device_width, AdFloat(90));
+    [backdropView_1 addSubview:introduceBtn];
+    
+    //3
+    UIView *backdropView_2 = [F_UI SL_UI_View:[UIColor whiteColor] cornerRadius:0 borderColor:nil borderWidth:0];
+    backdropView_2.frame = CGRectMake(0, backdropView_1.maxY+AdFloat(16), d_Device_width, AdFloat(278));
+    [self.view addSubview:backdropView_2];
+    
+//    CertificationLab = [F_UI SL_UI_Label:@"审核中" color:[UIColor hex:@"999999"] textAlignment:NSTextAlignmentRight textFont:AdFloat(28) numberOfLines:1];
+//    CertificationLab.frame = CGRectMake(AdFloat(250), 0, AdFloat(444), AdFloat(90));
+//    [backdropView_2 addSubview:CertificationLab];
+    
+    
+    certificateLab = [F_UI SL_UI_Label:@"未上传" color:[UIColor hex:@"999999"] textAlignment:NSTextAlignmentRight textFont:AdFloat(28) numberOfLines:1];
+    certificateLab.frame = CGRectMake(AdFloat(250), industryLab.maxY+AdFloat(2), AdFloat(444), AdFloat(90));
+    [backdropView_2 addSubview:certificateLab];
+    
+    timeLab = [F_UI SL_UI_Label:@"100天" color:[UIColor hex:@"999999"] textAlignment:NSTextAlignmentRight textFont:AdFloat(28) numberOfLines:1];
+    timeLab.frame = CGRectMake(AdFloat(250), termLab.maxY+AdFloat(2), AdFloat(488), AdFloat(90));
+    [backdropView_2 addSubview:timeLab];
+    
+    NSArray *titleArr = @[@"行业",@"工作年限",@"特长"];
+    NSArray *titleArr_1 = @[@"我的名片",@"个人证书上传",@"App注册时间"];
+    for (int i = 0; i < titleArr.count; i++) {
+        UIImageView *img = [F_UI SL_UI_UIimg:[UIImage imageNamed:@"返回-4 copy 6"] cornerRadius:0];
+        img.frame = CGRectMake(d_Device_width-AdFloat(42), AdFloat(34)+ i*AdFloat(92), AdFloat(12), AdFloat(24));
+        [backdropView addSubview:img];
+        
+        UIButton *btn = [F_UI SL_UI_Btn:nil Color:nil Font:0 bgimage:nil selecteImage:nil target:self action:@selector(btn:) cornerRadius:1];
+        btn.frame = CGRectMake(0, i*AdFloat(92), d_Device_width, AdFloat(90));
+        btn.tag = 400+i;
+        [backdropView addSubview:btn];
+        
+        if (i < 2) {
+            UIView *xianView = [F_UI SL_UI_View:[UIColor hex:@"F2F2F2"] cornerRadius:0 borderColor:nil borderWidth:0];
+            xianView.frame = CGRectMake(AdFloat(30), AdFloat(90)+i*AdFloat(92), d_Device_width-AdFloat(60), AdFloat(2));
+            [backdropView addSubview:xianView];
+            
+            UIView *xianView_1 = [F_UI SL_UI_View:[UIColor hex:@"F2F2F2"] cornerRadius:0 borderColor:nil borderWidth:0];
+            xianView_1.frame = CGRectMake(AdFloat(30), AdFloat(90)+i*AdFloat(92), d_Device_width-AdFloat(60), AdFloat(2));
+            [backdropView_2 addSubview:xianView_1];
+            
+            UIImageView *img_1 = [F_UI SL_UI_UIimg:[UIImage imageNamed:@"返回-4 copy 6"] cornerRadius:0];
+            img_1.frame = CGRectMake(d_Device_width-AdFloat(42), AdFloat(34)+ i*AdFloat(92), AdFloat(12), AdFloat(24));
+            [backdropView_2 addSubview:img_1];
+            
+            UIButton *btn_1 = [F_UI SL_UI_Btn:nil Color:nil Font:0 bgimage:nil selecteImage:nil target:self action:@selector(btn_1:) cornerRadius:1];
+            btn_1.frame = CGRectMake(0, i*AdFloat(92), d_Device_width, AdFloat(90));
+            btn_1.tag = 410+i;
+            [backdropView_2 addSubview:btn_1];
+        }
+        UILabel *titleLab = [F_UI SL_UI_Label:titleArr[i] color:[UIColor hex:@"444444"] textAlignment:NSTextAlignmentLeft textFont:AdFloat(28) numberOfLines:1];
+        titleLab.frame = CGRectMake(AdFloat(30), i*AdFloat(92), AdFloat(200), AdFloat(90));
+        [backdropView addSubview:titleLab];
+        
+        UILabel *titleLab_1 = [F_UI SL_UI_Label:titleArr_1[i] color:[UIColor hex:@"444444"] textAlignment:NSTextAlignmentLeft textFont:AdFloat(28) numberOfLines:1];
+        titleLab_1.frame = CGRectMake(AdFloat(30), i*AdFloat(92), AdFloat(200), AdFloat(90));
+        [backdropView_2 addSubview:titleLab_1];
+    }
+}
+#pragma mark - 行业、工作年限、特长
+-(void)btn:(UIButton *)sender{
+    if (sender.tag == 400) {
+        YBMySeniorityPublicViewController *vc = [[YBMySeniorityPublicViewController alloc] init];
+        vc.title = @"行业";
+        vc.type = 1;
+        [self.navigationController pushViewController:vc animated:YES];
+    }else if (sender.tag == 401){
+        YBMySeniorityPublicViewController *vc = [[YBMySeniorityPublicViewController alloc] init];
+        vc.title = @"工作年限";
+        vc.type = 2;
+        [self.navigationController pushViewController:vc animated:YES];
+
+    }else if (sender.tag == 402){
+        YBMySeniorityTextViewController *vc = [[YBMySeniorityTextViewController alloc] init];
+        vc.title = @"特长";
+        vc.type = 1;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+#pragma mark - 实名认证、证书
+-(void)btn_1:(UIButton *)sender{
+    if (sender.tag == 410) {
+        
+//        if ([CertificationLab.text isEqualToString:@"未审核"] ||[CertificationLab.text isEqualToString:@"审核未通过"] ) {
+//            MyCertificationViewController *vc = [[MyCertificationViewController alloc] init];
+//            vc.title = @"个人实名认证";
+//            [self.navigationController pushViewController:vc animated:YES];
+//            
+//        }
+        
+        UserInfoVC *vc = [[UserInfoVC alloc]init];
+        vc.user_id=self.user.id;
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+        
+        
+    }else if (sender.tag == 411){
+        
+        
+        if ([certificateLab.text isEqualToString:@"未上传"]) {
+            YBMyUploadCertificateViewController *vc = [[YBMyUploadCertificateViewController alloc] init];
+            vc.title = @"证书上传";
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+//        else{
+//            
+//        }
+        
+        
+    }
+}
+#pragma mark - 我的介绍
+-(void)introduceBtn:(UIButton *)sender{
+    YBMySeniorityTextViewController *vc = [[YBMySeniorityTextViewController alloc] init];
+    vc.title = @"自我介绍";
+    vc.type = 2;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark request
+#pragma mark
+-(void)requestUserCenter_get_zili
+{
+    
+    NSDictionary *parameters =@{@"token":USERTOKEN};
+    
+    [[YBRequestManager sharedYBManager]postWithUrlString:UserCenter_get_zili parameters:parameters success:^(id data) {
+        
+        
+//        [self.dataArr removeAllObjects];
+        if ([data[@"code"]integerValue] ==0) {
+            
+            industryLab.text=data[@"data"][@"industry"];
+            termLab.text=data[@"data"][@"workyear"];
+            specialityLab.text=data[@"data"][@"speciality"];
+            introduceLab.text=data[@"data"][@"introduce"];
+            
+            if ([data[@"data"][@"is_check"] intValue] ==0) {
+                CertificationLab.text= @"未审核";
+            }
+            else if ([data[@"data"][@"is_check"] intValue] ==1)
+            {
+                CertificationLab.text= @"审核中";
+            }
+            else if ([data[@"data"][@"is_check"] intValue] ==2)
+            {
+                CertificationLab.text= @"审核通过";
+            }
+            else if ([data[@"data"][@"is_check"] intValue] ==3)
+            {
+                CertificationLab.text= @"审核未通过";
+            }
+            
+            
+            if ([data[@"data"][@"is_up"] intValue] ==0) {
+                certificateLab.text=@"未上传";
+            }
+            else{
+                certificateLab.text=@"已上传";
+            }
+            
+            timeLab.text=[NSString stringWithFormat:@"%@天",data[@"data"][@"days"]];
+        
+            
+            
+            
+        }
+        else if ([data[@"code"]integerValue] ==1)
+        {
+            
+            [DWBToast showCenterWithText:data[@"msg"]];
+        }
+        else{
+            [DWBToast showCenterWithText:data[@"msg"]];
+        }
+        
+    } failure:^(NSError *error) {
+        
+    }];
+}
+
+@end

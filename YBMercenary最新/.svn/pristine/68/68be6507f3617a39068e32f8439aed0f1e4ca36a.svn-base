@@ -1,0 +1,93 @@
+//
+//  YBMySetFeedbackViewController.m
+//  YBMercenary
+//
+//  Created by 飞哥 on 2018/3/27.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "YBMySetFeedbackViewController.h"
+
+@interface YBMySetFeedbackViewController ()
+
+@end
+
+@implementation YBMySetFeedbackViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    [self makeUI];
+}
+
+-(void)makeUI{
+    //1
+    UIView *backView_1 = [F_UI SL_UI_View:[UIColor whiteColor] cornerRadius:0 borderColor:nil borderWidth:0];
+    backView_1.frame = CGRectMake(0, AdFloat(16), d_Device_width, AdFloat(184));
+    [self.view addSubview:backView_1];
+    
+    UIView *xianView_1 = [F_UI SL_UI_View:[UIColor hex:@"E5E5E5"] cornerRadius:0 borderColor:nil borderWidth:0];
+    xianView_1.frame = CGRectMake(AdFloat(30), AdFloat(91), d_Device_width-AdFloat(60), AdFloat(2));
+    [backView_1 addSubview:xianView_1];
+    
+    UILabel *lab_1 = [F_UI SL_UI_Label:@"请选择反馈类型" color:[UIColor hex:@"444444"] textAlignment:NSTextAlignmentLeft textFont:AdFloat(28) numberOfLines:1];
+    lab_1.frame = CGRectMake(AdFloat(30), 0, AdFloat(250), AdFloat(91));
+    [backView_1 addSubview:lab_1];
+    
+    UILabel *lab_2 = [F_UI SL_UI_Label:@"问题反馈" color:[UIColor hex:@"444444"] textAlignment:NSTextAlignmentLeft textFont:AdFloat(28) numberOfLines:1];
+    lab_2.frame = CGRectMake(AdFloat(30), AdFloat(94), AdFloat(250), AdFloat(91));
+    [backView_1 addSubview:lab_2];
+    
+    UIImageView *img = [F_UI SL_UI_UIimg:[UIImage imageNamed:@"返回-4 copy 6"] cornerRadius:0];
+    img.frame = CGRectMake(d_Device_width-AdFloat(42), AdFloat(33), AdFloat(12), AdFloat(24));
+    [backView_1 addSubview:img];
+    
+    UITextField *textField_1 = [F_UI SL_UI_Field:@"请填写您的问题" font:AdFloat(28) textAlignment:NSTextAlignmentLeft borderStyle:UITextBorderStyleNone clearOnBeginEditing:YES secure:YES keyBoardStyle:UIKeyboardTypeDefault];
+    textField_1.frame = CGRectMake(AdFloat(280), AdFloat(93), AdFloat(500), AdFloat(91));
+    [backView_1 addSubview:textField_1];
+    
+    
+    
+    
+    //2
+    UIView *backView_2 = [F_UI SL_UI_View:[UIColor whiteColor] cornerRadius:0 borderColor:nil borderWidth:0];
+    backView_2.frame = CGRectMake(0,backView_1.maxY+AdFloat(16), d_Device_width, AdFloat(184));
+    [self.view addSubview:backView_2];
+    
+    UIView *xianView_2 = [F_UI SL_UI_View:[UIColor hex:@"E5E5E5"] cornerRadius:0 borderColor:nil borderWidth:0];
+    xianView_2.frame = CGRectMake(AdFloat(30), AdFloat(91), d_Device_width-AdFloat(60), AdFloat(2));
+    [backView_2 addSubview:xianView_2];
+    
+    UILabel *lab_3 = [F_UI SL_UI_Label:@"姓名" color:[UIColor hex:@"444444"] textAlignment:NSTextAlignmentLeft textFont:AdFloat(28) numberOfLines:1];
+    lab_3.frame = CGRectMake(AdFloat(30), 0, AdFloat(250), AdFloat(91));
+    [backView_2 addSubview:lab_3];
+    
+    UILabel *lab_4 = [F_UI SL_UI_Label:@"手机号/邮箱/QQ" color:[UIColor hex:@"444444"] textAlignment:NSTextAlignmentLeft textFont:AdFloat(28) numberOfLines:1];
+    lab_4.frame = CGRectMake(AdFloat(30), AdFloat(94), AdFloat(250), AdFloat(91));
+    [backView_2 addSubview:lab_4];
+    
+    UITextField *textField_2 = [F_UI SL_UI_Field:@"请输入您的姓名" font:AdFloat(28) textAlignment:NSTextAlignmentLeft borderStyle:UITextBorderStyleNone clearOnBeginEditing:YES secure:YES keyBoardStyle:UIKeyboardTypeDefault];
+    textField_2.frame = CGRectMake(AdFloat(280), 0, AdFloat(500), AdFloat(91));
+    [backView_2 addSubview:textField_2];
+    
+    UITextField *textField_3 = [F_UI SL_UI_Field:@"请输入手机号/邮箱/QQ" font:AdFloat(28) textAlignment:NSTextAlignmentLeft borderStyle:UITextBorderStyleNone clearOnBeginEditing:YES secure:YES keyBoardStyle:UIKeyboardTypeDefault];
+    textField_3.frame = CGRectMake(AdFloat(280), AdFloat(93), AdFloat(500), AdFloat(91));
+    [backView_2 addSubview:textField_3];
+    
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

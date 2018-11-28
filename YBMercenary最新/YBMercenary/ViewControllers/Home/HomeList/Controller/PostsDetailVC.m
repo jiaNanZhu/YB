@@ -1,0 +1,373 @@
+//
+//  PostsDetailVC.m
+//  YBMercenary
+//
+//  Created by 龙青磊 on 2018/4/10.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "PostsDetailVC.h"
+#import "PostsContentCell.h"
+#import "PostsCommentCell.h"
+#import "PostsCommentModel.h"
+#import "PostsDetailModel.h"
+
+#import "YBLoginViewController.h"
+
+#define isIPhoneX [UIScreen mainScreen].bounds.size.height==812
+#define KNavHeight (isIPhoneX ? 88 : 64)
+#define KNavSepace  (isIPhoneX ? (88-64) : 0)
+#define KTabbarHeight (isIPhoneX ? 83 : 49)
+#define KTabSepaceHeight (isIPhoneX ? (83-49) : 0)
+#import <IQKeyboardManager/IQKeyboardManager.h>
+@interface PostsDetailVC ()<FCHeadlinesDetailsCommentKeyBoardViewDelegate>
+{
+    UIView *bgview;
+}
+@property (nonatomic, strong) NSMutableArray *listArr;
+
+@property(nonatomic,strong)PostsDetailModel *model;
+
+
+
+@property(nonatomic,assign)BOOL isReply;
+
+@property(nonatomic,strong)NSString *liuyanId;
+@end
+
+@implementation PostsDetailVC
+-(FCHeadlinesDetailsCommentKeyBoardView *)commentView
+{
+    if (!_commentView) {
+        _commentView =[[FCHeadlinesDetailsCommentKeyBoardView alloc]init];
+        _commentView.delegate=self;
+
+        _commentView.backgroundColor=[UIColor whiteColor]; 
+    }
+    return _commentView;
+}
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self setsendmentview];
+}
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [self.commentView removeFromSuperview];
+    [bgview removeFromSuperview];
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    
+    [[IQKeyboardManager sharedManager] setEnable:NO];
+    [IQKeyboardManager sharedManager].enableAutoToolbar = NO;
+    
+    [self initNav];
+    [self configTableView];
+    
+    self.listArr = [NSMutableArray array];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardDidShowNotification object:nil];
+    // 键盘消失的通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHiden:) name:UIKeyboardWillHideNotification object:nil];
+ 
+    [self requestCommonDrunkery_post_detail];
+}
+-(void)setsendmentview
+{
+    self.commentView.frame=CGRectMake(0, kScreenHeight - KTabbarHeight, kScreenWidth, 49);
+    [self.tabBarController.view addSubview:self.commentView];
+    
+    bgview =[[UIView alloc]initWithFrame:CGRectMake(0, self.commentView.bottom, kScreenWidth, KTabSepaceHeight)];
+    
+    
+    bgview.backgroundColor=[UIColor whiteColor];
+    [self.tabBarController.view addSubview:bgview];
+}
+- (void)initNav{
+    self.navigationItem.title = @"帖子详情";
+}
+
+- (void)configTableView{
+    self.tableView.estimatedRowHeight = 100;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.backgroundColor = [UIColor hex:Back_Color];
+    
+    self.tableView.contentInset=UIEdgeInsetsMake(0, 0, KTabbarHeight, 0);
+}
+
+
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [self.view endEditing:YES];
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (section == 0) {
+        return 1;
+    }else{
+        return self.listArr.count;
+    }
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0) {
+        PostsContentCell *cell = [PostsContentCell creatTableViewCellWithTableView:tableView];
+        
+        cell.model=self.model;
+        
+        cell.comments=self.listArr.count;
+        return cell;
+    }else{
+        PostsCommentCell *cell = [PostsCommentCell creatTableViewCellWithTableView:tableView];
+        cell.model = self.listArr[indexPath.row];
+        
+        
+        //回复留言
+        
+        KWeakSelf(self);
+        cell.commentMethod = ^(NSString *liuyanId) {
+            weakself.isReply=YES;
+            weakself.liuyanId=liuyanId;
+            
+            [weakself.commentView.textView  becomeFirstResponder];
+        };
+        return cell;
+    }
+}
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.commentView endEditing:YES];
+}
+
+/*
+// Override to support conditional editing of the table view.
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return NO if you do not want the specified item to be editable.
+    return YES;
+}
+*/
+
+/*
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        // Delete the row from the data source
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+    }   
+}
+*/
+
+/*
+// Override to support rearranging the table view.
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+}
+*/
+
+/*
+// Override to support conditional rearranging of the table view.
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return NO if you do not want the item to be re-orderable.
+    return YES;
+}
+*/
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+
+- (void)loadTestData{
+    
+    
+    PostsCommentModel *model1 = [[PostsCommentModel alloc]init];
+    model1.content = @"步骤很详细,感谢分享";
+    PostsCommentListModel *comment1 = [PostsCommentListModel mj_objectWithKeyValues:@{@"commenter":@{@"username":@"小小",@"userid":@"1"},@"content":@"评论很精辟!"}];
+    PostsCommentListModel *comment2 = [PostsCommentListModel mj_objectWithKeyValues:@{@"commenter":@{@"username":@"无敌",@"userid":@"1"},@"content":@"评论很精辟!"}];
+    model1.commentList = @[comment1,comment2];
+    
+    PostsCommentModel *model2 = [[PostsCommentModel alloc]init];
+    model2.content = @"步骤很详细,感谢分享";
+    PostsCommentListModel *comment3 = [PostsCommentListModel mj_objectWithKeyValues:@{@"commenter":@{@"username":@"小小",@"userid":@"1"},@"content":@"评论很精辟!"}];
+    PostsCommentListModel *comment4 = [PostsCommentListModel mj_objectWithKeyValues:@{@"commenter":@{@"username":@"无敌",@"userid":@"1"},@"content":@"评论很精辟!"}];
+    model2.commentList = @[comment4,comment3];
+//
+//    PostsCommentModel *model3 = [[PostsCommentModel alloc]init];
+//    model3.content = @"步骤很详细,感谢分享";
+//    model3.commentList = @[@{@"replyname":@"小小",@"content":@"评论很精辟!"},
+//                          @{@"replyname":@"无敌",@"content":@"评论很精辟"}];
+    [self.listArr addObject:model1];
+    [self.listArr addObject:model2];
+//    [self.listArr addObject:model3];
+    
+    [self reloadTableView];
+}
+#pragma mark -评论
+-(void)send
+{
+    
+    
+    [self.view endEditing:YES];
+    if ([[YBUser boolLogin] isEqualToString:@""]||[YBUser boolLogin] == nil) {
+        [self login];
+    }
+    else
+    {
+        if (self.commentView.textView.text.length<=0) {
+            [DWBToast showCenterWithText:@"评论内容不能为空"];
+        }
+        else{
+            
+            if (!self.isReply) {
+                [self requestDrunkery_liuyan_add];
+            }
+            else{
+                [self requestDrunkery_huifu_addwithid:self.liuyanId];
+            }
+            
+        }
+        
+    }
+    
+    
+}
+-(void)login{
+    YBLoginViewController *login = [[YBLoginViewController alloc]init];
+    UINavigationController *navi = [[UINavigationController alloc]initWithRootViewController:login];
+    [self.navigationController presentViewController:navi animated:YES completion:nil];
+}
+#pragma mark request
+#pragma mark
+-(void)requestCommonDrunkery_post_detail
+{
+    
+    if (!self.detailid) {
+        return;
+    }
+    NSDictionary *parameters =@{@"id":self.detailid};
+    [[YBRequestManager sharedYBManager]postWithUrlString:CommonDrunkery_post_detail parameters:parameters success:^(id data) {
+        
+        if ([data[@"code"]integerValue] ==0) {
+           
+            self.model =[PostsDetailModel yy_modelWithDictionary:data[@"data"]];
+            
+            
+            
+            [self.listArr removeAllObjects];
+            for (NSDictionary *dict  in data[@"data"][@"liuyan"]) {
+               PostsCommentModel *liuyanmodel=[PostsCommentModel yy_modelWithDictionary:dict];
+                
+                [self.listArr addObject:liuyanmodel];
+            }
+            
+            
+            [self.tableView reloadData];
+            
+        }
+        else{
+            [DWBToast showCenterWithText:data[@"msg"]];
+        }
+    } failure:^(NSError *error) {
+        
+    }];
+    
+}
+
+#pragma mark   发表留言
+-(void)requestDrunkery_liuyan_add
+{
+    
+    NSDictionary *parameters =@{@"id":self.detailid,@"token":USERTOKEN,@"liuyan_content":self.commentView.textView.text};
+    [[YBRequestManager sharedYBManager]postWithUrlString:Drunkery_liuyan_add parameters:parameters success:^(id data) {
+        
+        if ([data[@"code"]integerValue] ==0) {
+            
+//            self.model =[PostsDetailModel yy_modelWithDictionary:data[@"data"]];
+//
+//            [self.tableView reloadData];
+            
+            self.commentView.textView.text=@"";
+            [DWBToast showCenterWithText:@"评论成功"];
+            
+            [self  requestCommonDrunkery_post_detail];
+        }
+        else{
+            [DWBToast showCenterWithText:data[@"msg"]];
+        }
+    } failure:^(NSError *error) {
+        
+    }];
+    
+}
+#pragma mark   回复留言
+-(void)requestDrunkery_huifu_addwithid:(NSString*)liuyanid
+{
+    NSDictionary *parameters =@{@"id":liuyanid,@"token":USERTOKEN,@"huifu_content":self.commentView.textView.text};
+    [[YBRequestManager sharedYBManager]postWithUrlString:Drunkery_huifu_add parameters:parameters success:^(id data) {
+        
+        if ([data[@"code"]integerValue] ==0) {
+            
+            //            self.model =[PostsDetailModel yy_modelWithDictionary:data[@"data"]];
+            //
+            //            [self.tableView reloadData];
+            
+            self.commentView.textView.text=@"";
+            [DWBToast showCenterWithText:@"评论成功"];
+            
+            [self  requestCommonDrunkery_post_detail];
+        }
+        else{
+            [DWBToast showCenterWithText:data[@"msg"]];
+        }
+    } failure:^(NSError *error) {
+        
+    }];
+    
+}
+
+#pragma mark -键盘监听方法
+- (void)keyboardWasShown:(NSNotification *)notification
+{
+    // 获取键盘的高度
+    CGRect frame = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGFloat height = kScreenHeight  - frame.size.height;
+    
+     self.commentView.frame = CGRectMake(0, kScreenHeight  - frame.size.height-self.commentView.height, kScreenWidth, self.commentView.height);
+}
+- (void)keyboardWillBeHiden:(NSNotification *)notification
+{
+    
+    self.isReply=NO;
+    self.commentView.frame = CGRectMake(0, kScreenHeight - self.commentView.height-KTabSepaceHeight, kScreenWidth, self.commentView.height);
+}
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+}
+
+@end

@@ -1,0 +1,110 @@
+//
+//  YBTabBar.m
+//  YBMercenary
+//
+//  Created by 飞哥 on 2018/3/21.
+//  Copyright © 2018年 pengfei.li. All rights reserved.
+//
+
+#import "YBTabBar.h"
+#import "UIView+Size.h"
+#import "UIButton+Edge.h"
+@interface YBTabBar()
+@property (nonatomic, strong) UIButton *middleBtn;
+@end
+@implementation YBTabBar
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    CGFloat w = self.bounds.size.width/5.0;
+
+    //  不透明背景
+    UIView *backView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 49)];
+    backView.backgroundColor = [UIColor whiteColor];
+    [self insertSubview:backView atIndex:0];
+    self.opaque = YES;
+    
+    
+    
+    UIButton *sendBtn = [[UIButton alloc] init];
+    sendBtn.titleLabel.font = [UIFont systemFontOfSize:10];
+    [sendBtn addTarget:self action:@selector(didClickPublishBtn:) forControlEvents:UIControlEventTouchUpInside];
+    sendBtn.adjustsImageWhenHighlighted = NO;
+    sendBtn.size = CGSizeMake(w, 70);
+    sendBtn.centerX = self.width / 2;
+    sendBtn.centerY = 12;
+    [self addSubview:sendBtn];
+    
+    UIView *btnView = [[UIView alloc] initWithFrame:CGRectMake((w-54)/2, 2, 54, 54)];
+    btnView.backgroundColor = [UIColor whiteColor];
+    btnView.layer.cornerRadius = 27;
+    btnView.layer.masksToBounds =YES;
+    [sendBtn addSubview:btnView];
+    
+    UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 44, 44)];
+    img.image = [UIImage imageNamed:@"发布"];
+    [btnView addSubview:img];
+    
+    UILabel *btnLab = [[UILabel alloc] initWithFrame:CGRectMake(0, 58, w, 12)];
+    btnLab.text = @"发现";
+    btnLab.textColor = [UIColor grayColor];
+    btnLab.font = [UIFont systemFontOfSize:10];
+    btnLab.textAlignment = NSTextAlignmentCenter;
+    [sendBtn addSubview:btnLab];
+
+    self.middleBtn = sendBtn;
+    
+    [sendBtn setImagePositionWithType:SSImagePositionTypeTop spacing:4];
+    // 其他位置按钮
+    NSUInteger count = self.subviews.count;
+    for (NSUInteger i = 0 , j = 0; i < count; i++)
+    {
+        UIView *view = self.subviews[i];
+        Class class = NSClassFromString(@"UITabBarButton");
+        if ([view isKindOfClass:class])
+        {
+            view.width = self.width / 5.0;
+            view.x = self.width * j / 5.0;
+            j++;
+            if (j == 2)
+            {
+                j++;
+            }
+        }
+    }
+    
+}
+// 发布
+- (void)didClickPublishBtn:(UIButton*)sender {
+    if (self.didMiddBtn) {
+        self.didMiddBtn();
+    }
+}
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    if (self.isHidden == NO)
+    {
+        CGPoint newP = [self convertPoint:point toView:self.middleBtn];
+        if ( [self.middleBtn pointInside:newP withEvent:event])
+        {
+            return self.middleBtn;
+        }else
+        {
+            return [super hitTest:point withEvent:event];
+        }
+    }
+    else
+    {
+        return [super hitTest:point withEvent:event];
+    }
+}
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect {
+    // Drawing code
+}
+*/
+
+@end

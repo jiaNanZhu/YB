@@ -1,0 +1,34 @@
+//
+//  YBMyIssueTableViewCell.h
+//  YBMercenary
+//
+//  Created by 飞哥 on 2018/3/29.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "YBMyIssueModel.h"
+@protocol YBMyIssueDelegate <NSObject>
+
+-(void)clickAttention:(int)tag;//修改
+-(void)clickAttention_1:(int)tag;//撤销
+-(void)clickAttention_2:(int)tag;//邀请
+-(void)clickAttention_3:(int)tag type:(int)type;//1.确认审核 2.评价 3.上架
+@end
+@interface YBMyIssueTableViewCell : UITableViewCell
+@property(nonatomic, weak)id<YBMyIssueDelegate>delegate;
+@property (nonatomic, strong) UILabel *titleLab;//标题
+@property (nonatomic, strong) UILabel *numLab;//费用
+@property (nonatomic, strong) UILabel *contentLab;//内容
+@property (nonatomic, strong) UILabel *totalLab;//浏览数、分享数
+@property (nonatomic, strong) UIButton *amendBtn;//修改
+@property (nonatomic, strong) UIButton *revocationBtn;//撤销
+@property (nonatomic, strong) UIButton *inviteBtn;//邀请
+@property (nonatomic, strong) UIButton *collectBtn;//确认审核、评价、上架
+@property int typeS;
+-(void)networkDataCell:(NSDictionary *)dic row:(int)row type:(int)type;
+
+
+-(void)configurationwithmodel:(YBMyIssueModel *)model;
+
+@end

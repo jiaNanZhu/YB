@@ -1,0 +1,21 @@
+//
+//  ChosePersonCell.h
+//  YBMercenary
+//
+//  Created by 龙青磊 on 2018/4/16.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "BaseTableViewCell.h"
+@class ChosePersonCell;
+@protocol ChosePersonCellDelegate<NSObject>
+-(void)chosePersonCellButtonCLickWithType:(NSString *)type withCell:(ChosePersonCell *)cell;
+@end
+@interface ChosePersonCell : BaseTableViewCell
+@property (nonatomic ,weak) id <ChosePersonCellDelegate> delegate;
+@property (nonatomic, strong) UIImageView *iconImage;
+@property (nonatomic, strong) UILabel *nameLabel;
+@property (nonatomic, strong) UILabel *priceLabel;
+@property (nonatomic, copy) NSString *type;
+
+@end

@@ -1,0 +1,19 @@
+//
+//  ZhiNengBuyModel.h
+//  OverseasRealEstateProject
+//
+//  Created by 险峰科技 on 2018/6/9.
+//  Copyright © 2018年 XianFeng. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface ZhiNengBuyModel : NSObject
+@property (nonatomic ,copy)NSString *answer;
+@property (nonatomic ,copy)NSString *createTime;
+@property (nonatomic ,copy)NSString *id;
+@property (nonatomic ,copy)NSString *isDeleted;
+@property (nonatomic ,copy)NSString *theKeyword;
+@property (nonatomic ,copy)NSString *updateTime;
+@property (nonatomic ,assign)CGFloat width;
+@end

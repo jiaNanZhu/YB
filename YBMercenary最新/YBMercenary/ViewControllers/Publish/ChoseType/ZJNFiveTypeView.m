@@ -1,0 +1,72 @@
+//
+//  ZJNFiveTypeView.m
+//  YBMercenary
+//
+//  Created by 险峰科技 on 2018/9/5.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "ZJNFiveTypeView.h"
+#import "ZJNHomeTypeView.h"
+@implementation ZJNFiveTypeView
+-(id)init{
+    self = [super init];
+    if (self) {
+        self.backgroundColor = [UIColor whiteColor];
+        CGFloat imageH = (kScreenWidth-AdFloat(328+60))/4.0;
+        ZJNHomeTypeView *signView;
+        for (int i = 0; i <5; i ++) {
+            ZJNHomeTypeView *typeView = [[ZJNHomeTypeView alloc]init];
+            typeView.tag = 10+i;
+            typeView.userInteractionEnabled = NO;
+            [typeView.button addTarget:self action:@selector(typeButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+            [self addSubview:typeView];
+            if (i == 0) {
+                [typeView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.equalTo(self).offset(AdFloat(62));
+                    make.top.equalTo(self).offset(AdFloat(30));
+                    make.size.mas_equalTo(CGSizeMake(imageH, imageH+AdFloat(52)));
+                }];
+                signView  = typeView;
+            }else if (i == 4){
+                [typeView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.top.equalTo(signView.mas_bottom).offset(AdFloat(24));
+                    make.size.mas_equalTo(CGSizeMake(imageH, imageH+AdFloat(52)));
+                    make.left.equalTo(self).offset(AdFloat(62));
+                }];
+            }else{
+                [typeView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.top.equalTo(signView);
+                    make.size.mas_equalTo(CGSizeMake(imageH, imageH+AdFloat(52)));
+                    make.left.equalTo(signView.mas_right).offset(AdFloat(68));
+                }];
+                signView = typeView;
+            }
+        }
+    }
+    return self;
+}
+-(void)typeButtonClick:(UIButton *)button{
+    ZJNHomeTypeView *typeView = (ZJNHomeTypeView *)[button superview];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(zjnFiveTypeViewButtonSelected:)]) {
+        [self.delegate zjnFiveTypeViewButtonSelected:typeView.tag];
+    }
+}
+
+-(void)setInfoArr:(NSArray *)infoArr{
+    for (int i = 0; i <infoArr.count; i ++) {
+        ZJNHomeTypeView *typeView = (ZJNHomeTypeView *)[self viewWithTag:10+i];
+        typeView.userInteractionEnabled = YES;
+        typeView.imageV.image = SetImage(infoArr[i]);
+        typeView.titleLabel.text = infoArr[i];
+    }
+}
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect {
+    // Drawing code
+}
+*/
+
+@end

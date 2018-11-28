@@ -1,0 +1,64 @@
+//
+//  TaskListVC.m
+//  YBMercenary
+//
+//  Created by 龙青磊 on 2018/4/12.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "TaskListVC.h"
+#import "HomeTaskDetailCell.h"
+#import "SignUpVC.h"
+@interface TaskListVC ()
+
+@end
+
+@implementation TaskListVC
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    [self initNav];
+    [self configTableView];
+}
+
+- (void)initNav{
+    self.title = @"任务列表";
+}
+
+- (void)configTableView{
+    self.tableView.estimatedRowHeight = 100;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.backgroundColor = [UIColor hex:Back_Color];
+    self.tableView.contentInset = UIEdgeInsetsMake(Width(10), 0, 0, 0);
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 5;
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    HomeTaskDetailCell *cell = [HomeTaskDetailCell creatTableViewCellWithTableView:tableView];
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    SignUpVC *vc = [[SignUpVC alloc]init];
+    vc.type = self.type;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+@end

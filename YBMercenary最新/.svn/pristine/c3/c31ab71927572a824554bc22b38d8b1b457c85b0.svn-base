@@ -1,0 +1,66 @@
+//
+//  YBMyUploadCertificateViewController.m
+//  YBMercenary
+//
+//  Created by 飞哥 on 2018/5/7.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "YBMyUploadCertificateViewController.h"
+
+@interface YBMyUploadCertificateViewController ()
+
+@end
+
+@implementation YBMyUploadCertificateViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    [self makeUI];
+}
+-(void)makeUI{
+    
+    UIView *backView = [F_UI SL_UI_View:[UIColor whiteColor] cornerRadius:0 borderColor:nil borderWidth:0];
+    backView.frame = CGRectMake(0, AdFloat(16), d_Device_width, AdFloat(480));
+    [self.view addSubview:backView];
+    
+    UILabel *lab = [F_UI SL_UI_Label:@"上传证书" color:[UIColor hex:@"444444"] textAlignment:NSTextAlignmentLeft textFont:AdFloat(28) numberOfLines:1];
+    lab.frame = CGRectMake(AdFloat(30), AdFloat(24), AdFloat(300), AdFloat(40));
+    [backView addSubview:lab];
+    
+    UIView *imgBack = [F_UI SL_UI_View:[UIColor hex:@"EDEDED"] cornerRadius:0 borderColor:nil borderWidth:0];
+    imgBack.frame = CGRectMake(AdFloat(40), lab.maxY+AdFloat(26), d_Device_width-AdFloat(80), AdFloat(360));
+    [backView addSubview:imgBack];
+    
+    UIImageView *picIMG = [F_UI SL_UI_UIimg:[UIImage imageNamed:@"上传图片"] cornerRadius:0];
+    picIMG.frame = CGRectMake(AdFloat(290), AdFloat(116), AdFloat(90), AdFloat(80));
+    [imgBack addSubview:picIMG];
+    
+    
+    UIButton *uploadBtn = [F_UI SL_UI_Btn:@"上传" Color:[UIColor whiteColor] Font:AdFloat(32) bgimage:nil selecteImage:nil target:self action:@selector(uploadBtn) cornerRadius:AdFloat(45)];
+    uploadBtn.frame = CGRectMake(AdFloat(60),backView.maxY+AdFloat(60), d_Device_width-AdFloat(120), AdFloat(90));
+    [uploadBtn setBackgroundColor:[UIColor hex:@"0386FF"]];
+    [self.view addSubview:uploadBtn];
+    
+}
+
+-(void)uploadBtn{
+    
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

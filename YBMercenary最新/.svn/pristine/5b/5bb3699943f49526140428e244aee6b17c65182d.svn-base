@@ -1,0 +1,255 @@
+//
+//  MyCertificationViewController.m
+//  YBMercenary
+//
+//  Created by 飞哥 on 2018/5/7.
+//  Copyright © 2018年 xfkeji_yongbing. All rights reserved.
+//
+
+#import "MyCertificationViewController.h"
+#import "YBMYSeniorityIDCardViewController.h"
+#import "UIView+SDExtension.h"
+@interface MyCertificationViewController ()<YBMYSeniorityIDCardViewControllerDelegate>
+{
+    UILabel *numberLab;
+    
+//    UIImageView *picIMG;
+    
+    UIView *imgBack;
+    
+    UIImageView *idcardImg;
+    
+    NSString  *idcardurlStr;
+}
+@end
+
+@implementation MyCertificationViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    [self makeUI];
+    [self nav];
+}
+#pragma mark - NAV
+-(void)nav{
+    UIButton *rightBtn = [F_UI SL_UI_Btn:@"提交" Color:[UIColor whiteColor] Font:AdFloat(32) bgimage:nil selecteImage:nil target:self action:@selector(rightBtn) cornerRadius:0];
+    rightBtn.frame = CGRectMake(0, 0, AdFloat(80), AdFloat(30));
+    UIBarButtonItem *right = [[UIBarButtonItem alloc]initWithCustomView:rightBtn];
+    self.navigationItem.rightBarButtonItem = right;
+}
+-(void)makeUI{
+    UIView *backView_1 = [F_UI SL_UI_View:[UIColor whiteColor] cornerRadius:0 borderColor:nil borderWidth:0];
+    backView_1.frame = CGRectMake(0, AdFloat(16), d_Device_width, AdFloat(90));
+    [self.view addSubview:backView_1];
+    
+    UILabel *lab_1 = [F_UI SL_UI_Label:@"身份证号" color:[UIColor hex:@"444444"] textAlignment:NSTextAlignmentLeft textFont:AdFloat(28) numberOfLines:1];
+    lab_1.frame = CGRectMake(AdFloat(30), 0, AdFloat(250), AdFloat(91));
+    [backView_1 addSubview:lab_1];
+    
+    numberLab = [F_UI SL_UI_Label:@"请输入身份证号" color:[UIColor hex:@"666666"] textAlignment:NSTextAlignmentRight textFont:AdFloat(28) numberOfLines:1];
+    numberLab.frame = CGRectMake(d_Device_width-AdFloat(500), 0, AdFloat(440), AdFloat(90));
+    [backView_1 addSubview:numberLab];
+    
+   
+   
+    
+    UIButton *numberBtn = [F_UI SL_UI_Btn:nil Color:nil Font:0 bgimage:nil selecteImage:nil target:self action:@selector(numberBtn) cornerRadius:0];
+    numberBtn.frame = CGRectMake(0, 0, d_Device_width, AdFloat(90));
+    [backView_1 addSubview:numberBtn];
+    
+    
+    UIImageView *img = [F_UI SL_UI_UIimg:[UIImage imageNamed:@"返回-4 copy 6"] cornerRadius:0];
+    img.frame = CGRectMake(d_Device_width-AdFloat(42), AdFloat(33), AdFloat(12), AdFloat(24));
+    [backView_1 addSubview:img];
+    
+    UIView *backView_2 = [F_UI SL_UI_View:[UIColor whiteColor] cornerRadius:0 borderColor:nil borderWidth:0];
+    backView_2.frame = CGRectMake(0, backView_1.maxY+AdFloat(16), d_Device_width, AdFloat(480));
+    [self.view addSubview:backView_2];
+    
+    UILabel *lab_2 = [F_UI SL_UI_Label:@"上传身份证照片" color:[UIColor hex:@"444444"] textAlignment:NSTextAlignmentLeft textFont:AdFloat(28) numberOfLines:1];
+    lab_2.frame = CGRectMake(AdFloat(30), AdFloat(24), AdFloat(300), AdFloat(40));
+    [backView_2 addSubview:lab_2];
+    
+    imgBack = [F_UI SL_UI_View:[UIColor hex:@"EDEDED"] cornerRadius:0 borderColor:nil borderWidth:0];
+    imgBack.frame = CGRectMake(AdFloat(40), lab_2.maxY+AdFloat(26), d_Device_width-AdFloat(80), AdFloat(360));
+    [backView_2 addSubview:imgBack];
+    
+    
+    idcardImg= [[UIImageView alloc]init];
+    idcardImg.frame=CGRectMake(AdFloat(40), lab_2.maxY+AdFloat(26), d_Device_width-AdFloat(80), AdFloat(360));
+    [backView_2 addSubview:idcardImg];
+    
+    UIView * picIMG = [F_UI SL_UI_UIimg:[UIImage imageNamed:@"上传图片"] cornerRadius:0];
+    picIMG.frame = CGRectMake(AdFloat(290), AdFloat(110), AdFloat(90), AdFloat(80));
+    [imgBack addSubview:picIMG];
+    
+    UILabel *lab_3 = [F_UI SL_UI_Label:@"请上传身份证正面照" color:[UIColor hex:@"999999"] textAlignment:NSTextAlignmentCenter textFont:AdFloat(28) numberOfLines:1];
+    lab_3.frame = CGRectMake(0, picIMG.maxY+AdFloat(26), imgBack.width, AdFloat(20));
+    [imgBack addSubview:lab_3];
+    
+    UIButton *photographBtn = [F_UI SL_UI_Btn:@"手持身份证拍照" Color:[UIColor whiteColor] Font:AdFloat(32) bgimage:nil selecteImage:nil target:self action:@selector(photographBtn) cornerRadius:AdFloat(45)];
+    photographBtn.frame = CGRectMake(AdFloat(60),backView_2.maxY+AdFloat(60), d_Device_width-AdFloat(120), AdFloat(90));
+    [photographBtn setBackgroundColor:[UIColor hex:@"0386FF"]];
+    [self.view addSubview:photographBtn];
+    
+}
+
+-(void)saveidcardnum:(NSString *)num
+{
+    numberLab.text=num;
+}
+
+-(void)numberBtn{
+    YBMYSeniorityIDCardViewController *vc =[[YBMYSeniorityIDCardViewController alloc]init];
+    vc.delegate=self;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+-(void)rightBtn
+{
+    if (numberLab.text.length<=0) {
+      
+        [DWBToast showCenterWithText:@"请输入身份证号"];
+    }
+    else if (numberLab.text.length!=18 )
+    {
+        [DWBToast showCenterWithText:@"身份证号必须是18位"];
+    }
+    else if(!idcardImg.image)
+    {
+        [DWBToast showCenterWithText:@"请上传身份证正面照"];
+    }
+    else{
+       [self imguploadwithimg:idcardImg.image];
+    }
+    
+    
+}
+-(void)photographBtn{
+    
+    
+    UIAlertController *actionSheetController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    
+    UIImagePickerController * picker = [[UIImagePickerController alloc] init];
+    picker.delegate = self;
+//    picker.allowsEditing = YES;
+    
+    UIAlertAction *showAllInfoAction = [UIAlertAction actionWithTitle:@"从相册中选取" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        DBLog(@"------ 从相册中选取 ------");
+        
+        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        [self presentViewController:picker animated:YES completion:nil];
+        
+    }];
+    [showAllInfoAction setValue:[UIColor hex:@"444444"] forKey:@"_titleTextColor"];
+    UIAlertAction *pickAction = [UIAlertAction actionWithTitle:@"拍照" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        DBLog(@"------ 拍照 ------");
+        picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        [self presentViewController:picker animated:YES completion:nil];
+    }];
+    [pickAction setValue:[UIColor hex:@"444444"] forKey:@"_titleTextColor"];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        DBLog(@"------ 取消 ------");
+    }];
+    [cancelAction setValue:[UIColor hex:@"444444"] forKey:@"_titleTextColor"];
+    [actionSheetController addAction:pickAction];
+    [actionSheetController addAction:showAllInfoAction];
+    [actionSheetController addAction:cancelAction];
+    [self presentViewController:actionSheetController animated:YES completion:nil];
+    
+    
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    UIImage *portraitImg = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
+    
+    
+    idcardImg.image=portraitImg;
+    imgBack.hidden=YES;
+//    [self imguploadwithimg:portraitImg];
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    
+}
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+-(void)imguploadwithimg:(UIImage *)image
+{
+    
+    
+    NSDictionary *parameters =@{@"token":USERTOKEN};
+    
+    [[YBRequestManager sharedYBManager].sessionManager POST:[NSString stringWithFormat:@"%@%@",HOST,UserCenter_singleimgup] parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+        NSData *imgData = UIImageJPEGRepresentation(image, 0.8);
+        //        //上传的参数(上传图片，以文件流的格式)
+        [formData appendPartWithFileData:imgData
+         
+         
+         
+                                    name:@"image"
+         
+         
+         
+                                fileName:@"image.png"
+         
+         
+         
+                                mimeType:@"image/png"];
+        
+        
+    } progress:^(NSProgress * _Nonnull uploadProgress) {
+        
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        
+        
+        self->idcardurlStr=responseObject[@"data"][@"imgurl"];
+        
+        
+        
+        [self requestUserCenter_set_renzheng:responseObject[@"data"][@"imgurl"]];
+        //        [self requestUserCenter_setinfowithhead_img:responseObject[@"data"][@"head_img"]];
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        
+        
+    }];
+    
+    
+    
+    
+}
+
+-(void)requestUserCenter_set_renzheng:(NSString *)idcardurlStr
+{
+    NSDictionary *parameters =@{@"token":USERTOKEN,@"id_card":numberLab.text,@"identity_front":idcardurlStr};
+    
+    [[YBRequestManager sharedYBManager]postWithUrlString:UserCenter_set_renzheng parameters:parameters success:^(id data) {
+        
+        
+        if ([data[@"code"]integerValue] ==0) {
+            
+            [DWBToast showCenterWithText:@"提交成功"];
+            [self.navigationController popViewControllerAnimated:YES];
+            
+        }
+        
+        else{
+            [DWBToast showCenterWithText:data[@"msg"]];
+
+        }
+        
+    } failure:^(NSError *error) {
+        
+    }];
+}
+
+@end
